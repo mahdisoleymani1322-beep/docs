@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "document.schema.json",
+  "title": "سند: تنها منبع حقیقت (document.v<n>.json)",
+  "description": "متن سند در sections و جدول‌های ساخت‌یافته در data. Markdown همیشه با render.py از همین فایل ساخته می‌شود. فعلاً فقط proposal؛ pitch و catalog در فاز G.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["doc_type", "meta", "sections", "data"],
+  "properties": {
+    "doc_type": {"enum": ["proposal"]},
+    "meta": {"$ref": "#/$defs/meta"},
+    "sections": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/section"}},
+    "data": {"$ref": "#/$defs/proposal_data"}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "text_or_null": {"type": ["string", "null"]},
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "client_name", "doc_id", "revision", "date", "calendar", "status_note", "currency", "sample"],
+      "properties": {
+        "title": {"type": "string", "minLength": 3},
+        "client_name": {"$ref": "#/$defs/text"},
+        "doc_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "revision": {"type": "integer", "minimum": 1},
+        "date": {"$ref": "#/$defs/text"},
+        "calendar": {"enum": ["jalali", "gregorian"]},
+        "valid_until": {"$ref": "#/$defs/text_or_null"},
+        "status_note": {"$ref": "#/$defs/text"},
+        "prepared_by": {"$ref": "#/$defs/text_or_null"},
+        "currency": {"$ref": "#/$defs/text_or_null"},
+        "sample": {"type": "boolean", "description": "true برای داده‌ی نمایشی و گلدن‌ست؛ رندر برچسب «نمونه» می‌گذارد"}
+      }
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "blocks"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^S[0-9]{2}$"},
+        "title": {"type": "string", "minLength": 2},
+        "blocks": {"type": "array", "items": {"$ref": "#/$defs/block"}}
+      }
+    },
+    "block": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {"kind": {"enum": ["para", "list", "table", "callout", "ref"]}},
+      "allOf": [
+        {"if": {"properties": {"kind": {"const": "para"}}}, "then": {"$ref": "#/$defs/block_para"}},
+        {"if": {"properties": {"kind": {"const": "list"}}}, "then": {"$ref": "#/$defs/block_list"}},
+        {"if": {"properties": {"kind": {"const": "table"}}}, "then": {"$ref": "#/$defs/block_table"}},
+        {"if": {"properties": {"kind": {"const": "callout"}}}, "then": {"$ref": "#/$defs/block_callout"}},
+        {"if": {"properties": {"kind": {"const": "ref"}}}, "then": {"$ref": "#/$defs/block_ref"}}
+      ]
+    },
+    "block_para": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "text"],
+      "properties": {"kind": {"const": "para"}, "text": {"$ref": "#/$defs/text"}}
+    },
+    "block_list": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "items"],
+      "properties": {
+        "kind": {"const": "list"},
+        "items": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "ordered": {"type": "boolean"}
+      }
+    },
+    "block_table": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "columns", "rows"],
+      "properties": {
+        "kind": {"const": "table"},
+        "caption": {"$ref": "#/$defs/text_or_null"},
+        "columns": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/text"}},
+        "rows": {"type": "array", "minItems": 1, "items": {"type": "array", "items": {"type": "string"}}}
+      }
+    },
+    "block_callout": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "text"],
+      "properties": {"kind": {"const": "callout"}, "title": {"$ref": "#/$defs/text_or_null"}, "text": {"$ref": "#/$defs/text"}}
+    },
+    "block_ref": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "data"],
+      "description": "جدول ساخت‌یافته‌ی data را در همین جا رندر می‌کند تا هر عدد فقط یک جا نوشته شود",
+      "properties": {
+        "kind": {"const": "ref"},
+        "data": {"enum": ["deliverables", "acceptance", "pricing", "payments", "timeline", "metrics", "risks", "roles", "unknowns"]},
+        "caption": {"$ref": "#/$defs/text_or_null"}
+      }
+    },
+    "proposal_data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deliverables", "acceptance", "pricing", "timeline", "metrics", "risks", "roles", "unknowns"],
+      "properties": {
+        "deliverables": {"type": "array", "items": {"$ref": "#/$defs/deliverable"}},
+        "acceptance": {"type": "array", "items": {"$ref": "#/$defs/acceptance"}},
+        "pricing": {"$ref": "#/$defs/pricing"},
+        "timeline": {"type": "array", "items": {"$ref": "#/$defs/timeline_step"}},
+        "metrics": {"type": "array", "items": {"$ref": "#/$defs/metric"}},
+        "risks": {"type": "array", "items": {"$ref": "#/$defs/risk"}},
+        "roles": {"type": "array", "items": {"$ref": "#/$defs/role"}},
+        "unknowns": {"type": "array", "items": {"$ref": "#/$defs/unknown"}}
+      }
+    },
+    "deliverable": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "detail", "format", "due", "acceptance"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^D-[0-9]{2}$"},
+        "title": {"$ref": "#/$defs/text"},
+        "detail": {"$ref": "#/$defs/text"},
+        "format": {"$ref": "#/$defs/text"},
+        "due": {"$ref": "#/$defs/text"},
+        "need": {"$ref": "#/$defs/text_or_null"},
+        "acceptance": {"type": ["string", "null"], "pattern": "^A-[0-9]{2}$", "description": "null مجاز است تا CHK-D-A آن را به‌عنوان رد فوری ثبت کند، نه خطای schema"}
+      }
+    },
+    "acceptance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "deliverable", "test", "threshold", "reviewer", "fix_window"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^A-[0-9]{2}$"},
+        "deliverable": {"type": "string", "pattern": "^D-[0-9]{2}$"},
+        "test": {"$ref": "#/$defs/text"},
+        "data": {"$ref": "#/$defs/text_or_null"},
+        "threshold": {"$ref": "#/$defs/text"},
+        "critical_error": {"$ref": "#/$defs/text_or_null"},
+        "reviewer": {"$ref": "#/$defs/text"},
+        "fix_window": {"$ref": "#/$defs/text"},
+        "retest": {"$ref": "#/$defs/text_or_null"}
+      }
+    },
+    "pricing": {
+      "type": "object", "additionalProperties": false,
+      "required": ["currency", "tax_note", "items", "totals", "payments", "validity"],
+      "properties": {
+        "currency": {"$ref": "#/$defs/text"},
+        "tax_note": {"$ref": "#/$defs/text"},
+        "items": {"type": "array", "items": {"$ref": "#/$defs/price_item"}},
+        "totals": {
+          "type": "object", "additionalProperties": false, "required": ["one_time", "recurring"],
+          "properties": {"one_time": {"type": ["number", "null"]}, "recurring": {"type": ["number", "null"]}}
+        },
+        "payments": {"type": "array", "items": {"$ref": "#/$defs/payment"}},
+        "usage_cap": {"$ref": "#/$defs/text_or_null"},
+        "separate_costs": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "tariff_assumption": {"$ref": "#/$defs/text_or_null"},
+        "validity": {"$ref": "#/$defs/text_or_null"}
+      }
+    },
+    "price_item": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "basis", "amount", "kind"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^P-[0-9]{2}$"},
+        "title": {"$ref": "#/$defs/text"},
+        "basis": {"$ref": "#/$defs/text"},
+        "amount": {"type": ["number", "null"], "minimum": 0, "description": "null یعنی نامعلوم؛ آن‌وقت جمع هم باید null باشد"},
+        "kind": {"enum": ["one_time", "recurring"]},
+        "period": {"$ref": "#/$defs/text_or_null"},
+        "note": {"$ref": "#/$defs/text_or_null"}
+      }
+    },
+    "payment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "event", "percent"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^PAY-[0-9]{2}$"},
+        "event": {"$ref": "#/$defs/text"},
+        "deliverable": {"type": ["string", "null"], "pattern": "^D-[0-9]{2}$"},
+        "percent": {"type": "number", "exclusiveMinimum": 0, "maximum": 100}
+      }
+    },
+    "timeline_step": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "stage", "prerequisite", "duration_workdays", "output", "approver", "delay_effect"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^T-[0-9]{2}$"},
+        "stage": {"$ref": "#/$defs/text"},
+        "prerequisite": {"$ref": "#/$defs/text"},
+        "duration_workdays": {"type": ["number", "null"], "minimum": 0},
+        "output": {"$ref": "#/$defs/text"},
+        "approver": {"$ref": "#/$defs/text"},
+        "delay_effect": {"$ref": "#/$defs/text"}
+      }
+    },
+    "metric": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "baseline", "target", "period", "method", "owner"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^M-[0-9]{2}$"},
+        "name": {"$ref": "#/$defs/text"},
+        "formula": {"$ref": "#/$defs/text_or_null"},
+        "baseline": {"$ref": "#/$defs/text"},
+        "target": {"$ref": "#/$defs/text"},
+        "period": {"$ref": "#/$defs/text"},
+        "method": {"$ref": "#/$defs/text"},
+        "owner": {"$ref": "#/$defs/text"}
+      }
+    },
+    "risk": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "trigger", "effect", "control", "owner", "fallback"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^K-[0-9]{2}$"},
+        "trigger": {"$ref": "#/$defs/text"},
+        "effect": {"$ref": "#/$defs/text"},
+        "control": {"$ref": "#/$defs/text"},
+        "owner": {"$ref": "#/$defs/text"},
+        "fallback": {"$ref": "#/$defs/text"}
+      }
+    },
+    "role": {
+      "type": "object", "additionalProperties": false,
+      "required": ["task", "executor", "approver", "response_time"],
+      "properties": {
+        "task": {"$ref": "#/$defs/text"},
+        "executor": {"$ref": "#/$defs/text"},
+        "approver": {"$ref": "#/$defs/text"},
+        "response_time": {"$ref": "#/$defs/text"}
+      }
+    },
+    "unknown": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "item", "question", "owner", "due"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^U-[0-9]{2}$"},
+        "item": {"$ref": "#/$defs/text"},
+        "question": {"$ref": "#/$defs/text"},
+        "owner": {"$ref": "#/$defs/text"},
+        "due": {"$ref": "#/$defs/text"},
+        "gap": {"type": ["string", "null"], "pattern": "^G-[0-9]{2}$"}
+      }
+    }
+  }
+}
