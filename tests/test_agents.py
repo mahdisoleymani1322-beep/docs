@@ -72,7 +72,7 @@ class AgentContractTest(unittest.TestCase):
         for name, short in JUDGES.items():
             with self.subTest(agent=name):
                 meta, _ = parse(AGENTS / f"{name}.md")
-                cmds = [l for l in meta["hooks"] if l.startswith("command:")]
+                cmds = [l for l in meta["hooks"] if l.startswith("command:") and "validate.py" in l]
                 self.assertEqual(len(cmds), 1)
                 cmd = cmds[0].removeprefix("command:").strip()
                 self.assertEqual(cmd, f'python3 "$CLAUDE_PROJECT_DIR/scripts/validate.py" --hook --stage judge-{short}')

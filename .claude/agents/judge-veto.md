@@ -9,6 +9,11 @@ omitClaudeMd: true
 skills:
   - truth
 hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: python3 "$CLAUDE_PROJECT_DIR/scripts/guard.py" --allow "judges/v{n}/veto.json"
   Stop:
     - hooks:
         - type: command

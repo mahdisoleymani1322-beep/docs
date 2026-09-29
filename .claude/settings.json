@@ -10,7 +10,20 @@
             "timeout": 20
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/guard.py\" --locked",
+            "timeout": 10
+          }
+        ]
       }
     ]
+  },
+  "env": {
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1"
   }
 }
