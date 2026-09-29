@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "checks.schema.json",
+  "title": "نتیجه‌ی چک‌های قطعی (checks.v<n>.json) — checks.py",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "doc_type", "mode", "results"],
+  "properties": {
+    "version": {"type": "integer", "minimum": 1},
+    "doc_type": {"enum": ["proposal", "pitch", "catalog"]},
+    "mode": {"enum": ["structured", "text"], "description": "text یعنی فقط Markdown موجود بود و چک‌های ساختاری skip شدند"},
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "status", "detail", "locations", "veto", "caps"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^CHK-[A-Z0-9-]+$"},
+          "status": {"enum": ["pass", "fail", "warn", "skip"]},
+          "detail": {"type": "string"},
+          "locations": {"type": "array", "items": {"type": "string"}},
+          "veto": {"type": "array", "items": {"type": "string", "pattern": "^V[0-9]{2}$"}},
+          "caps": {
+            "type": "array",
+            "items": {"type": "object", "additionalProperties": false, "required": ["criterion", "max"],
+              "properties": {"criterion": {"type": "string", "pattern": "^R[0-9]{2}$"}, "max": {"type": "integer", "minimum": 0, "maximum": 4}}}
+          }
+        }
+      }
+    }
+  }
+}

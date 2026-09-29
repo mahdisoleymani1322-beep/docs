@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "issues.schema.json",
+  "title": "ایرادهای قابل‌اجرا برای نویسنده (issues.v<n>.json) — loop.py یا feedback.py",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["for_round", "base_version", "issues", "regressions"],
+  "properties": {
+    "for_round": {"type": "integer", "minimum": 1},
+    "base_version": {"type": ["integer", "null"], "minimum": 1},
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "source", "severity", "section", "text"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^I-[0-9]{2,3}$"},
+          "source": {"type": "string", "description": "R01 | V03 | CHK-PRICE-SUM | claims | human"},
+          "severity": {"enum": ["veto", "critical", "below_min", "below_target", "warn", "human"]},
+          "section": {"type": ["string", "null"], "pattern": "^S[0-9]{2}$"},
+          "text": {"type": "string", "minLength": 3},
+          "points_at_stake": {"type": ["number", "null"]}
+        }
+      }
+    },
+    "regressions": {"type": "array", "items": {"type": "string"}}
+  }
+}

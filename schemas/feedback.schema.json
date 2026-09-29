@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "feedback.schema.json",
+  "title": "یک رکورد بازخورد انسانی (یک خط در feedback/<run_id>.jsonl) — feedback.py",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ts", "run_id", "version", "section", "vote", "note", "action", "author"],
+  "properties": {
+    "ts": {"type": "string"},
+    "run_id": {"type": "string"},
+    "version": {"type": ["integer", "null"], "minimum": 1},
+    "section": {"type": ["string", "null"], "pattern": "^S[0-9]{2}$"},
+    "vote": {"enum": ["up", "down", null]},
+    "note": {"type": ["string", "null"]},
+    "action": {"enum": ["review", "request_changes", "approve", "decline", null]},
+    "author": {"type": "string", "minLength": 1},
+    "override_reason": {"type": ["string", "null"]}
+  }
+}

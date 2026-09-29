@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "judge-claims.schema.json",
+  "title": "گزارش داور ادعا (judges/v<n>/claims.json)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["judge", "version", "claims", "summary"],
+  "properties": {
+    "judge": {"const": "claims"},
+    "version": {"type": "integer", "minimum": 1},
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["quote", "section", "ledger_ref", "status", "note"],
+        "properties": {
+          "quote": {"type": "string", "minLength": 8, "maxLength": 400},
+          "section": {"type": "string", "pattern": "^S[0-9]{2}$"},
+          "ledger_ref": {"type": ["string", "null"], "pattern": "^C-[0-9]{2}$"},
+          "status": {"enum": ["supported", "labeled_assumption", "unsupported", "contradicts_ledger"]},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["supported", "labeled_assumption", "unsupported", "contradicts_ledger"],
+      "properties": {
+        "supported": {"type": "integer", "minimum": 0},
+        "labeled_assumption": {"type": "integer", "minimum": 0},
+        "unsupported": {"type": "integer", "minimum": 0},
+        "contradicts_ledger": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

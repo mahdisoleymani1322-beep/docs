@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gaps.schema.json",
+  "title": "کمبودهای ورودی (gaps.json) — intake-analyst",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["gaps"],
+  "properties": {
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "field", "kind", "detail", "impact", "blocking"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^G-[0-9]{2}$"},
+          "field": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["missing", "vague", "conflict", "unverified", "injection"]},
+          "detail": {"type": "string", "minLength": 1},
+          "impact": {"enum": ["price", "scope", "commitment", "timeline", "security", "none"]},
+          "blocking": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

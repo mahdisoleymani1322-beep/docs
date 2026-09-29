@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "revision.schema.json",
+  "title": "تغییرات یک دور (revision.v<n>.json) — writer",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "base_version", "addressed", "not_addressed", "summary"],
+  "properties": {
+    "version": {"type": "integer", "minimum": 1},
+    "base_version": {"type": ["integer", "null"], "minimum": 1},
+    "addressed": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["issue", "change"],
+        "properties": {"issue": {"type": "string", "pattern": "^I-[0-9]{2,3}$"}, "change": {"type": "string", "minLength": 3}}}
+    },
+    "not_addressed": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["issue", "reason"],
+        "properties": {"issue": {"type": "string", "pattern": "^I-[0-9]{2,3}$"}, "reason": {"type": "string", "minLength": 3}}}
+    },
+    "summary": {"type": "string", "minLength": 3}
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "brief.schema.json",
+  "title": "بریف (brief.json) — strategist",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["doc_type", "variant", "audience", "decision_sought", "key_message", "sections", "length_budget", "out_of_scope"],
+  "properties": {
+    "doc_type": {"enum": ["proposal", "pitch", "catalog"]},
+    "variant": {"type": "string", "minLength": 2, "description": "پرپوزال: sales | rfp | consulting | discovery"},
+    "audience": {
+      "type": "object", "additionalProperties": false, "required": ["decision_maker", "readers"],
+      "properties": {"decision_maker": {"type": "string", "minLength": 1}, "readers": {"type": "array", "items": {"type": "string"}}}
+    },
+    "decision_sought": {"type": "string", "minLength": 3},
+    "key_message": {"type": "string", "minLength": 3},
+    "sections": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "title", "purpose", "must_include", "inputs", "gaps"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^S[0-9]{2}$"},
+          "title": {"type": "string", "minLength": 2},
+          "purpose": {"type": "string", "minLength": 3},
+          "must_include": {"type": "array", "items": {"type": "string"}},
+          "inputs": {"type": "array", "items": {"type": "string"}},
+          "gaps": {"type": "array", "items": {"type": "string", "pattern": "^G-[0-9]{2}$"}}
+        }
+      }
+    },
+    "length_budget": {
+      "type": "object", "additionalProperties": false, "required": ["min_words", "max_words"],
+      "properties": {"min_words": {"type": "integer", "minimum": 0}, "max_words": {"type": "integer", "minimum": 1}}
+    },
+    "out_of_scope": {"type": "array", "items": {"type": "string"}}
+  }
+}

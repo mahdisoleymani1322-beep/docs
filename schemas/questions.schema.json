@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "questions.schema.json",
+  "title": "سؤال‌ها برای انسان (questions.json) — intake-analyst",
+  "description": "حداکثر ۵ سؤال (پرامپت مادر راهنما: «حداکثر پنج سؤال مسدودکننده بپرس»).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["questions"],
+  "properties": {
+    "questions": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "gap", "text", "why", "blocking"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^Q-[0-9]{2}$"},
+          "gap": {"type": "string", "pattern": "^G-[0-9]{2}$"},
+          "text": {"type": "string", "minLength": 5},
+          "why": {"type": "string", "minLength": 3},
+          "blocking": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

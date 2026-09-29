@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "loop.schema.json",
+  "title": "قرارداد و تاریخچه‌ی Loop اصلی (loop.json) — loop.py",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_id", "doc_type", "contract", "config", "rounds", "best_version", "state", "stop_reason"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "doc_type": {"enum": ["proposal", "pitch", "catalog"]},
+    "contract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["goal", "criteria", "acceptable_risks", "unacceptable_risks", "authority_system", "authority_human"],
+      "properties": {
+        "goal": {"type": "string"},
+        "criteria": {"type": "string"},
+        "acceptable_risks": {"type": "array", "items": {"type": "string"}},
+        "unacceptable_risks": {"type": "array", "items": {"type": "string"}},
+        "authority_system": {"type": "array", "items": {"type": "string"}},
+        "authority_human": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "config": {
+      "type": "object", "additionalProperties": false,
+      "required": ["max_rounds", "total_gt", "plateau_rounds", "plateau_min_gain"],
+      "properties": {
+        "max_rounds": {"type": "integer", "minimum": 1},
+        "total_gt": {"type": "number"},
+        "plateau_rounds": {"type": "integer", "minimum": 1},
+        "plateau_min_gain": {"type": "number", "minimum": 0}
+      }
+    },
+    "rounds": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["round", "version", "base_version", "total", "score10", "guide_pass", "target_met", "veto", "below_target", "limited_by_input", "decision", "reason", "best_version_after"],
+        "properties": {
+          "round": {"type": "integer", "minimum": 1},
+          "version": {"type": "integer", "minimum": 1},
+          "base_version": {"type": ["integer", "null"]},
+          "total": {"type": "number"},
+          "score10": {"type": "number"},
+          "guide_pass": {"type": "boolean"},
+          "target_met": {"type": "boolean"},
+          "veto": {"type": "array", "items": {"type": "string"}},
+          "below_target": {"type": "array", "items": {"type": "string"}},
+          "limited_by_input": {"type": "boolean"},
+          "decision": {"enum": ["continue", "stop_target_met", "stop_input_limited", "stop_max_rounds", "stop_plateau"]},
+          "reason": {"type": "string"},
+          "best_version_after": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "best_version": {"type": ["integer", "null"]},
+    "state": {"enum": ["running", "stopped"]},
+    "stop_reason": {"type": ["string", "null"]}
+  }
+}

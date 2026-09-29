@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rubric.schema.json",
+  "title": "کارت نوع سند (rubrics/<type>.json)",
+  "description": "تنها منبع وزن، آستانه، رد فوری، بخش‌ها، فرم ورودی و برش‌ها. فیلدهای *_source نقل‌قول عین متن راهنما هستند و تست B3 آن‌ها را با راهنما تطبیق می‌دهد.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["doc_type", "title", "guide", "scale", "scale_source", "formula", "criteria", "gate", "gate_source", "bands", "loop_target", "claims_criterion", "veto", "veto_source", "banned_effects", "sections", "intake_fields", "blocking_rationale", "slices", "length_words", "interpretations"],
+  "properties": {
+    "doc_type": {"enum": ["proposal", "pitch", "catalog"]},
+    "title": {"type": "string"},
+    "guide": {"type": "string", "pattern": "^guides/.+\\.md$"},
+    "scale": {
+      "type": "object", "additionalProperties": false, "required": ["0", "1", "2", "3", "4"],
+      "properties": {"0": {"type": "string"}, "1": {"type": "string"}, "2": {"type": "string"}, "3": {"type": "string"}, "4": {"type": "string"}}
+    },
+    "scale_source": {"type": "string"},
+    "formula": {"const": "weight * score / 4"},
+    "criteria": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "title", "weight", "sections"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^R[0-9]{2}$"},
+          "title": {"type": "string"},
+          "weight": {"type": "number", "exclusiveMinimum": 0},
+          "sections": {"type": "array", "items": {"type": "string", "pattern": "^S[0-9]{2}$"}, "description": "نگاشت تفسیری ردیف به بخش‌های سند؛ برای سقف ۰ وقتی بخش غایب است"}
+        }
+      }
+    },
+    "gate": {
+      "type": "object", "additionalProperties": false, "required": ["min_total", "min_row", "critical"],
+      "properties": {
+        "min_total": {"type": "number"},
+        "min_row": {"type": "integer"},
+        "critical": {
+          "type": ["object", "null"], "additionalProperties": false, "required": ["criteria", "min"],
+          "properties": {"criteria": {"type": "array", "items": {"type": "string"}}, "min": {"type": "integer"}}
+        }
+      }
+    },
+    "gate_source": {"type": "string"},
+    "bands": {
+      "type": "array", "minItems": 2,
+      "items": {"type": "object", "additionalProperties": false, "required": ["min", "label"],
+        "properties": {"min": {"type": "number"}, "label": {"type": "string"}}}
+    },
+    "loop_target": {
+      "type": "object", "additionalProperties": false, "required": ["total_gt", "max_rounds", "plateau_rounds", "plateau_min_gain"],
+      "properties": {
+        "total_gt": {"type": "number"},
+        "max_rounds": {"type": "integer", "minimum": 1},
+        "plateau_rounds": {"type": "integer", "minimum": 1},
+        "plateau_min_gain": {"type": "number", "minimum": 0}
+      }
+    },
+    "claims_criterion": {"type": "string", "pattern": "^R[0-9]{2}$"},
+    "veto": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "text", "detector"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^V[0-9]{2}$"},
+          "text": {"type": "string"},
+          "detector": {"enum": ["code", "judge", "both"]},
+          "applies_if": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "veto_source": {"type": "string"},
+    "banned_effects": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "veto": {"type": "array", "items": {"type": "string", "pattern": "^V[0-9]{2}$"}},
+          "caps": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["criterion", "max"],
+            "properties": {"criterion": {"type": "string", "pattern": "^R[0-9]{2}$"}, "max": {"type": "integer", "minimum": 0, "maximum": 4}}}},
+          "warn": {"type": "boolean"}
+        }
+      }
+    },
+    "sections": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "title", "required"],
+        "properties": {"id": {"type": "string", "pattern": "^S[0-9]{2}$"}, "title": {"type": "string"}, "required": {"type": "boolean"}}}
+    },
+    "intake_fields": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["key", "label", "required", "blocking"],
+        "properties": {
+          "key": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "label": {"type": "string"},
+          "required": {"type": "boolean"},
+          "blocking": {"type": "boolean"},
+          "required_if": {"type": ["object", "null"], "additionalProperties": false, "required": ["field", "contains"],
+            "properties": {"field": {"type": "string"}, "contains": {"type": "string"}}}
+        }
+      }
+    },
+    "blocking_rationale": {"type": "string"},
+    "slices": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^## "}},
+    "length_words": {
+      "type": ["object", "null"], "additionalProperties": false, "required": ["min", "max", "derivation"],
+      "properties": {"min": {"type": "integer"}, "max": {"type": "integer"}, "derivation": {"type": "string"}}
+    },
+    "interpretations": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["topic", "decision"],
+        "properties": {"topic": {"type": "string"}, "decision": {"type": "string"}}}
+    }
+  }
+}

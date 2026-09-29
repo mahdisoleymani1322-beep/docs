@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "banned.schema.json",
+  "title": "عبارت‌های ممنوع (rubrics/banned.json)",
+  "description": "الگوها روی متن یکسان‌شده اجرا می‌شوند: ي/ك عربی ← ی/ک، نیم‌فاصله ← فاصله، ارقام لاتین ← فارسی. اثر هر category در banned_effects کارت هر نوع سند تعریف می‌شود.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["normalization", "negation", "phrases"],
+  "properties": {
+    "normalization": {"type": "string"},
+    "negation": {
+      "type": "object", "additionalProperties": false, "required": ["after_window", "after_markers", "before_window", "before_markers"],
+      "properties": {
+        "after_window": {"type": "integer"}, "after_markers": {"type": "array", "items": {"type": "string"}},
+        "before_window": {"type": "integer"}, "before_markers": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "phrases": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "pattern", "category", "source", "negation_cancels"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^B[0-9]{2}$"},
+          "pattern": {"type": "string", "minLength": 2},
+          "category": {"enum": ["guarantee", "flawless", "absolute_security", "hype"]},
+          "source": {"type": "string", "description": "کجای راهنما این عبارت را خطا شمرده"},
+          "negation_cancels": {"type": "boolean", "description": "false برای عبارت‌هایی که خودشان شکل منفی دارند، مثل «هیچ خطایی ندارد»"}
+        }
+      }
+    }
+  }
+}

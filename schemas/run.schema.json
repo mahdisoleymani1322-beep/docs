@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run.schema.json",
+  "title": "وضعیت اجرا (run.json) — run.py",
+  "description": "دو محور جدا: status را فقط کد تعیین می‌کند؛ lifecycle را فقط انسان از راه feedback.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_id", "mode", "doc_type", "created", "status", "stage", "round", "intake_rounds", "lifecycle", "revision", "parent_run", "errors", "history"],
+  "properties": {
+    "run_id": {"type": "string", "pattern": "^[0-9]{8}-[0-9]{6}-(proposal|pitch|catalog)(-[a-z0-9]+)?$"},
+    "mode": {"enum": ["studio", "evaluate"]},
+    "doc_type": {"enum": ["proposal", "pitch", "catalog"]},
+    "created": {"type": "string"},
+    "status": {"enum": ["running", "blocked_on_input", "needs_human", "ready_for_review", "failed"]},
+    "stage": {"enum": ["init", "intake", "brief", "claims", "write", "render", "checks", "judge", "gate", "loop", "finalize", "critic", "done"]},
+    "round": {"type": "integer", "minimum": 0},
+    "intake_rounds": {"type": "integer", "minimum": 0},
+    "lifecycle": {"enum": ["draft", "in_review", "changes_requested", "approved", "declined"]},
+    "revision": {"type": "integer", "minimum": 1},
+    "parent_run": {"type": ["string", "null"]},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "history": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["ts", "event"],
+        "properties": {"ts": {"type": "string"}, "event": {"type": "string"}, "detail": {"type": ["string", "null"]}}}
+    }
+  }
+}

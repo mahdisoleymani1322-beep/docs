@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lessons-proposed.schema.json",
+  "title": "درس‌های پیشنهادی یک اجرا (lessons.proposed.json) — critic",
+  "description": "حداکثر ۳ درس (الگوی arkan). درس بی‌ارزش هزینه است؛ فهرست خالی مجاز است.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lessons", "rationale"],
+  "properties": {
+    "lessons": {
+      "type": "array", "maxItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["agent", "text", "evidence", "source_kind"],
+        "properties": {
+          "agent": {"$ref": "lessons.schema.json#/properties/lessons/items/properties/agent"},
+          "text": {"type": "string", "minLength": 10, "maxLength": 200},
+          "evidence": {"type": "string", "minLength": 3, "description": "کدام دور، ردیف یا بازخورد این درس را نشان داد"},
+          "source_kind": {"enum": ["loop", "feedback"]}
+        }
+      }
+    },
+    "rationale": {"type": "string"}
+  }
+}

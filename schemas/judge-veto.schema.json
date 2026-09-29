@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "judge-veto.schema.json",
+  "title": "گزارش داور رد فوری (judges/v<n>/veto.json)",
+  "description": "checked باید همه‌ی رد فوری‌های detector=judge|both کارت نوع سند را پوشش دهد (چک متقاطع در validate.py).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["judge", "version", "checked", "hits"],
+  "properties": {
+    "judge": {"const": "veto"},
+    "version": {"type": "integer", "minimum": 1},
+    "checked": {"type": "array", "items": {"type": "string", "pattern": "^V[0-9]{2}$"}},
+    "not_applicable": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["veto_id", "reason"],
+        "properties": {"veto_id": {"type": "string", "pattern": "^V[0-9]{2}$"}, "reason": {"type": "string", "minLength": 3}}}
+    },
+    "hits": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["veto_id", "quote", "section", "reason"],
+        "properties": {
+          "veto_id": {"type": "string", "pattern": "^V[0-9]{2}$"},
+          "quote": {"type": "string", "minLength": 8, "maxLength": 400},
+          "section": {"type": "string", "pattern": "^S[0-9]{2}$"},
+          "reason": {"type": "string", "minLength": 3}
+        }
+      }
+    }
+  }
+}
