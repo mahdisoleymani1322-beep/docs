@@ -1,0 +1,14 @@
+{
+  "judge": "veto",
+  "version": 1,
+  "checked": [
+    "V01",
+    "V04",
+    "V06",
+    "V07",
+    "V08"
+  ],
+  "not_applicable": [],
+  "hits": [],
+  "bottom_line": "هیچ مورد رد فوری پیدا نشد."
+}

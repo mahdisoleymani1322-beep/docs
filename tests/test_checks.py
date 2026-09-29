@@ -63,7 +63,8 @@ class StructureTest(unittest.TestCase):
     def test_price_sum_wrong_is_veto_v03_and_cap_on_price_row(self):
         r = run(lambda d: d["data"]["pricing"]["totals"].update(one_time=999))["CHK-PRICE-SUM"]
         self.assertEqual((r["status"], r["veto"], caps(r)), ("fail", ["V03"], {("R06", 1)}))
-        self.assertIn("150000000", r["detail"])
+        self.assertIn("۱۵۰٬۰۰۰٬۰۰۰", r["detail"])
+        self.assertNotRegex(r["detail"], "[0-9]|one_time")
 
     def test_unknown_item_forces_unknown_total(self):
         r = run(lambda d: d["data"]["pricing"]["items"][0].update(amount=None))["CHK-PRICE-SUM"]
@@ -291,7 +292,7 @@ class ModesTest(unittest.TestCase):
             out = json.loads((run_dir / "checks.v1.json").read_text(encoding="utf-8"))
             length = next(x for x in out["results"] if x["id"] == "CHK-LENGTH")
             self.assertEqual(length["status"], "warn")
-            self.assertIn("10 تا 20", length["detail"])
+            self.assertIn("۱۰ تا ۲۰", length["detail"])
 
 
 if __name__ == "__main__":

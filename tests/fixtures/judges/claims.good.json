@@ -1,0 +1,27 @@
+{
+  "judge": "claims",
+  "version": 1,
+  "claims": [
+    {
+      "quote": "مدیر فروش در جلسه‌ی کشف گفت",
+      "section": "S02",
+      "ledger_ref": "C-01",
+      "status": "supported",
+      "note": ""
+    },
+    {
+      "quote": "صورت‌جلسه‌ی کشف نیاز در",
+      "section": "S03",
+      "ledger_ref": "C-02",
+      "status": "supported",
+      "note": ""
+    }
+  ],
+  "summary": {
+    "supported": 2,
+    "labeled_assumption": 0,
+    "unsupported": 0,
+    "contradicts_ledger": 0
+  },
+  "bottom_line": "ادعاهای بررسی‌شده همه منبع دارند."
+}

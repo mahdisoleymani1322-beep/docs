@@ -1,0 +1,154 @@
+{
+  "judge": "rubric",
+  "version": 1,
+  "criteria": [
+    {
+      "id": "R01",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S03",
+          "quote": "طبق صورت‌جلسه‌ی کشف نیاز"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R02",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S04",
+          "quote": "هدف عددی هر شاخص پس از مشاهده‌ی خط مبنا"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R03",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S06",
+          "quote": "دامنه‌ی پایلوت: یک کانال"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R04",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S13",
+          "quote": "هیچ مسیر ارسال بدون تأیید انسانی مجاز نیست"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R05",
+      "score": 3,
+      "evidence": [
+        {
+          "section": "S07",
+          "quote": "تأخیر در این دو مورد برنامه را جابه‌جا می‌کند"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "زمان‌بندی را به تاریخ تقویمی وصل کنید",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R06",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S09",
+          "quote": "هزینه‌ی API جدا محاسبه می‌شود"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R07",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S11",
+          "quote": "این کنترل‌ها برنامه‌ریزی‌شده‌اند و هنوز اجرا نشده‌اند"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R08",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S14",
+          "quote": "نتایج تجاری مشتریان قبلی در این سند ادعا نمی‌شود"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R09",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S02",
+          "quote": "پیشنهاد می‌کنیم ابتدا کیفیت و زمان بررسی"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    },
+    {
+      "id": "R10",
+      "score": 4,
+      "evidence": [
+        {
+          "section": "S15",
+          "quote": "گام بعد، تأیید دامنه‌ی پایلوت"
+        }
+      ],
+      "reason": "شاهد در متن هست",
+      "fix": "",
+      "limited_by_input": false,
+      "gap_refs": []
+    }
+  ],
+  "bottom_line": "سند مستند و کامل است؛ فقط زمان‌بندی تقویمی ندارد.",
+  "biggest_weakness": {
+    "criterion": "R05",
+    "what": "مراحل تاریخ تقویمی ندارند",
+    "why": "مشتری نمی‌تواند شروع را برنامه‌ریزی کند",
+    "fix": "تاریخ شروع پس از تأیید دامنه اضافه شود"
+  },
+  "would_change": "تاریخ تقویمی شروع"
+}

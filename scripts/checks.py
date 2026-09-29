@@ -132,15 +132,15 @@ def chk_price_sum(doc, card):
         declared = p["totals"][kind]
         if any(i["amount"] is None for i in items):
             if declared is not None:
-                bad.append(f"جمع {kind} اعلام شده ولی قلمی نامعلوم است")
+                bad.append(f"جمع {render.KIND_FA[kind]} اعلام شده ولی قلمی نامعلوم است")
         elif items:
             real = sum(i["amount"] for i in items)
             if declared is None:
-                bad.append(f"جمع {kind} نامعلوم اعلام شده ولی مجموع اقلام {real} است")
+                bad.append(f"جمع {render.KIND_FA[kind]} نامعلوم اعلام شده ولی مجموع اقلام {common.fa_number(real)} است")
             elif round(real, 2) != round(declared, 2):
-                bad.append(f"جمع {kind}: اقلام {real} ولی اعلام‌شده {declared}")
+                bad.append(f"جمع {render.KIND_FA[kind]}: مجموع اقلام {common.fa_number(real)} ولی اعلام‌شده {common.fa_number(declared)}")
         elif declared not in (None, 0):
-            bad.append(f"جمع {kind} {declared} اعلام شده ولی هیچ قلمی نیست")
+            bad.append(f"جمع {render.KIND_FA[kind]} {common.fa_number(declared)} اعلام شده ولی هیچ قلمی نیست")
     if bad:
         return result("CHK-PRICE-SUM", "fail", "critical", "؛ ".join(bad), ["S09"], ["V03"], cap(row_for_section(card, "S09"), 1))
     return result("CHK-PRICE-SUM", "pass", "critical")
@@ -150,7 +150,7 @@ def chk_pay_percent(doc, card):
     pay = doc["data"]["pricing"]["payments"]
     total = round(sum(x["percent"] for x in pay), 6)
     if total != 100:
-        return result("CHK-PAY-PERCENT", "fail", "critical", f"جمع درصد پرداخت‌ها {total} است، نه ۱۰۰", ["S09"], caps=cap(row_for_section(card, "S09"), 1))
+        return result("CHK-PAY-PERCENT", "fail", "critical", f"جمع درصد پرداخت‌ها {common.to_fa_digits(total)} است، نه ۱۰۰", ["S09"], caps=cap(row_for_section(card, "S09"), 1))
     return result("CHK-PAY-PERCENT", "pass", "critical")
 
 
@@ -245,8 +245,8 @@ def chk_length(doc, card, brief):
     lo, hi = (brief["length_budget"]["min_words"], brief["length_budget"]["max_words"]) if brief else (
         card["length_words"]["min"], card["length_words"]["max"])
     if not lo <= words <= hi:
-        return result("CHK-LENGTH", "warn", "warn", f"{words} کلمه؛ بودجه {lo} تا {hi}", ["sections"])
-    return result("CHK-LENGTH", "pass", "warn", f"{words} کلمه")
+        return result("CHK-LENGTH", "warn", "warn", f"{common.to_fa_digits(words)} کلمه؛ بودجه {common.to_fa_digits(lo)} تا {common.to_fa_digits(hi)}", ["sections"])
+    return result("CHK-LENGTH", "pass", "warn", f"{common.to_fa_digits(words)} کلمه")
 
 
 def chk_length_text(text, card, brief):
@@ -254,8 +254,8 @@ def chk_length_text(text, card, brief):
     lo, hi = (brief["length_budget"]["min_words"], brief["length_budget"]["max_words"]) if brief else (
         card["length_words"]["min"], card["length_words"]["max"])
     if not lo <= words <= hi:
-        return result("CHK-LENGTH", "warn", "warn", f"{words} کلمه؛ بودجه {lo} تا {hi}", ["md"])
-    return result("CHK-LENGTH", "pass", "warn", f"{words} کلمه")
+        return result("CHK-LENGTH", "warn", "warn", f"{common.to_fa_digits(words)} کلمه؛ بودجه {common.to_fa_digits(lo)} تا {common.to_fa_digits(hi)}", ["md"])
+    return result("CHK-LENGTH", "pass", "warn", f"{common.to_fa_digits(words)} کلمه")
 
 
 # ---------------------------------------------------------------- هزینه در برابر منفعت (الزام کاربر)
