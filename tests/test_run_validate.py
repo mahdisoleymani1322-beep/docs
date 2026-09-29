@@ -262,6 +262,18 @@ class ValidateStageTest(unittest.TestCase):
         explicit = sh(["validate.py", "--run", "current", "--stage", "intake"], self.env, check=False)
         self.assertEqual(explicit.returncode, 1, "ارکستریتور باید خطا را ببیند")
 
+    def test_cost_benefit_cross_refs(self):
+        doc = common.load_json(FIX / "document.good.json")
+        self.assertEqual(validate.cost_benefit_errors(doc["data"]), [])
+        cb = doc["data"]["cost_benefit"]
+        cb["costs"][0]["amount"] = 1
+        cb["costs"][1]["price_ref"] = "P-09"
+        cb["benefits"][0]["metric"] = "M-09"
+        cb["scenarios"] = [{"name": "base", "assumptions": "x", "net_value": None}] * 3
+        errors = " ".join(validate.cost_benefit_errors(doc["data"]))
+        for needle in ("CC-01", "P-09", "M-09", "low"):
+            self.assertIn(needle, errors)
+
     def test_file_mode(self):
         r = sh(["validate.py", str(FIX / "document.good.json")], self.env, check=False)
         self.assertEqual(r.returncode, 0, r.stderr)

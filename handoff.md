@@ -3,7 +3,7 @@
 # Handoff — استودیوی اسناد فروش
 
 > این فایل پیش از **هر کامیت و پوش** به‌روز می‌شود (اجبار: `scripts/check_handoff.py` در hook گیت و hook Claude Code).
-> هر کس کار را از اینجا برمی‌دارد، اول همین را بخواند. آخرین به‌روزرسانی: DS3، ۲۹ سپتامبر ۲۰۲۶.
+> هر کس کار را از اینجا برمی‌دارد، اول همین را بخواند. آخرین به‌روزرسانی: DS4، ۲۹ سپتامبر ۲۰۲۶.
 
 ## 1) Goal
 
@@ -22,9 +22,9 @@
   1. DS1: handoff.md و اجبارش ✅
   2. DS2: لوگو و `brand/LOGO.md` ✅
   3. DS3: `DESIGN.md` مهدیار ✅
-  4. DS4: cost-to-benefit اجباری
+  4. DS4: cost-to-benefit اجباری ✅ (قرارداد؛ سقف‌ها در C1)
   5. DS5: خروجی طراحی‌شده (HTML، PDF، سپس DOCX و PPTX)
-- **آزمون‌ها:** همه پاس (۷۸ آزمون بعد از DS3).
+- **آزمون‌ها:** همه پاس (۸۴ آزمون بعد از DS4).
 - **شاخه:** `claude/epic-newton-vgg5h7`؛ آخرین پوش: BR4.
 
 ## 3) Active files
@@ -32,17 +32,27 @@
 | فایل | نقش در کار جاری |
 |---|---|
 | `handoff.md` | همین فایل |
+| `schemas/document.schema.json` ← `cost_benefit`، `rubrics/*.json` ← `required_elements` | قرارداد cost-to-benefit (DS4) |
+| `scripts/render.py` (`render_cost_benefit`)، `scripts/validate.py` (`cost_benefit_errors`) | رندر و یکپارچگی ارجاع |
+| `scripts/common.py` (`banned_hits`) | قاعده‌ی نفی عبارت ممنوع؛ C1 از آن استفاده می‌کند |
 | `DESIGN.md` | توکن‌های طراحی (YAML) + قواعد فارسی؛ ورودی DS5 |
 | `scripts/design_tokens.py` | خواندن توکن‌ها، `resolve`، `contrast`، `--css`؛ render_html.py از آن استفاده خواهد کرد |
 | `tests/test_design.py` | منشأ هر hex و اندازه، ارجاع‌ها، کنتراست اجزا، جدول کنتراست متن |
 | `brand/sources/references/DESIGN-apple.md` | فقط الگوی ساختار DESIGN.md |
 | `brand/LOGO.md`، `brand/mahdiyar.json` ← `assets.logo` | قواعد لوگو (DS2) |
-| `schemas/document.schema.json`، `rubrics/*.json` | جای تغییر DS4 (cost_benefit، required_elements) |
 | `ROADMAP.md` | فاز DS و وضعیت هر کار |
 | `CLAUDE.md` | قاعده‌ی handoff برای همه‌ی جلسه‌ها |
 
 ## 4) Changes made
 
+- DS4: cost-to-benefit در هر سه نوع سند.
+  - `data.cost_benefit`: `headline`، هزینه‌ها (قرارداد، زمان تیم مشتری، سرویس بیرونی)، منفعت‌ها با نوع و پشتوانه،
+    سناریو (۰ یا ۳)، `caveat`. در schema اختیاری است تا نبودنش امتیاز بگیرد، نه خطای schema.
+  - `required_elements` در سه کارت: نبودش سقف ۲ روی ردیف تجاری (پرپوزال R06، پیچ R07، کاتالوگ R05) + ایراد critical.
+    روبریک عین راهنما ماند؛ وزن‌ها دست نخورد.
+  - `ref` با `variant: headline|full`؛ رندر نوع منفعت را همیشه نشان می‌دهد و منفعت بی‌پشتوانه را «[بدون پشتوانه]».
+  - `common.banned_hits` (قاعده‌ی نفی): هشدار پیشنهادی خود راهنما («تضمین درآمد نیست») رد فوری نمی‌خورد.
+  - مشخصات `CHK-COST-BENEFIT`، `CHK-CB-SUPPORT`، `CHK-CB-TYPE`، `CHK-CB-CAVEAT` در داک ۰۳؛ دستور نویسنده در داک ۰۲.
 - DS3: `DESIGN.md` در قالب مرجع Apple با توکن‌های V2: ۱۲ رنگ، سه مقیاس تایپوگرافی (A4 به pt، اسلاید به pt،
   وب به px)، spacing و گردی V2، و ۲۰ جزء سند (cost-benefit-block، claim-ref، unknown-marker و …).
   آزمون هر عدد را با بازه‌ی منبع (راهنمای پرپوزال فصل ۸، V2 بخش ۱۵، ۱۶، ۱۹ و ۲۳) مقایسه می‌کند.
@@ -62,6 +72,9 @@
 
 ## 5) Failed attempts
 
+- **DS4، آزمون عبارت ممنوع روی fixture:** افزودن هشدار «سناریوی مالی، تضمین درآمد نیست» (جمله‌ی خود راهنما) آزمون را
+  رد کرد، چون آزمون الگو را بدون قاعده‌ی نفی اجرا می‌کرد. درمان عبارت‌سازی دوباره نبود (نویسنده باید همین جمله را
+  بنویسد)؛ قاعده‌ی نفی `banned.json` در `common.banned_hits` پیاده شد و آزمون از آن استفاده می‌کند.
 - **DS3، پارسر front matter:** نسخه‌ی اول `#` داخل `"#FDFDFD"` را توضیح گرفت و همه‌ی رنگ‌ها `"` شدند.
   درمان: `_strip_comment` + آزمون. درس ۱۰. (در یک آزمون جهش هم sed من روی `"12pt"` نقل‌قول‌دار نوشته شده بود و
   چیزی را تغییر نداد؛ «OK» آن ضعف آزمون نبود. با الگوی درست تکرار شد و آزمون رد کرد.)
@@ -82,9 +95,8 @@
 
 ## 6) Next steps
 
-1. DS4: `data.cost_benefit` در schema، `required_elements` در کارت‌ها، رندر و مستندات.
-2. DS5: `render_html.py` و `export.py` (PDF با متن قابل انتخاب از Chromium؛ سپس DOCX و PPTX).
-3. بعد از DS: ادامه‌ی فاز C، از C1 (`checks.py`).
+1. DS5: `render_html.py` و `export.py` (PDF با متن قابل انتخاب از Chromium؛ سپس DOCX و PPTX).
+2. بعد از DS: ادامه‌ی فاز C، از C1 (`checks.py`، شامل چک‌های cost-benefit با `banned_hits`).
 - **منتظر کاربر:** نسخه‌های دیگر لوگو (SVG، نسخه‌ی روشن/معکوس برای پس‌زمینه‌ی تیره، نسخه‌ی افقی یا فقط‌نماد).
 
 </div>

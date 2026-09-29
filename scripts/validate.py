@@ -157,6 +157,29 @@ def check_claims(run_dir, run, card, errors):
                 errors.append(f"claims.json: {c['id']} در بخش ناموجود {s} استفاده شده")
 
 
+def cost_benefit_errors(data: dict) -> list[str]:
+    """فقط یکپارچگی ارجاع؛ کیفیت (منفعت بی‌پشتوانه، نبود سناریو) کار CHK-COST-BENEFIT و امتیاز است."""
+    cb = data.get("cost_benefit")
+    if not cb:
+        return []
+    prices = {i["id"]: i["amount"] for i in data["pricing"]["items"]}
+    metrics = {m["id"] for m in data["metrics"]}
+    errors = [f"شناسه‌ی تکراری {d} در cost_benefit"
+              for d in _dupes([c["id"] for c in cb["costs"]] + [b["id"] for b in cb["benefits"]])]
+    for c in cb["costs"]:
+        ref = c.get("price_ref")
+        if ref and ref not in prices:
+            errors.append(f"{c['id']} به قلم قیمت ناموجود {ref} ارجاع می‌دهد")
+        elif ref and prices[ref] != c["amount"]:
+            errors.append(f"مبلغ {c['id']} با قلم قیمت {ref} یکی نیست")
+    for b in cb["benefits"]:
+        if b.get("metric") and b["metric"] not in metrics:
+            errors.append(f"{b['id']} به شاخص ناموجود {b['metric']} ارجاع می‌دهد")
+    if len({x["name"] for x in cb["scenarios"]}) != len(cb["scenarios"]):
+        errors.append("سناریوهای cost_benefit باید low، base و high باشند، هرکدام یک بار")
+    return errors
+
+
 def check_write(run_dir, run, card, errors):
     n = run["round"]
     doc = _load(run_dir, f"document.v{n}.json", "document", errors)
@@ -175,6 +198,7 @@ def check_write(run_dir, run, card, errors):
             errors.extend(f"document.v{n}.json: شناسه‌ی تکراری {d} در {key}" for d in _dupes(x["id"] for x in data[key]))
         errors.extend(f"document.v{n}.json: شناسه‌ی تکراری {d} در pricing"
                       for d in _dupes([x["id"] for x in data["pricing"]["items"]] + [p["id"] for p in data["pricing"]["payments"]]))
+        errors.extend(f"document.v{n}.json: {e}" for e in cost_benefit_errors(data))
     if rev is not None:
         if rev["version"] != n:
             errors.append(f"revision.v{n}.json: version باید {n} باشد")

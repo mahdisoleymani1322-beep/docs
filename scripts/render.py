@@ -18,9 +18,15 @@ import common
 
 TYPE_FA = {"fact": "واقعی", "assumption": "فرض", "target": "هدف"}
 KIND_FA = {"one_time": "یک‌باره", "recurring": "دوره‌ای"}
-DATA_ORDER = ("deliverables", "acceptance", "pricing", "payments", "timeline", "metrics", "risks", "roles", "unknowns")
+COST_FA = {"fee": "مبلغ قرارداد", "client_time": "زمان تیم مشتری", "third_party": "سرویس بیرونی"}
+BENEFIT_FA = {"freed_capacity": "ظرفیت آزادشده", "cash_saving": "صرفه‌جویی نقدی", "revenue_potential": "درآمد بالقوه",
+              "risk_reduction": "کاهش ریسک", "qualitative": "کیفی"}
+SCENARIO_FA = {"low": "کم", "base": "پایه", "high": "زیاد"}
+DATA_ORDER = ("cost_benefit", "deliverables", "acceptance", "pricing", "payments", "timeline", "metrics", "risks", "roles",
+              "unknowns")
 DATA_TITLE = {"deliverables": "تحویل‌دادنی‌ها", "acceptance": "معیار پذیرش", "pricing": "قیمت", "payments": "پرداخت",
-              "timeline": "برنامه", "metrics": "شاخص‌ها", "risks": "ریسک‌ها", "roles": "نقش‌ها", "unknowns": "موارد نامعلوم"}
+              "timeline": "برنامه", "metrics": "شاخص‌ها", "risks": "ریسک‌ها", "roles": "نقش‌ها", "unknowns": "موارد نامعلوم",
+              "cost_benefit": "هزینه در برابر منفعت"}
 
 
 def cell(value) -> str:
@@ -42,7 +48,36 @@ def fa(v) -> str:
     return "[نامعلوم]" if v is None else common.to_fa_digits(v)
 
 
-def render_data(kind: str, data: dict, currency: str | None, caption: str | None) -> list[str]:
+def _benefit_value(b: dict) -> str:
+    # منفعت بی‌واحد و بی‌مقدار ذاتاً غیرعددی است؛ «[نامعلوم]» برایش القای عدد گم‌شده می‌کند
+    if b["value"] is None and not b.get("unit"):
+        return "غیرعددی"
+    return common.fa_number(b["value"])
+
+
+def render_cost_benefit(cb: dict, cur: str, caption: str | None, variant: str) -> list[str]:
+    if variant == "headline":
+        return [f"> **هزینه در برابر منفعت:** {cb['headline']}", ""]
+    out = table(["شناسه", "هزینه", "نوع", f"مبلغ ({cur})", "دوره", "قلم قیمت", "توضیح"],
+                [[c["id"], c["item"], COST_FA[c["kind"]], common.fa_number(c["amount"]), c.get("period"), c.get("price_ref"),
+                  c.get("note")] for c in cb["costs"]], caption or "هزینه در برابر منفعت")
+    # نوع منفعت همیشه دیده می‌شود تا «ظرفیت آزادشده» با پول نقد اشتباه گرفته نشود (راهنمای پرپوزال فصل ۵)
+    out += table(["شناسه", "منفعت", "نوع", "مقدار", "واحد", "پشتوانه", "شاخص"],
+                 [[b["id"], b["description"], BENEFIT_FA[b["type"]], _benefit_value(b), b.get("unit"),
+                   f"[{b['claim']}]" if b.get("claim") else (f"فرض: {b['assumption']}" if b.get("assumption") else "[بدون پشتوانه]"),
+                   b.get("metric")] for b in cb["benefits"]])
+    if cb["scenarios"]:
+        out += table(["سناریو", "فرض‌ها", f"ارزش خالص ({cur})", "دوره"],
+                     [[SCENARIO_FA[x["name"]], x["assumptions"], common.fa_number(x["net_value"]), x.get("period")]
+                      for x in cb["scenarios"]])
+    else:
+        out += ["- **سناریوی مالی:** تا وقتی خط مبنا اندازه‌گیری نشده، سناریوی عددی ساخته نمی‌شود.", ""]
+    return out + [f"> **هشدار:** {cb['caveat']}", ""]
+
+
+def render_data(kind: str, data: dict, currency: str | None, caption: str | None, variant: str = "full") -> list[str]:
+    if kind == "cost_benefit":
+        return render_cost_benefit(data["cost_benefit"], data["pricing"]["currency"] or currency or "", caption, variant)
     if kind == "deliverables":
         return table(["شناسه", "تحویل", "شرح", "قالب", "موعد", "پذیرش"],
                      [[d["id"], d["title"], d["detail"], d["format"], d["due"], d["acceptance"] or "[بدون معیار پذیرش]"]
@@ -97,7 +132,7 @@ def _is_empty(kind: str, data: dict) -> bool:
         return not data["pricing"]["items"]
     if kind == "payments":
         return not data["pricing"]["payments"]
-    return not data[kind]
+    return not data.get(kind)
 
 
 def render(doc: dict, claims: dict | None = None) -> str:
@@ -124,8 +159,14 @@ def render(doc: dict, claims: dict | None = None) -> str:
             elif k == "callout":
                 out += [f"> **{b['title']}:** {b['text']}" if b.get("title") else f"> {b['text']}", ""]
             elif k == "ref":
-                referenced.add(b["data"])
-                out += render_data(b["data"], doc["data"], m.get("currency"), b.get("caption"))
+                variant = b.get("variant", "full")
+                if b["data"] not in doc["data"]:
+                    # ارجاع به داده‌ی ناموجود پنهان نمی‌شود؛ داور و انسان باید جای خالی را ببینند
+                    out += [f"> **[نامعلوم: {DATA_TITLE[b['data']]}]**", ""]
+                    continue
+                if variant == "full":
+                    referenced.add(b["data"])
+                out += render_data(b["data"], doc["data"], m.get("currency"), b.get("caption"), variant)
 
     # هر جدول ساخت‌یافته‌ای که در متن ارجاع نشده، در پیوست می‌آید تا داور و انسان همه‌ی داده را ببینند
     leftover = [k for k in DATA_ORDER if k not in referenced and not _is_empty(k, doc["data"])]

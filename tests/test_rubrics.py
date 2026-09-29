@@ -145,6 +145,22 @@ class RubricCardTest(unittest.TestCase):
                     self.assertTrue({c["criterion"] for c in eff.get("caps", [])} <= crit_ids)
                 self.assertGreater(card["loop_target"]["total_gt"], card["gate"]["min_total"])
 
+    def test_cost_benefit_required_in_every_card(self):
+        """الزام کاربر: هر سه نوع سند؛ نبودش سقف ۲ روی ردیف تجاری همان راهنما."""
+        commercial = {"proposal": ("R06", "قیمت"), "pitch": ("R07", "مالی"), "catalog": ("R05", "بسته")}
+        guide = (ROOT / "guides" / "پرپوزال.md").read_text(encoding="utf-8").replace("\r", "")
+        for t, card in self.cards.items():
+            with self.subTest(t=t):
+                el = card["required_elements"]["cost_benefit"]
+                crit, word = commercial[t]
+                self.assertEqual(el["missing"]["caps"], [{"criterion": crit, "max": 2}])
+                title = next(c["title"] for c in card["criteria"] if c["id"] == crit)
+                self.assertIn(word, title)
+                self.assertEqual(el["missing"]["severity"], "critical")
+                for quote in re.findall(r"«([^»]+)»", el["source"]):
+                    if quote != "ظرفیت آزادشده":  # نقل تو‌در‌تو
+                        self.assertIn(quote, guide)
+
 
 class BannedTest(unittest.TestCase):
     def setUp(self):
@@ -171,8 +187,15 @@ class BannedTest(unittest.TestCase):
     def test_good_fixture_has_no_affirmative_hits(self):
         doc = common.load_json(ROOT / "tests" / "fixtures" / "document.good.json")
         text = common.normalize(" ".join(s for _, s in common.iter_text_fields(doc)))
-        hits = [p["id"] for p in self.banned["phrases"] if re.search(p["pattern"], text)]
-        self.assertEqual(hits, [])
+        self.assertEqual(common.banned_hits(text, self.banned), [])
+
+    def test_negation_rule(self):
+        """هشدار پیشنهادی خود راهنما نباید رد فوری بخورد؛ همان عبارت به‌صورت وعده باید بخورد."""
+        guide_caveat = common.normalize("سناریوی مالی، تضمین درآمد نیست.")
+        self.assertEqual(common.banned_hits(guide_caveat, self.banned), [])
+        promise = common.normalize("این پایلوت تضمین درآمد برای تیم فروش شماست.")
+        self.assertEqual([h["id"] for h in common.banned_hits(promise, self.banned)], ["B02"])
+        self.assertEqual(common.banned_hits(common.normalize("بدون تضمین درآمد"), self.banned), [])
 
 
 if __name__ == "__main__":

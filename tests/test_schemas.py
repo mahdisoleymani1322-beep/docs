@@ -127,12 +127,23 @@ class SchemaTest(unittest.TestCase):
             "مبلغ منفی": lambda d: d["data"]["pricing"]["items"][0].update(amount=-1),
             "درصد صفر": lambda d: d["data"]["pricing"]["payments"][0].update(percent=0),
             "نوع سند پشتیبانی‌نشده": lambda d: d.update(doc_type="pitch"),
+            "دو سناریو": lambda d: d["data"]["cost_benefit"]["scenarios"].extend(
+                [{"name": "low", "assumptions": "x", "net_value": None}, {"name": "base", "assumptions": "x", "net_value": None}]),
+            "منفعت بی‌نوع": lambda d: d["data"]["cost_benefit"]["benefits"][0].update(type="roi"),
+            "بدون هشدار": lambda d: d["data"]["cost_benefit"].pop("caveat"),
+            "بدون هزینه": lambda d: d["data"]["cost_benefit"].update(costs=[]),
         }
         for label, mutate in mutations.items():
             with self.subTest(mutation=label):
                 d = copy.deepcopy(base)
                 mutate(d)
                 self.assertNotEqual(common.schema_errors(d, "document"), [], label)
+
+    def test_document_allows_missing_cost_benefit_for_checks(self):
+        """نبود cost_benefit خطای schema نیست تا CHK-COST-BENEFIT آن را با سقف امتیاز ثبت کند."""
+        d = common.load_json(FIX / "document.good.json")
+        d["data"].pop("cost_benefit")
+        self.assertEqual(common.schema_errors(d, "document"), [])
 
     def test_document_allows_null_acceptance_for_checks(self):
         """پذیرش null باید از schema عبور کند تا CHK-D-A آن را رد فوری V05 ثبت کند، نه خطای schema."""

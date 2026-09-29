@@ -50,6 +50,25 @@ class RenderTest(unittest.TestCase):
         self.assertIn("## پیوست: جدول‌های تکمیلی", md)
         self.assertIn("U-01", md)
 
+    def test_cost_benefit_headline_and_full(self):
+        md = render.render(DOC)
+        summary = md.split("<!-- section: S02 -->")[1].split("## ")[0]
+        self.assertIn("**هزینه در برابر منفعت:**", summary)
+        self.assertNotIn("CC-01", summary)  # خلاصه فقط یک جمله است
+        self.assertEqual(md.count("| CC-01 |"), 1)  # جدول کامل فقط یک بار، نه دوباره در پیوست
+        self.assertIn("ظرفیت آزادشده", md)
+        self.assertIn("**هشدار:**", md)
+
+    def test_cost_benefit_unsupported_benefit_and_missing_data_are_visible(self):
+        d = copy.deepcopy(DOC)
+        b = d["data"]["cost_benefit"]["benefits"][0]
+        b.update(value=40, assumption=None, claim=None)
+        self.assertIn("[بدون پشتوانه]", render.render(d))
+        d["data"].pop("cost_benefit")
+        md = render.render(d)
+        self.assertIn("[نامعلوم: هزینه در برابر منفعت]", md)
+        self.assertNotIn("**هزینه در برابر منفعت:**", md)
+
     def test_sample_banner(self):
         self.assertIn("**نمونه:**", render.render(DOC))
         d = copy.deepcopy(DOC)
