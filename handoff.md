@@ -3,7 +3,7 @@
 # Handoff — استودیوی اسناد فروش
 
 > این فایل پیش از **هر کامیت و پوش** به‌روز می‌شود (اجبار: `scripts/check_handoff.py` در hook گیت و hook Claude Code).
-> هر کس کار را از اینجا برمی‌دارد، اول همین را بخواند. آخرین به‌روزرسانی: DS2، ۲۹ سپتامبر ۲۰۲۶.
+> هر کس کار را از اینجا برمی‌دارد، اول همین را بخواند. آخرین به‌روزرسانی: DS3، ۲۹ سپتامبر ۲۰۲۶.
 
 ## 1) Goal
 
@@ -21,10 +21,10 @@
 - **در حال انجام:** فاز DS، طبق پلن تأییدشده، این ترتیب:
   1. DS1: handoff.md و اجبارش ✅
   2. DS2: لوگو و `brand/LOGO.md` ✅
-  3. DS3: `DESIGN.md` مهدیار
+  3. DS3: `DESIGN.md` مهدیار ✅
   4. DS4: cost-to-benefit اجباری
   5. DS5: خروجی طراحی‌شده (HTML، PDF، سپس DOCX و PPTX)
-- **آزمون‌ها:** همه پاس (۶۶ آزمون بعد از DS2).
+- **آزمون‌ها:** همه پاس (۷۸ آزمون بعد از DS3).
 - **شاخه:** `claude/epic-newton-vgg5h7`؛ آخرین پوش: BR4.
 
 ## 3) Active files
@@ -32,17 +32,22 @@
 | فایل | نقش در کار جاری |
 |---|---|
 | `handoff.md` | همین فایل |
-| `brand/LOGO.md`، `brand/assets/logo/*` | قواعد و فایل لوگو (DS2) |
-| `brand/mahdiyar.json` ← `assets.logo` | نسخه‌ی ساخت‌یافته‌ی قواعد لوگو |
-| `scripts/check_handoff.py` | چک ساختار و به‌روز بودن handoff |
-| `.githooks/pre-commit`، `.githooks/pre-push` | لایه‌ی گیت اجبار |
-| `.claude/settings.json` | لایه‌ی Claude Code اجبار (PreToolUse روی Bash) |
-| `tests/test_handoff.py` | آزمون ساختار و رد کامیت بدون handoff |
+| `DESIGN.md` | توکن‌های طراحی (YAML) + قواعد فارسی؛ ورودی DS5 |
+| `scripts/design_tokens.py` | خواندن توکن‌ها، `resolve`، `contrast`، `--css`؛ render_html.py از آن استفاده خواهد کرد |
+| `tests/test_design.py` | منشأ هر hex و اندازه، ارجاع‌ها، کنتراست اجزا، جدول کنتراست متن |
+| `brand/sources/references/DESIGN-apple.md` | فقط الگوی ساختار DESIGN.md |
+| `brand/LOGO.md`، `brand/mahdiyar.json` ← `assets.logo` | قواعد لوگو (DS2) |
+| `schemas/document.schema.json`، `rubrics/*.json` | جای تغییر DS4 (cost_benefit، required_elements) |
 | `ROADMAP.md` | فاز DS و وضعیت هر کار |
 | `CLAUDE.md` | قاعده‌ی handoff برای همه‌ی جلسه‌ها |
 
 ## 4) Changes made
 
+- DS3: `DESIGN.md` در قالب مرجع Apple با توکن‌های V2: ۱۲ رنگ، سه مقیاس تایپوگرافی (A4 به pt، اسلاید به pt،
+  وب به px)، spacing و گردی V2، و ۲۰ جزء سند (cost-benefit-block، claim-ref، unknown-marker و …).
+  آزمون هر عدد را با بازه‌ی منبع (راهنمای پرپوزال فصل ۸، V2 بخش ۱۵، ۱۶، ۱۹ و ۲۳) مقایسه می‌کند.
+  کنتراست: Soft Gray و Mahdiyar Teal روی سفید زیر ۴٫۵اند و فقط برای متن درشت یا غیرمتنی مجازند؛ متادیتا Charcoal است.
+  `contrast()` از test_brand به `design_tokens.py` منتقل شد تا یک تعریف باشد. درس ۱۰.
 - DS2: لوگو در `brand/assets/logo/` (WebP اصلی + PNG با آلفا)، `brand/LOGO.md`، `assets.logo` در کارت برند و schema.
   قواعد اندازه از اندازه‌گیری خود فایل: «HOOSH AFZA» ۴٫۱٪ ارتفاع است ← حداقل ۳۶mm و ۲۰۰px.
   سربرگ صفحه‌های داخلی نشانگر متنی دارد، نه لوگو (lockup مربع برای سربرگ سنگین است).
@@ -57,6 +62,9 @@
 
 ## 5) Failed attempts
 
+- **DS3، پارسر front matter:** نسخه‌ی اول `#` داخل `"#FDFDFD"` را توضیح گرفت و همه‌ی رنگ‌ها `"` شدند.
+  درمان: `_strip_comment` + آزمون. درس ۱۰. (در یک آزمون جهش هم sed من روی `"12pt"` نقل‌قول‌دار نوشته شده بود و
+  چیزی را تغییر نداد؛ «OK» آن ضعف آزمون نبود. با الگوی درست تکرار شد و آزمون رد کرد.)
 - **استخراج سطح ۰ روبریک (B3):** regex روی «۰ » اول، داخل «۱۰۰ امتیازی» تیتر گیر کرد و سطح ۰ هر سه کارت خراب شد.
   با بازبینی چشمی پیدا شد؛ درمان: لنگر روی «۰ غایب» + آزمون. درس ۷.
 - **validate روی داده‌ی بدشکل (BR3):** بعد از افزودن فیلدهای truth، چک متقاطع روی گزارش بدون فیلد KeyError داد.
@@ -74,10 +82,9 @@
 
 ## 6) Next steps
 
-1. DS3: `DESIGN.md` در قالب فایل مرجع Apple، با توکن‌های Design System V2 و آزمون کنتراست WCAG.
-2. DS4: `data.cost_benefit` در schema، `required_elements` در کارت‌ها، رندر و مستندات.
-3. DS5: `render_html.py` و `export.py` (PDF با متن قابل انتخاب از Chromium؛ سپس DOCX و PPTX).
-4. بعد از DS: ادامه‌ی فاز C، از C1 (`checks.py`).
+1. DS4: `data.cost_benefit` در schema، `required_elements` در کارت‌ها، رندر و مستندات.
+2. DS5: `render_html.py` و `export.py` (PDF با متن قابل انتخاب از Chromium؛ سپس DOCX و PPTX).
+3. بعد از DS: ادامه‌ی فاز C، از C1 (`checks.py`).
 - **منتظر کاربر:** نسخه‌های دیگر لوگو (SVG، نسخه‌ی روشن/معکوس برای پس‌زمینه‌ی تیره، نسخه‌ی افقی یا فقط‌نماد).
 
 </div>

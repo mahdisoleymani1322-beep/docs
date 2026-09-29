@@ -11,6 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 import common  # noqa: E402
 import docx_to_md  # noqa: E402
+from design_tokens import contrast  # noqa: E402
 
 SRC = ROOT / "brand" / "sources"
 
@@ -95,19 +96,6 @@ def image_info(path: pathlib.Path) -> dict:
         h = int.from_bytes(data[20:24], "big")
         return {"w": w, "h": h, "alpha": data[25] in (4, 6)}
     raise ValueError(f"قالب ناشناخته: {path}")
-
-
-def luminance(hex_color: str) -> float:
-    def ch(v):
-        v /= 255
-        return v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
-    r, g, b = (int(hex_color[i:i + 2], 16) for i in (1, 3, 5))
-    return 0.2126 * ch(r) + 0.7152 * ch(g) + 0.0722 * ch(b)
-
-
-def contrast(a: str, b: str) -> float:
-    la, lb = sorted((luminance(a), luminance(b)), reverse=True)
-    return (la + 0.05) / (lb + 0.05)
 
 
 class LogoTest(unittest.TestCase):
