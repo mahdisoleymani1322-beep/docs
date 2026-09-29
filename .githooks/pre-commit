@@ -1,0 +1,3 @@
+#!/bin/sh
+# handoff.md باید در هر کامیت به‌روز شود (CLAUDE.md بخش ۴)
+exec python3 "$(git rev-parse --show-toplevel)/scripts/check_handoff.py" --staged

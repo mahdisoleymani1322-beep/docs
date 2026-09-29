@@ -26,6 +26,9 @@
 - کامنت «چرا» را توضیح می‌دهد، نه «چه».
 - اسکریپت‌ها فقط کتابخانه‌ی استاندارد پایتون + `jsonschema` (`requirements.txt`).
 - قبل از کامیت: `python3 -m unittest discover -s tests`.
+- **پیش از هر کامیت و پوش `handoff.md` به‌روز می‌شود** (شش بخش: Goal، Current state، Active files، Changes made،
+  Failed attempts، Next steps). hook گیت و hook Claude Code کامیت یا پوش بدون آن را رد می‌کنند.
+  راه‌اندازی hook گیت در هر clone: `git config core.hooksPath .githooks`.
 - پیام کامیت با شناسه‌ی کار شروع می‌شود (مثل `C2:`) و نتیجه‌ی چک‌لیست «تمام» همان کار را دارد.
 - اگر از یک باگ درسی گرفتید، در `docs/درس‌های-مهندسی.md` بنویسید.
 

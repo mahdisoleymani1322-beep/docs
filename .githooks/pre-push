@@ -1,0 +1,3 @@
+#!/bin/sh
+# آخرین کامیت پیش از پوش باید handoff.md را به‌روز کرده باشد
+exec python3 "$(git rev-parse --show-toplevel)/scripts/check_handoff.py" --push
