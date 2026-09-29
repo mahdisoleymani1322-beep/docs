@@ -3,12 +3,18 @@
   "version": 1,
   "checked": [
     "V01",
+    "V02",
     "V04",
+    "V05",
     "V06",
-    "V07",
-    "V08"
+    "V07"
   ],
-  "not_applicable": [],
+  "not_applicable": [
+    {
+      "veto_id": "V08",
+      "reason": "نوع پیشنهاد فروش است و RFP نیست"
+    }
+  ],
   "hits": [],
   "bottom_line": "هیچ مورد رد فوری پیدا نشد."
 }
