@@ -64,23 +64,45 @@ def check(mode: str, cwd: pathlib.Path | None = None) -> list[str]:
         # hook ایجنت پیش از اجرای «git add … && git commit» صدا زده می‌شود؛ پس تغییرِ هنوز stage‌نشده هم پذیرفته است
         # status و نه diff: فایل تازه (untracked) هم تغییر حساب شود
         if not git("status", "--porcelain", "--", FILE, cwd=top).strip():
-            errors.append(f"{FILE} نسبت به آخرین کامیت تغییری ندارد؛ پیش از کامیت به‌روزش کن")
+            errors.append(f"{FILE} نسبت به آخرین کامیت تغییری ندارد؛ به‌روزش کن. این hook پیش از اجرای فرمان چک می‌کند، پس "
+                          "ویرایشِ handoff داخل همان فرمان کامیت دیده نمی‌شود؛ اول handoff را در یک فرمان جدا ویرایش کن، "
+                          "بعد کامیت را در فرمان بعدی بزن")
     elif mode == "push":
         if FILE not in git("diff", "--name-only", "HEAD~1", "HEAD", cwd=top).split():
             errors.append(f"آخرین کامیت {FILE} را به‌روز نکرده است؛ پیش از پوش به‌روزش کن و کامیت کن")
     return errors
 
 
+HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1[^\n]*\n.*?\n\s*\2\s*(?:\n|$)", re.S)
+QUOTED = re.compile(r"'[^']*'|\"(?:\\.|[^\"\\])*\"")
+# git در ابتدای فرمان یا بعد از جداکننده‌ی فرمان؛ با متغیر محیطی و گزینه‌های سراسری (-C dir، -c k=v) پیش از زیرفرمان
+GIT_CMD = r"(?:^|[;&|(\n])\s*(?:\w+=\S*\s+)*git\s+(?:(?:-C|-c)\s+\S+\s+|--[\w-]+(?:=\S+)?\s+)*"
+
+
+def git_action(command: str) -> str | None:
+    """«commit» یا «push» فقط اگر واقعاً فرمان git باشد، نه متنی داخل رشته یا heredoc.
+
+    چرا: نسخه‌ی اول کل متن فرمان را با regex می‌گشت و فرمانی که فقط «git commit» را در یک رشته‌ی پایتون یا پیام
+    می‌نوشت (مثل ویرایش CLAUDE.md) به‌اشتباه رد می‌شد.
+    """
+    bare = QUOTED.sub("''", HEREDOC.sub("\n", command))
+    for action in ("commit", "push"):
+        if re.search(GIT_CMD + action + r"\b", bare):
+            return action
+    return None
+
+
 def hook() -> int:
-    """PreToolUse: فقط وقتی فرمان Bash شامل git commit یا git push است دخالت می‌کند."""
+    """PreToolUse: فقط وقتی فرمان Bash واقعاً git commit یا git push اجرا می‌کند دخالت می‌کند."""
     try:
         data = json.load(sys.stdin)
     except (json.JSONDecodeError, ValueError):
         return 0
     command = (data.get("tool_input") or {}).get("command", "")
-    if re.search(r"\bgit\s+commit\b", command):
+    action = git_action(command)
+    if action == "commit":
         mode = "commit-intent"
-    elif re.search(r"\bgit\s+push\b", command):
+    elif action == "push":
         mode = "push"
     else:
         return 0

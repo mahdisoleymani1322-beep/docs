@@ -92,5 +92,70 @@ class HandoffEnforcementTest(unittest.TestCase):
         self.assertEqual(allow.stdout.strip(), "")
 
 
+class GitActionParsingTest(unittest.TestCase):
+    """hook فقط فرمان git واقعی را بگیرد، نه متنی که «git commit» را فقط می‌نویسد (باگ واقعی: ویرایش CLAUDE.md رد شد)."""
+
+    def test_real_commands_are_detected(self):
+        real = {
+            "git commit -m x": "commit", "git add -A && git commit -q -F -": "commit", "cd /r && git commit": "commit",
+            "git -C /repo commit -m x": "commit", "git -c user.name=a commit": "commit", "FOO=1 git commit": "commit",
+            "true;git commit": "commit", "(git commit)": "commit", "echo a\ngit commit -m x": "commit",
+            "git push": "push", "git push -u origin b": "push", "git add . && git push origin HEAD": "push",
+            "git commit -F - <<'EOF'\nپیام\nEOF\ngit push": "commit",
+        }
+        for cmd, want in real.items():
+            with self.subTest(cmd=cmd):
+                self.assertEqual(check_handoff.git_action(cmd.replace("\\n", "\n")), want)
+
+    def test_mentions_are_not_commands(self):
+        text = {
+            "heredoc": "python3 - <<'EOF'\nprint('بعد git commit بزن و git push')\nEOF",
+            "double quote": 'echo "run git commit later"',
+            "single quote": "echo 'git push'",
+            "python string": "python3 -c \"open('CLAUDE.md').write('بعد git commit')\"",
+            "grep": "grep -n 'git commit' CLAUDE.md",
+            "path": "cat docs/git-commit-notes.md",
+            "other git": "git status && git log -1 && git diff",
+            "commit as word": "echo commit push",
+            # اشاره‌ی سرِ مرز فرمان: بدون حذف رشته و heredoc، این‌ها فرمان واقعی به نظر می‌رسند
+            "quoted after separator": 'echo "done; git commit"',
+            "quoted multi-line": 'echo "line1\ngit push\nline3"',
+            "heredoc line starts with git": "cat > notes.md <<'EOF'\ngit commit -m x\nEOF",
+            "unquoted heredoc delimiter": "cat <<EOF\ngit push\nEOF",
+        }
+        for label, cmd in text.items():
+            with self.subTest(label=label):
+                self.assertIsNone(check_handoff.git_action(cmd), cmd)
+
+    def test_heredoc_body_is_skipped_but_command_after_it_is_still_seen(self):
+        cmd = "cat > f <<'EOF'\ngit push\nEOF\ngit commit -m x"
+        self.assertEqual(check_handoff.git_action(cmd), "commit")
+
+    def test_denial_message_tells_the_right_order(self):
+        repo = pathlib.Path(tempfile.mkdtemp())
+        try:
+            git(repo, "init", "-q")
+            git(repo, "config", "user.email", "a@b.c")
+            git(repo, "config", "user.name", "t")
+            (repo / "handoff.md").write_text(GOOD, encoding="utf-8")
+            git(repo, "add", "-A")
+            git(repo, "commit", "-q", "-m", "x")
+            (repo / "f.txt").write_text("x", encoding="utf-8")
+            r = subprocess.run([sys.executable, str(SCRIPT), "--hook"], input=json.dumps({"tool_input": {"command": "git commit -m y"}, "cwd": str(repo)}),
+                               capture_output=True, text=True)
+            reason = json.loads(r.stdout)["hookSpecificOutput"]["permissionDecisionReason"]
+            self.assertIn("فرمان جدا", reason)
+            self.assertIn("پیش از اجرا", reason)
+            mention = subprocess.run([sys.executable, str(SCRIPT), "--hook"], input=json.dumps({"tool_input": {"command": "echo 'git commit'"}, "cwd": str(repo)}),
+                                     capture_output=True, text=True)
+            self.assertEqual(mention.stdout.strip(), "", "فقط اشاره‌ی متنی است؛ رد نمی‌شود")
+        finally:
+            shutil.rmtree(repo)
+
+    def test_rule_is_written_in_claude_md(self):
+        text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        self.assertIn("در یک فرمان جدا", text)
+
+
 if __name__ == "__main__":
     unittest.main()
