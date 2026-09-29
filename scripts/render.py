@@ -160,7 +160,7 @@ def render(doc: dict, claims: dict | None = None) -> str:
                 out += [f"> **{b['title']}:** {b['text']}" if b.get("title") else f"> {b['text']}", ""]
             elif k == "ref":
                 variant = b.get("variant", "full")
-                if b["data"] not in doc["data"]:
+                if b["data"] == "cost_benefit" and not doc["data"].get("cost_benefit"):
                     # ارجاع به داده‌ی ناموجود پنهان نمی‌شود؛ داور و انسان باید جای خالی را ببینند
                     out += [f"> **[نامعلوم: {DATA_TITLE[b['data']]}]**", ""]
                     continue

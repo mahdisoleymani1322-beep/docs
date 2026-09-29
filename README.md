@@ -85,6 +85,7 @@ flowchart LR
 
 ```bash
 pip install -r requirements.txt
+pip install -r requirements-dev.txt    # فقط آزمون PDF (pypdf)؛ Chromium هم باید باشد
 git config core.hooksPath .githooks     # handoff.md پیش از هر کامیت و پوش چک می‌شود
 python3 -m unittest discover -s tests
 ```

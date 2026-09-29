@@ -86,6 +86,11 @@
         }
       }
     },
+    "output_formats": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"enum": ["md", "html", "pdf", "docx", "pptx"]},
+      "description": "فرمت‌هایی که کاربر در این درخواست می‌خواهد (export.py). اگر نیاید، ['pdf']. docx و pptx هنوز ساخته نشده‌اند (ROADMAP H2) و درخواستشان خطای صریح می‌دهد"
+    },
     "sample": {
       "type": "boolean"
     },

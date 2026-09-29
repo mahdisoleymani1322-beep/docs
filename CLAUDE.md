@@ -24,7 +24,7 @@
 ## ۴. کار روی کد این ریپو
 - مستندات، کامنت‌ها و پیام کامیت فارسی‌اند؛ نام فایل‌ها، کلیدهای JSON و شناسه‌های کد انگلیسی.
 - کامنت «چرا» را توضیح می‌دهد، نه «چه».
-- اسکریپت‌ها فقط کتابخانه‌ی استاندارد پایتون + `jsonschema` (`requirements.txt`).
+- اسکریپت‌ها فقط کتابخانه‌ی استاندارد پایتون + `jsonschema` (`requirements.txt`)؛ ابزار آزمون‌محور جدا در `requirements-dev.txt`.
 - قبل از کامیت: `python3 -m unittest discover -s tests`.
 - **پیش از هر کامیت و پوش `handoff.md` به‌روز می‌شود** (شش بخش: Goal، Current state، Active files، Changes made،
   Failed attempts، Next steps). hook گیت و hook Claude Code کامیت یا پوش بدون آن را رد می‌کنند.

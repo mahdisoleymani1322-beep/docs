@@ -113,6 +113,27 @@ def css_variables(tokens: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def component_css(tokens: dict, prefix: str = "c-") -> str:
+    """هر جزء components ← یک کلاس (.c-<name>)؛ چیدمان کار خروجی‌ساز است و رنگ و اندازه فقط از DESIGN.md می‌آید."""
+    props = {"backgroundColor": "background-color", "textColor": "color", "borderColor": "border-color",
+             "rounded": "border-radius"}
+    rules = []
+    for name, comp in tokens["components"].items():
+        decl = []
+        for key, css in props.items():
+            if key in comp:
+                v = resolve(tokens, comp[key])
+                decl.append(f"{css}: {v}px" if key == "rounded" else f"{css}: {v}")
+        if "typography" in comp:
+            t = resolve(tokens, comp["typography"])
+            decl += [f"font-family: {t['fontFamily']}", f"font-size: {t['fontSize']}", f"font-weight: {t['fontWeight']}",
+                     f"line-height: {t['lineHeight']}"]
+        if "height" in comp:
+            decl.append(f"min-height: {comp['height']}px")
+        rules.append(f".{prefix}{name} {{ " + "; ".join(decl) + "; }")
+    return "\n".join(rules) + "\n"
+
+
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     tokens = load(args[0] if args else DESIGN)

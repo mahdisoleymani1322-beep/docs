@@ -3,7 +3,7 @@
 # Handoff — استودیوی اسناد فروش
 
 > این فایل پیش از **هر کامیت و پوش** به‌روز می‌شود (اجبار: `scripts/check_handoff.py` در hook گیت و hook Claude Code).
-> هر کس کار را از اینجا برمی‌دارد، اول همین را بخواند. آخرین به‌روزرسانی: DS4، ۲۹ سپتامبر ۲۰۲۶.
+> هر کس کار را از اینجا برمی‌دارد، اول همین را بخواند. آخرین به‌روزرسانی: DS5، ۲۹ سپتامبر ۲۰۲۶.
 
 ## 1) Goal
 
@@ -23,28 +23,33 @@
   2. DS2: لوگو و `brand/LOGO.md` ✅
   3. DS3: `DESIGN.md` مهدیار ✅
   4. DS4: cost-to-benefit اجباری ✅ (قرارداد؛ سقف‌ها در C1)
-  5. DS5: خروجی طراحی‌شده (HTML، PDF، سپس DOCX و PPTX)
-- **آزمون‌ها:** همه پاس (۸۴ آزمون بعد از DS4).
-- **شاخه:** `claude/epic-newton-vgg5h7`؛ آخرین پوش: BR4.
+  5. DS5: خروجی طراحی‌شده ✅ برای md، html، pdf؛ DOCX و PPTX در H2 (بعد از E7)
+- **آزمون‌ها:** همه پاس (۱۰۳ آزمون بعد از DS5؛ آزمون‌های PDF به Chromium و `pypdf` نیاز دارند، وگرنه skip می‌شوند).
+- **شاخه:** `claude/epic-newton-vgg5h7`؛ آخرین پوش: پایان DS (همین کامیت).
 
 ## 3) Active files
 
 | فایل | نقش در کار جاری |
 |---|---|
 | `handoff.md` | همین فایل |
-| `schemas/document.schema.json` ← `cost_benefit`، `rubrics/*.json` ← `required_elements` | قرارداد cost-to-benefit (DS4) |
-| `scripts/render.py` (`render_cost_benefit`)، `scripts/validate.py` (`cost_benefit_errors`) | رندر و یکپارچگی ارجاع |
-| `scripts/common.py` (`banned_hits`) | قاعده‌ی نفی عبارت ممنوع؛ C1 از آن استفاده می‌کند |
-| `DESIGN.md` | توکن‌های طراحی (YAML) + قواعد فارسی؛ ورودی DS5 |
-| `scripts/design_tokens.py` | خواندن توکن‌ها، `resolve`، `contrast`، `--css`؛ render_html.py از آن استفاده خواهد کرد |
-| `tests/test_design.py` | منشأ هر hex و اندازه، ارجاع‌ها، کنتراست اجزا، جدول کنتراست متن |
-| `brand/sources/references/DESIGN-apple.md` | فقط الگوی ساختار DESIGN.md |
-| `brand/LOGO.md`، `brand/mahdiyar.json` ← `assets.logo` | قواعد لوگو (DS2) |
-| `ROADMAP.md` | فاز DS و وضعیت هر کار |
-| `CLAUDE.md` | قاعده‌ی handoff برای همه‌ی جلسه‌ها |
+| `scripts/render_html.py` | document.json ← Markdown (`render.py`) ← HTML با توکن‌های DESIGN.md، لوگو و فونت جاسازی‌شده |
+| `scripts/export.py` | md، html، pdf (Chromium `--print-to-pdf`)؛ docx و pptx خطای صریح تا H2 |
+| `tests/test_export.py` | HTML، PDF (متن قابل‌استخراج، لوگو، فونت جاسازی) و ردّ فرمت‌های ساخته‌نشده |
+| `DESIGN.md`، `scripts/design_tokens.py` | توکن‌ها؛ `component_css` هر جزء را به کلاس CSS می‌برد |
+| `brand/assets/fonts/` | Vazirmatn ۴ وزن + OFL |
+| `schemas/input.schema.json` ← `output_formats` | انتخاب فرمت توسط کاربر در هر درخواست |
+| `scripts/render.py`، `scripts/validate.py`، `scripts/common.py` (`banned_hits`) | رندر Markdown، یکپارچگی cost_benefit، قاعده‌ی نفی |
+| `ROADMAP.md` | بعدی: C1 |
 
 ## 4) Changes made
 
+- DS5: خروجی طراحی‌شده.
+  - `render_html.py` از همان Markdown داورها می‌سازد (نه رندر دوم از JSON)؛ رنگ‌ها فقط از DESIGN.md (تست)، هر کلاس `c-*` جزء
+    واقعی DESIGN.md است. A4، راست‌به‌چپ، سربرگ «مهدیار / رشد هوشمند» با @page، شماره‌ی صفحه‌ی فارسی، پس‌زمینه‌ی canvas.
+  - `export.py`: PDF از Chromium با متن قابل‌انتخاب و فونت جاسازی‌شده؛ فقط فرمت‌های خواسته‌شده می‌مانند.
+  - لوگو: جلد بالا-راست ۵۰mm و انتهای بدنه ۴۰mm؛ پیش از پیوست‌ها. جدول ≥ ۹ ستون صفحه‌ی افقی.
+  - `output_formats` در ورودی (اختیاری؛ پیش‌فرض `["pdf"]` در الگو). `requirements-dev.txt` برای pypdf.
+  - بازبینی چشمی صفحه‌ها با PyMuPDF (فقط ابزار توسعه، نصب نشده در پروژه) چهار خطای چیدمان را نشان داد که آزمون نمی‌گرفت.
 - DS4: cost-to-benefit در هر سه نوع سند.
   - `data.cost_benefit`: `headline`، هزینه‌ها (قرارداد، زمان تیم مشتری، سرویس بیرونی)، منفعت‌ها با نوع و پشتوانه،
     سناریو (۰ یا ۳)، `caveat`. در schema اختیاری است تا نبودنش امتیاز بگیرد، نه خطای schema.
@@ -72,6 +77,16 @@
 
 ## 5) Failed attempts
 
+- **DS5، دانلود فونت:** `cdn.jsdelivr.net` را سیاست شبکه بست (۴۰۳). به‌جای دور زدن، همان بسته از `registry.npmjs.org`
+  (مجاز) گرفته شد: `vazirmatn@33.0.3` با مجوز OFL.
+- **DS5، خطای چیدمان که آزمون نگرفت:** (۱) شناسه‌ی `K-01` وسط خط تیره می‌شکست؛ (۲) جدول ۸ستونه بی‌دلیل افقی شد و با
+  `max-width: 210mm` وسط صفحه‌ی افقی جمع شد؛ (۳) لوگوی پایانی بعد از پیوستِ پرِ صفحه، تنها روی صفحه‌ی آخر افتاد؛
+  (۴) حاشیه‌ی @page سفید خالص بود و با canvas `#FDFDFD` فرق داشت. همه با بازبینی چشمی پیدا و رفع شدند.
+- **DS5، رگرسیون از DS4:** نگهبان `render.py` جدول پرداخت را «نامعلوم» کرد (کلید `payments` زیر `pricing` است). آزمونِ
+  تازه رفتار را قفل کرد. درس ۱۱.
+- **DS5، دو جهش زنده ماند:** آزمون لوگو و آزمون ۹ستون ضعیف بودند؛ تقویت شدند و هر شش جهش رد شد.
+- **DS5، `pip install pypdf`:** import به‌خاطر `cffi` ناسازگار سیستم panic کرد؛ `pip install cffi` درمان شد
+  (محیط، نه پروژه).
 - **DS4، آزمون عبارت ممنوع روی fixture:** افزودن هشدار «سناریوی مالی، تضمین درآمد نیست» (جمله‌ی خود راهنما) آزمون را
   رد کرد، چون آزمون الگو را بدون قاعده‌ی نفی اجرا می‌کرد. درمان عبارت‌سازی دوباره نبود (نویسنده باید همین جمله را
   بنویسد)؛ قاعده‌ی نفی `banned.json` در `common.banned_hits` پیاده شد و آزمون از آن استفاده می‌کند.
@@ -95,8 +110,10 @@
 
 ## 6) Next steps
 
-1. DS5: `render_html.py` و `export.py` (PDF با متن قابل انتخاب از Chromium؛ سپس DOCX و PPTX).
-2. بعد از DS: ادامه‌ی فاز C، از C1 (`checks.py`، شامل چک‌های cost-benefit با `banned_hits`).
+1. **C1:** `checks.py`: چک‌های قطعی طبق داک ۰۳، از جمله `CHK-BRAND-WORDS`، `CHK-COST-BENEFIT`، `CHK-CB-SUPPORT`،
+   `CHK-CB-TYPE`، `CHK-CB-CAVEAT` (با `common.banned_hits`). آزمون: ۴ سند عمداً خراب ← ۴ رد با دلیل درست.
+2. C2 `gate.py`، C3 `loop.py`، C4 داورها (skill truth)، C5 `evaluate-doc`، C6 `guard.py`.
+3. بعد: فازهای D، E (نویسنده، ارکستریتور، E7 سرتاسری)، H2 (DOCX و PPTX)، F، G.
 - **منتظر کاربر:** نسخه‌های دیگر لوگو (SVG، نسخه‌ی روشن/معکوس برای پس‌زمینه‌ی تیره، نسخه‌ی افقی یا فقط‌نماد).
 
 </div>

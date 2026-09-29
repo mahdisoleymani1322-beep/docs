@@ -50,6 +50,18 @@ class RenderTest(unittest.TestCase):
         self.assertIn("## پیوست: جدول‌های تکمیلی", md)
         self.assertIn("U-01", md)
 
+    def test_every_ref_renders_in_place_and_not_again_in_appendix(self):
+        """payments و کلید pricing.payments در data نیست؛ بلوک ref آن باید در جای خودش رندر شود، نه «نامعلوم» و نه پیوست."""
+        md = render.render(DOC)
+        self.assertNotIn("[نامعلوم: پرداخت]", md)
+        s09 = md.split("<!-- section: S09 -->")[1].split("<!-- section: S10 -->")[0]
+        self.assertIn("| PAY-01 |", s09)
+        self.assertEqual(md.count("| PAY-01 |"), 1)
+        for sec in DOC["sections"]:
+            for b in sec["blocks"]:
+                if b["kind"] == "ref" and b["data"] != "cost_benefit":
+                    self.assertNotIn(f"[نامعلوم: {render.DATA_TITLE[b['data']]}]", md, b["data"])
+
     def test_cost_benefit_headline_and_full(self):
         md = render.render(DOC)
         summary = md.split("<!-- section: S02 -->")[1].split("## ")[0]

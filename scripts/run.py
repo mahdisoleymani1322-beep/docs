@@ -83,7 +83,8 @@ def set_run(run_dir, status=None, stage=None, round_=None, error=None, note=None
 def template(doc_type: str) -> dict:
     card = common.load_card(doc_type)
     return {"doc_type": doc_type, "brand": common.DEFAULT_BRAND, "fields": {f["key"]: None for f in card["intake_fields"]},
-            "attachments": [], "answers": [], "sample": False}
+            "attachments": [], "answers": [], "sample": False,
+            "output_formats": ["pdf"]}
 
 
 def load_input(path, doc_type: str) -> tuple[dict, list[str]]:
