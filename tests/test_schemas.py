@@ -35,7 +35,7 @@ VALID = {
     "revision": {"version": 2, "base_version": 1, "addressed": [{"issue": "I-01", "change": "جمع قیمت اصلاح شد"}],
                  "not_addressed": [], "summary": "دور دوم"},
     "checks": {"version": 1, "doc_type": "proposal", "mode": "structured",
-               "results": [{"id": "CHK-PRICE-SUM", "status": "pass", "detail": "", "locations": [], "veto": [], "caps": []}]},
+               "results": [{"id": "CHK-PRICE-SUM", "status": "pass", "severity": "critical", "detail": "", "locations": [], "veto": [], "caps": []}]},
     "judge-rubric": {"judge": "rubric", "version": 1, "criteria": [
         {"id": "R01", "score": 3, "evidence": [{"section": "S03", "quote": "طبق صورت‌جلسه‌ی کشف نیاز"}],
          "reason": "مسئله با شاهد", "fix": "", "limited_by_input": False, "gap_refs": []}],

@@ -174,24 +174,28 @@ def load_banned() -> dict:
 
 # ---------------------------------------------------------------- اجرا
 
-def banned_hits(text_norm: str, banned: dict | None = None) -> list[dict]:
-    """عبارت‌های ممنوعِ تأییدی در متن یکسان‌شده؛ قاعده‌ی نفی banned.json اعمال می‌شود.
+def phrase_hits(text_norm: str, phrases: list[dict], negation: dict) -> list[dict]:
+    """عبارت‌های تأییدیِ فهرست در متن یکسان‌شده؛ قاعده‌ی نفی banned.json اعمال می‌شود.
 
-    چرا اینجا و نه فقط در checks.py: هشدار پیشنهادی خود راهنما («سناریوی مالی، تضمین درآمد نیست») الگوی B02 را دارد؛
-    هر جا که متن برای عبارت ممنوع اسکن شود باید همین یک تعریف از نفی را به کار ببرد.
+    چرا یک تابع برای هر دو فهرست: هم عبارت ممنوع راهنما و هم واژه‌ی ممنوع کارت برند باید نفی را یکسان بفهمند
+    («تضمین درآمد نیست» در خود راهنما آمده است).
     """
-    banned = banned or load_banned()
-    neg = banned["negation"]
     hits = []
-    for p in banned["phrases"]:
+    for p in phrases:
         for m in re.finditer(p["pattern"], text_norm):
-            after = text_norm[m.end(): m.end() + neg["after_window"]]
-            before = text_norm[max(0, m.start() - neg["before_window"]): m.start()]
-            if p.get("negation_cancels") and (any(k in after for k in neg["after_markers"])
-                                              or any(k in before for k in neg["before_markers"])):
+            after = text_norm[m.end(): m.end() + negation["after_window"]]
+            before = text_norm[max(0, m.start() - negation["before_window"]): m.start()]
+            if p.get("negation_cancels") and (any(k in after for k in negation["after_markers"])
+                                              or any(k in before for k in negation["before_markers"])):
                 continue
-            hits.append({"id": p["id"], "category": p["category"], "match": m.group(), "start": m.start()})
+            hits.append({"id": p.get("id"), "category": p.get("category"), "match": m.group(), "start": m.start()})
     return hits
+
+
+def banned_hits(text_norm: str, banned: dict | None = None) -> list[dict]:
+    """عبارت‌های ممنوعِ تأییدی راهنما (rubrics/banned.json) در متن یکسان‌شده."""
+    banned = banned or load_banned()
+    return phrase_hits(text_norm, banned["phrases"], banned["negation"])
 
 
 def current_run() -> pathlib.Path | None:
