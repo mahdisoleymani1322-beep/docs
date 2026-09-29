@@ -82,5 +82,59 @@ class BrandCardTest(unittest.TestCase):
                 self.assertEqual(p["publish_permission"], "unknown", p["id"])
 
 
+def image_info(path: pathlib.Path) -> dict:
+    """ابعاد و آلفا از هدر فایل، بدون Pillow (آزمون نباید وابستگی تازه بیاورد)."""
+    data = path.read_bytes()
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP" and data[12:16] == b"VP8X":
+        flags = data[20]
+        w = int.from_bytes(data[24:27], "little") + 1
+        h = int.from_bytes(data[27:30], "little") + 1
+        return {"w": w, "h": h, "alpha": bool(flags & 0x10)}
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        w = int.from_bytes(data[16:20], "big")
+        h = int.from_bytes(data[20:24], "big")
+        return {"w": w, "h": h, "alpha": data[25] in (4, 6)}
+    raise ValueError(f"قالب ناشناخته: {path}")
+
+
+def luminance(hex_color: str) -> float:
+    def ch(v):
+        v /= 255
+        return v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
+    r, g, b = (int(hex_color[i:i + 2], 16) for i in (1, 3, 5))
+    return 0.2126 * ch(r) + 0.7152 * ch(g) + 0.0722 * ch(b)
+
+
+def contrast(a: str, b: str) -> float:
+    la, lb = sorted((luminance(a), luminance(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+class LogoTest(unittest.TestCase):
+    def setUp(self):
+        self.logo = common.load_json(ROOT / "brand" / "mahdiyar.json")["assets"]["logo"]
+
+    def test_files_exist_and_match_card(self):
+        for f in self.logo["files"]:
+            info = image_info(ROOT / f["path"])
+            self.assertEqual((info["w"], info["h"]), (self.logo["canvas_px"],) * 2, f["path"])
+            self.assertTrue(info["alpha"], f"{f['path']}: کارت می‌گوید پس‌زمینه شفاف است")
+        self.assertTrue((ROOT / self.logo["rules_doc"]).exists())
+
+    def test_backgrounds_only_light_until_reversed_version(self):
+        """بخش‌های سرمه‌ای لوگو روی Deep Navy ناپدید می‌شوند؛ تا نسخه‌ی معکوس نیامده، فقط پس‌زمینه‌ی روشن."""
+        navy = "#051939"
+        for bg in self.logo["allowed_backgrounds"]:
+            self.assertGreaterEqual(contrast(navy, bg), 4.5, bg)
+        self.assertNotIn(navy, self.logo["allowed_backgrounds"])
+        self.assertTrue(any("معکوس" in v for v in self.logo["missing_versions"]))
+
+    def test_min_size_keeps_smallest_text_legible(self):
+        """«HOOSH AFZA» ۵۲px از ۱۲۵۴px است؛ در حداقل عرض، ارتفاع حرف ≥ ۱٫۵mm و ≥ ۸px بماند."""
+        ratio = 52 / 1254
+        self.assertGreaterEqual(self.logo["min_width_mm"] * ratio, 1.49)
+        self.assertGreaterEqual(self.logo["min_width_px"] * ratio, 8)
+
+
 if __name__ == "__main__":
     unittest.main()

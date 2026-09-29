@@ -49,7 +49,7 @@
 | کار | خروجی | تمام یعنی | وضعیت |
 |---|---|---|---|
 | DS1 | `handoff.md`، `scripts/check_handoff.py`، `.githooks/`، `.claude/settings.json` | کامیت و پوش بدون به‌روزرسانی handoff رد می‌شود (تست) | ✅ |
-| DS2 | `brand/assets/logo/`، `brand/LOGO.md`، `assets.logo` در کارت برند | فایل لوگو موجود؛ پس‌زمینه‌ی مجاز فقط روشن تا نسخه‌ی شفاف (تست) | ⏳ |
+| DS2 | `brand/assets/logo/`، `brand/LOGO.md`، `assets.logo` در کارت برند | فایل لوگو موجود؛ پس‌زمینه‌ی مجاز فقط روشن تا نسخه‌ی معکوس (تست) | ✅ |
 | DS3 | `DESIGN.md` مهدیار | هر hex و عدد مقیاس عیناً در منبع؛ کنتراست WCAG هر جفت متنی محاسبه‌شده (تست) | ⏳ |
 | DS4 | `data.cost_benefit`، `required_elements` در کارت‌ها، رندر | نبودِ cost-benefit ← سقف ۲؛ عدد بی‌منبع ← سقف ۱ (تست در C1) | ⏳ |
 | DS5 | `render_html.py`، `export.py` | PDF با لوگو و متن فارسی قابل استخراج؛ HTML با توکن‌های DESIGN.md (تست) | ⏳ |

@@ -3,7 +3,7 @@
 # Handoff — استودیوی اسناد فروش
 
 > این فایل پیش از **هر کامیت و پوش** به‌روز می‌شود (اجبار: `scripts/check_handoff.py` در hook گیت و hook Claude Code).
-> هر کس کار را از اینجا برمی‌دارد، اول همین را بخواند. آخرین به‌روزرسانی: DS1، ۲۹ سپتامبر ۲۰۲۶.
+> هر کس کار را از اینجا برمی‌دارد، اول همین را بخواند. آخرین به‌روزرسانی: DS2، ۲۹ سپتامبر ۲۰۲۶.
 
 ## 1) Goal
 
@@ -19,12 +19,12 @@
   - C0 (`render.py`)
   - لایه‌ی برند BR1 تا BR4 (منابع، کارت برند مهدیار، `brand.md` در کانتکست، حالت truth در داورها)
 - **در حال انجام:** فاز DS، طبق پلن تأییدشده، این ترتیب:
-  1. DS1: handoff.md و اجبارش (همین کار)
-  2. DS2: لوگو و `brand/LOGO.md`
+  1. DS1: handoff.md و اجبارش ✅
+  2. DS2: لوگو و `brand/LOGO.md` ✅
   3. DS3: `DESIGN.md` مهدیار
   4. DS4: cost-to-benefit اجباری
   5. DS5: خروجی طراحی‌شده (HTML، PDF، سپس DOCX و PPTX)
-- **آزمون‌ها:** ۵۷ از ۵۷ پاس پیش از DS1.
+- **آزمون‌ها:** همه پاس (۶۶ آزمون بعد از DS2).
 - **شاخه:** `claude/epic-newton-vgg5h7`؛ آخرین پوش: BR4.
 
 ## 3) Active files
@@ -32,6 +32,8 @@
 | فایل | نقش در کار جاری |
 |---|---|
 | `handoff.md` | همین فایل |
+| `brand/LOGO.md`، `brand/assets/logo/*` | قواعد و فایل لوگو (DS2) |
+| `brand/mahdiyar.json` ← `assets.logo` | نسخه‌ی ساخت‌یافته‌ی قواعد لوگو |
 | `scripts/check_handoff.py` | چک ساختار و به‌روز بودن handoff |
 | `.githooks/pre-commit`، `.githooks/pre-push` | لایه‌ی گیت اجبار |
 | `.claude/settings.json` | لایه‌ی Claude Code اجبار (PreToolUse روی Bash) |
@@ -41,6 +43,9 @@
 
 ## 4) Changes made
 
+- DS2: لوگو در `brand/assets/logo/` (WebP اصلی + PNG با آلفا)، `brand/LOGO.md`، `assets.logo` در کارت برند و schema.
+  قواعد اندازه از اندازه‌گیری خود فایل: «HOOSH AFZA» ۴٫۱٪ ارتفاع است ← حداقل ۳۶mm و ۲۰۰px.
+  سربرگ صفحه‌های داخلی نشانگر متنی دارد، نه لوگو (lockup مربع برای سربرگ سنگین است).
 - DS1: `handoff.md` با شش بخش. `check_handoff.py` با سه حالت (`--structure`، `--staged`، `--push`) و حالت hook.
   hook گیت و hook Claude Code؛ آزمون؛ قاعده در CLAUDE.md.
 - پیش از DS1 (خلاصه؛ جزئیات در `git log`):
@@ -59,16 +64,20 @@
 - **حالت فایلِ validate (B4):** نام `document.good.json` به هیچ schema نگاشت نمی‌شد و آزمون شکست خورد.
   درمان: الگوی نام انعطاف‌پذیر + گزینه‌ی `--schema`.
 - **لینک شکسته در README (A8):** README به پوشه‌ی هنوزساخته‌نشده‌ی `scripts/` لینک داشت. آزمون داک‌ها گرفت؛ لینک برداشته شد.
+- **DS2، فرض اشتباه درباره‌ی لوگو:** اول تصور شد لوگو پس‌زمینه‌ی سفید دارد (چون در چت روی سفید دیده می‌شد) و
+  تبدیل به PNG با RGB پس‌زمینه را سیاه کرد. بررسی کانال آلفا نشان داد پس‌زمینه شفاف است؛ PNG با RGBA دوباره ساخته شد.
+  تخمین اولیه‌ی حداقل اندازه (۳۲mm) هم بی‌پشتوانه بود و با اندازه‌گیری به ۳۶mm اصلاح شد.
+- **DS2، کامیت در یک فرمان با به‌روزرسانی handoff:** hook ایجنت پیش از اجرای فرمان چک می‌کند، پس ویرایش handoff
+  داخل همان فرمان را نمی‌بیند و کل فرمان رد شد. روش درست: اول handoff در یک گام جدا، بعد کامیت.
 - **DS1، نسخه‌ی اول hook:** `git diff HEAD` فایل تازه (untracked) را نمی‌بیند؛ پس اولین کامیت handoff رد می‌شد.
   درمان: `git status --porcelain`.
 
 ## 6) Next steps
 
-1. DS2: لوگو در `brand/assets/logo/`، قواعد در `brand/LOGO.md`، `assets.logo` در کارت برند (فعلاً فقط پس‌زمینه‌ی روشن).
-2. DS3: `DESIGN.md` در قالب فایل مرجع Apple، با توکن‌های Design System V2 و آزمون کنتراست WCAG.
-3. DS4: `data.cost_benefit` در schema، `required_elements` در کارت‌ها، رندر و مستندات.
-4. DS5: `render_html.py` و `export.py` (PDF با متن قابل انتخاب از Chromium؛ سپس DOCX و PPTX).
-5. بعد از DS: ادامه‌ی فاز C، از C1 (`checks.py`).
-- **منتظر کاربر:** نسخه‌های دیگر لوگو (SVG، PNG شفاف، نسخه‌ی تیره یا افقی).
+1. DS3: `DESIGN.md` در قالب فایل مرجع Apple، با توکن‌های Design System V2 و آزمون کنتراست WCAG.
+2. DS4: `data.cost_benefit` در schema، `required_elements` در کارت‌ها، رندر و مستندات.
+3. DS5: `render_html.py` و `export.py` (PDF با متن قابل انتخاب از Chromium؛ سپس DOCX و PPTX).
+4. بعد از DS: ادامه‌ی فاز C، از C1 (`checks.py`).
+- **منتظر کاربر:** نسخه‌های دیگر لوگو (SVG، نسخه‌ی روشن/معکوس برای پس‌زمینه‌ی تیره، نسخه‌ی افقی یا فقط‌نماد).
 
 </div>

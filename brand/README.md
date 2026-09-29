@@ -10,6 +10,7 @@
 | `sources/brand-guide-v2.docx` | برند گاید جامع مهدیار هوش‌افزا، نسخه ۲.۰، تیر ۱۴۰۴ (منبع اصلی) |
 | `sources/brand-guide-v2.md` | متن همان docx برای خواندن ایجنت‌ها؛ با `scripts/docx_to_md.py` ساخته می‌شود و دستی ویرایش نمی‌شود |
 | `sources/design-system-v2.md` | Mahdiyar Refined Minimal AI Design System، نسخه ۲.۰ |
+| `assets/logo/` | لوگوی مهدیار (WebP اصلی و PNG، پس‌زمینه‌ی شفاف)؛ قواعد استفاده: [`LOGO.md`](LOGO.md) |
 | `<brand_id>.json` | کارت برند: نسخه‌ی ساخت‌یافته و قابل‌چک همین منابع (فعلاً `mahdiyar.json`، پیش‌فرض) |
 
 **تقدم منابع** (تصمیم کاربر، ۲۹ سپتامبر ۲۰۲۶): برای قواعد بصری Design System V2 مقدم است. برند گاید «نور تیره» و

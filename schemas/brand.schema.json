@@ -5,55 +5,458 @@
   "description": "نسخه‌ی ساخت‌یافته‌ی منابع برند. هر متن با source_quote یا فهرست‌های verbatim به منبع وصل است و tests/test_brand.py آن را تطبیق می‌دهد.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "name_fa", "name_en", "sources", "precedence", "positioning", "usp", "one_liner_fa", "commitments", "voice", "approved_words", "forbidden_words", "cta", "copy_rules", "proof", "packages", "design", "known_issues"],
+  "required": [
+    "id",
+    "name_fa",
+    "name_en",
+    "sources",
+    "precedence",
+    "positioning",
+    "usp",
+    "one_liner_fa",
+    "commitments",
+    "voice",
+    "approved_words",
+    "forbidden_words",
+    "cta",
+    "copy_rules",
+    "proof",
+    "packages",
+    "design",
+    "known_issues",
+    "assets"
+  ],
   "properties": {
-    "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
-    "name_fa": {"type": "string"},
-    "name_en": {"type": "string"},
-    "sources": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["key", "path", "title", "date"],
-      "properties": {"key": {"type": "string"}, "path": {"type": "string"}, "title": {"type": "string"}, "date": {"type": ["string", "null"]}}}},
-    "precedence": {"type": "string"},
-    "positioning": {"type": "string"},
-    "usp": {"type": "string"},
-    "one_liner_fa": {"type": "string"},
-    "commitments": {"type": "array", "items": {"type": "string"}},
-    "voice": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["principle", "meaning", "do", "dont"],
-      "properties": {"principle": {"type": "string"}, "meaning": {"type": "string"}, "do": {"type": "string"}, "dont": {"type": "string"}, "caution": {"type": ["string", "null"]}}}},
-    "approved_words": {"type": "array", "items": {"type": "string"}},
-    "forbidden_words": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["text", "pattern", "negation_cancels"],
-      "properties": {"text": {"type": "string"}, "pattern": {"type": "string"}, "negation_cancels": {"type": "boolean"}}}},
-    "cta": {"type": "object", "additionalProperties": false, "required": ["preferred", "avoid"],
-      "properties": {"preferred": {"type": "array", "items": {"type": "string"}}, "avoid": {"type": "array", "items": {"type": "string"}}}},
-    "copy_rules": {"type": "array", "items": {"type": "string"}},
-    "proof": {"type": "array", "items": {"type": "object", "additionalProperties": false,
-      "required": ["id", "claim", "kind", "status", "publish_permission", "source_quote", "limits"],
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "name_fa": {
+      "type": "string"
+    },
+    "name_en": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "path",
+          "title",
+          "date"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "precedence": {
+      "type": "string"
+    },
+    "positioning": {
+      "type": "string"
+    },
+    "usp": {
+      "type": "string"
+    },
+    "one_liner_fa": {
+      "type": "string"
+    },
+    "commitments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "voice": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "principle",
+          "meaning",
+          "do",
+          "dont"
+        ],
+        "properties": {
+          "principle": {
+            "type": "string"
+          },
+          "meaning": {
+            "type": "string"
+          },
+          "do": {
+            "type": "string"
+          },
+          "dont": {
+            "type": "string"
+          },
+          "caution": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "approved_words": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbidden_words": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "pattern",
+          "negation_cancels"
+        ],
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "negation_cancels": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "cta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preferred",
+        "avoid"
+      ],
       "properties": {
-        "id": {"type": "string", "pattern": "^BP-[0-9]{2}$"},
-        "claim": {"type": "string"},
-        "kind": {"enum": ["credential", "client", "result"]},
-        "status": {"enum": ["self_reported", "verified"], "description": "self_reported یعنی فقط خود برند گفته؛ در سند مشتری «ادعای تهیه‌کننده» است، نه واقعیت تأییدشده"},
-        "publish_permission": {"enum": ["unknown", "granted", "not_needed"]},
-        "source_quote": {"type": "string"},
-        "limits": {"type": "string"}
-      }}},
-    "packages": {"type": "array", "items": {"type": "object", "additionalProperties": false,
-      "required": ["id", "name", "from_amount", "currency", "includes", "as_of", "needs_confirmation", "source_quote"],
+        "preferred": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "avoid": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "copy_rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "proof": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "claim",
+          "kind",
+          "status",
+          "publish_permission",
+          "source_quote",
+          "limits"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^BP-[0-9]{2}$"
+          },
+          "claim": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "credential",
+              "client",
+              "result"
+            ]
+          },
+          "status": {
+            "enum": [
+              "self_reported",
+              "verified"
+            ],
+            "description": "self_reported یعنی فقط خود برند گفته؛ در سند مشتری «ادعای تهیه‌کننده» است، نه واقعیت تأییدشده"
+          },
+          "publish_permission": {
+            "enum": [
+              "unknown",
+              "granted",
+              "not_needed"
+            ]
+          },
+          "source_quote": {
+            "type": "string"
+          },
+          "limits": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "from_amount",
+          "currency",
+          "includes",
+          "as_of",
+          "needs_confirmation",
+          "source_quote"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^PK-[0-9]{2}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "from_amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "includes": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": "string"
+          },
+          "needs_confirmation": {
+            "type": "boolean"
+          },
+          "source_quote": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "colors",
+        "fonts",
+        "contrast_pairs",
+        "rules"
+      ],
       "properties": {
-        "id": {"type": "string", "pattern": "^PK-[0-9]{2}$"},
-        "name": {"type": "string"}, "from_amount": {"type": "number"}, "currency": {"type": "string"},
-        "includes": {"type": "string"}, "as_of": {"type": "string"}, "needs_confirmation": {"type": "boolean"},
-        "source_quote": {"type": "string"}
-      }}},
-    "design": {"type": "object", "additionalProperties": false, "required": ["mode", "colors", "fonts", "contrast_pairs", "rules"],
+        "mode": {
+          "type": "string"
+        },
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "token",
+              "name",
+              "hex",
+              "role"
+            ],
+            "properties": {
+              "token": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "hex": {
+                "type": "string",
+                "pattern": "^#[0-9A-F]{6}$"
+              },
+              "role": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "fonts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "contrast_pairs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "known_issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue",
+          "evidence",
+          "handling"
+        ],
+        "properties": {
+          "issue": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "handling": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logo"
+      ],
       "properties": {
-        "mode": {"type": "string"},
-        "colors": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["token", "name", "hex", "role"],
-          "properties": {"token": {"type": "string"}, "name": {"type": "string"}, "hex": {"type": "string", "pattern": "^#[0-9A-F]{6}$"}, "role": {"type": "string"}}}},
-        "fonts": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
-        "contrast_pairs": {"type": "array", "items": {"type": "string"}},
-        "rules": {"type": "array", "items": {"type": "string"}}
-      }},
-    "known_issues": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["issue", "evidence", "handling"],
-      "properties": {"issue": {"type": "string"}, "evidence": {"type": "string"}, "handling": {"type": "string"}}}}
+        "logo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rules_doc",
+            "files",
+            "canvas_px",
+            "background",
+            "allowed_backgrounds",
+            "min_width_mm",
+            "min_width_px",
+            "clear_space",
+            "placements",
+            "missing_versions"
+          ],
+          "properties": {
+            "rules_doc": {
+              "type": "string"
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "format",
+                  "use"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  },
+                  "format": {
+                    "enum": [
+                      "webp",
+                      "png",
+                      "svg"
+                    ]
+                  },
+                  "use": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "canvas_px": {
+              "type": "integer"
+            },
+            "background": {
+              "enum": [
+                "transparent",
+                "white",
+                "dark"
+              ]
+            },
+            "allowed_backgrounds": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "pattern": "^#[0-9A-F]{6}$"
+              }
+            },
+            "min_width_mm": {
+              "type": "number"
+            },
+            "min_width_px": {
+              "type": "integer"
+            },
+            "clear_space": {
+              "type": "string"
+            },
+            "placements": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "missing_versions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
