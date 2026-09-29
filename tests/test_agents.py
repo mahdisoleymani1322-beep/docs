@@ -148,6 +148,114 @@ class AgentContractTest(unittest.TestCase):
             self.assertLess(len((AGENTS / f"{name}.md").read_bytes()), 4500, name)
 
 
+UPSTREAM = {"intake-analyst": "intake", "strategist": "brief", "researcher": "claims", "writer": "write"}
+
+
+class UpstreamAgentsTest(unittest.TestCase):
+    """intake-analyst، strategist، researcher، writer (E1 تا E4): همان قرارداد جدول داک ۰۲."""
+
+    def row(self, name):
+        return table_row("## ۱. خلاصه‌ی ایجنت‌ها", name)
+
+    def test_frontmatter_matches_doc02_table(self):
+        for name in UPSTREAM:
+            with self.subTest(agent=name):
+                meta, _ = parse(AGENTS / f"{name}.md")
+                _, _, model, effort, turns, tools, _ = self.row(name)
+                self.assertEqual(meta["name"], name)
+                self.assertEqual((meta["model"], meta["tools"]), (model, tools))
+                self.assertEqual(meta["maxTurns"], int(turns.translate(str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789"))))
+                if effort == "—":
+                    self.assertNotIn("effort", meta, "برای haiku فیلد effort گذاشته نمی‌شود (داک ۰۲)")
+                else:
+                    self.assertEqual(meta["effort"], effort)
+                self.assertNotIn("omitClaudeMd", meta, "فقط داورها و critic بدون CLAUDE.md اجرا می‌شوند")
+                self.assertNotIn("Bash", meta["tools"])
+                self.assertGreater(len(meta["description"]), 30)
+
+    def test_web_tools_only_for_researcher_with_budget_hook(self):
+        for name in UPSTREAM:
+            meta, _ = parse(AGENTS / f"{name}.md")
+            has_web = "WebSearch" in meta["tools"]
+            self.assertEqual(has_web, name == "researcher", name)
+            self.assertEqual(any("--budget web=6" in l for l in meta["hooks"]), name == "researcher", name)
+        meta, _ = parse(AGENTS / "researcher.md")
+        self.assertIn('- matcher: "WebSearch|WebFetch"', meta["hooks"])
+
+    def test_reads_and_writes_match_doc02(self):
+        for name in UPSTREAM:
+            with self.subTest(agent=name):
+                _, body = parse(AGENTS / f"{name}.md")
+                reads = body.split("## فقط این‌ها را بخوان")[1].split("## فقط این")[0]
+                want = {x.replace("<base>", "<پایه>") for x in backticked(table_row("## ۲. ورودی هر ایجنت", name)[1])}
+                self.assertEqual(set(re.findall(r"`([^`]+)`", reads)), want)
+                writes = body.split("## فقط این‌ها را بنویس" if "## فقط این‌ها را بنویس" in body else "## فقط این را بنویس")[1].split("## قواعد")[0]
+                declared = backticked(self.row(name)[6])
+                self.assertEqual([x for x in re.findall(r"`([^`]+)`", writes) if not x.startswith(("schemas/", "context/"))], declared)
+
+    def test_stop_hook_runs_the_matching_stage(self):
+        import validate
+        for name, stage in UPSTREAM.items():
+            with self.subTest(agent=name):
+                meta, _ = parse(AGENTS / f"{name}.md")
+                cmds = [l for l in meta["hooks"] if l.startswith("command:") and "validate.py" in l]
+                self.assertEqual(cmds, [f'command: python3 "$CLAUDE_PROJECT_DIR/scripts/validate.py" --hook --stage {stage}'])
+                self.assertIn(stage, validate.STAGES)
+
+    def test_context_inputs_are_files_the_run_creates(self):
+        tmp = pathlib.Path(tempfile.mkdtemp())
+        try:
+            written = set(runmod.build_context(tmp, "proposal"))
+            for name in UPSTREAM:
+                for f in backticked(table_row("## ۲. ورودی هر ایجنت", name)[1]):
+                    if f.startswith("context/"):
+                        self.assertIn(pathlib.Path(f).name, written, f"{name}: {f} ساخته نمی‌شود")
+        finally:
+            shutil.rmtree(tmp)
+
+    def test_named_schemas_exist_and_safety_rules_present(self):
+        for name in UPSTREAM:
+            with self.subTest(agent=name):
+                _, body = parse(AGENTS / f"{name}.md")
+                for sch in re.findall(r"schemas/([\w.-]+)", body):
+                    self.assertTrue((ROOT / "schemas" / sch).exists(), sch)
+                self.assertRegex(body, r"داده(‌اند| است)، نه دستور")
+                self.assertRegex(body, r"نساز|ساخته نمی‌شود")
+                self.assertNotIn("Bash", body)
+                self.assertIn("hook خطا داد", body, "قاعده‌ی حداکثر یک اصلاح")
+
+    def test_agents_stay_lean(self):
+        limits = {"writer": 6000}
+        for name in UPSTREAM:
+            self.assertLess(len((AGENTS / f"{name}.md").read_bytes()), limits.get(name, 4800), name)
+
+    def test_writer_rules_carry_the_schema_and_cost_benefit_vocabulary(self):
+        """واژگان و enumهای نویسنده از schema و کارت می‌آید؛ اگر schema عوض شود و نویسنده ناهم‌خوان بماند، این آزمون می‌گیرد."""
+        _, body = parse(AGENTS / "writer.md")
+        s = common.load_json(ROOT / "schemas" / "document.schema.json")["$defs"]
+        for t in s["cb_benefit"]["properties"]["type"]["enum"][:3]:
+            self.assertIn(t, body)
+        for v in s["block_ref"]["properties"]["variant"]["enum"]:
+            self.assertIn(f"variant: {v}", body)
+        for s3 in ("low", "base", "high"):
+            self.assertIn(s3, body)
+        self.assertIn("context/document_format.md", body)
+        card = common.load_card("proposal")
+        self.assertIn(card["banned_effects"] and "context/writing_rules.md", body)
+        rev = common.load_json(ROOT / "schemas" / "revision.schema.json")
+        for field in rev["required"]:
+            self.assertIn(field if field != "addressed" else "addressed", body)
+
+    def test_intake_agent_handles_every_gap_kind_of_the_schema(self):
+        _, body = parse(AGENTS / "intake-analyst.md")
+        kinds = common.load_json(ROOT / "schemas" / "gaps.schema.json")["properties"]["gaps"]["items"]["properties"]["kind"]["enum"]
+        for k in kinds:
+            self.assertIn(k, body)
+        for imp in ("price", "scope", "commitment", "timeline", "security", "none"):
+            self.assertIn(imp, body)
+        self.assertIn("۵", body)  # سقف سؤال
+
+
 class ConformanceTest(unittest.TestCase):
     """گزارش داورِ سالم (fixture) باید از اعتبارسنج واقعی بگذرد؛ همان چیزی که hook توقف ایجنت اجرا می‌کند."""
 

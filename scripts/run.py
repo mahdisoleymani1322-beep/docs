@@ -22,6 +22,7 @@ import shutil
 import sys
 
 import common
+import docformat
 import slice_guide
 
 # انتقال‌های مجاز status (docs/۰۱-معماری.md بخش ۵-الف)؛ وضعیت‌های پایانی به جایی نمی‌روند
@@ -204,6 +205,9 @@ def build_context(run_dir, doc_type: str, brand_id: str | None = None) -> list[s
     for name in CONTEXT_SLICES:
         (ctx / f"{name}.md").write_text(slice_guide.slice_chapter(doc_type, name), encoding="utf-8")
         written.append(f"{name}.md")
+    (ctx / "sections.md").write_text(docformat.sections_md(card), encoding="utf-8")
+    (ctx / "document_format.md").write_text(docformat.document_format_md(), encoding="utf-8")
+    written += ["sections.md", "document_format.md"]
     (ctx / "rubric.md").write_text(rubric_md(card), encoding="utf-8")
     (ctx / "veto.md").write_text(veto_md(card, common.load_banned()), encoding="utf-8")
     written += ["rubric.md", "veto.md", "brand.md"]
@@ -372,7 +376,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("intake-check"); p.add_argument("run", nargs="?")
     p = sub.add_parser("answer"); p.add_argument("run"); p.add_argument("question"); p.add_argument("text")
     p.add_argument("--field")
-    p = sub.add_parser("set"); p.add_argument("run"); p.add_argument("--status"); p.add_argument("--stage")
+    p = sub.add_parser("set"); p.add_argument("run", nargs="?"); p.add_argument("--status"); p.add_argument("--stage")
     p.add_argument("--round", type=int); p.add_argument("--error")
     p = sub.add_parser("finish"); p.add_argument("run", nargs="?")
     p = sub.add_parser("status"); p.add_argument("run", nargs="?")

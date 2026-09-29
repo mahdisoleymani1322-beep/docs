@@ -79,8 +79,8 @@
 
 | کار | خروجی | تمام یعنی | وضعیت |
 |---|---|---|---|
-| E1 تا E4 | intake-analyst، strategist، researcher، writer | خروجی هرکدام با schema و چک متقاطع کد؛ هر ایجنت hook گارد نوشتن دارد (آزمون `test_every_agent_has_a_write_guard` رد می‌کند اگر نداشته باشد) و researcher hook بودجه‌ی `web=6` | ⏳ |
-| E6 | اسکیل `sales-doc-studio` | همه‌ی مراحل جدول معماری به ترتیب؛ `disable-model-invocation: true` (G7) | ⏳ |
+| E1 تا E4 | intake-analyst، strategist، researcher، writer | خروجی هرکدام با schema و چک متقاطع کد؛ هر ایجنت hook گارد نوشتن دارد (آزمون `test_every_agent_has_a_write_guard` رد می‌کند اگر نداشته باشد) و researcher hook بودجه‌ی `web=6` | ✅ (تعریف و قرارداد با اعتبارسنج واقعی؛ رفتار مدل در E7) |
+| E6 | اسکیل `sales-doc-studio` | همه‌ی مراحل جدول معماری به ترتیب؛ `disable-model-invocation: true` (G7) | ✅ (فرمان‌های اسکیل عیناً اجرا می‌شوند؛ ایجنت‌ها fixture) |
 | E7 | اجرای کامل | `runs/examples/<id>/` شامل سند، گزارش داورها و `loop-log.md` | ⏳ |
 
 ## فاز F: بازخورد و یادگیری

@@ -216,6 +216,7 @@ class BudgetTest(GuardBase):
             self.assertIsNone(p.poll(), "گارد باید پشت قفل منتظر بماند")
             fcntl.flock(held, fcntl.LOCK_UN)
         self.assertEqual(p.wait(timeout=10), 0)
+        p.stdout.close()
         self.assertEqual((d / ".budget" / "web").read_text(encoding="utf-8"), "1")
 
     def test_parallel_calls_never_exceed_the_limit(self):
@@ -262,10 +263,10 @@ class WiringTest(unittest.TestCase):
                 self.assertIn("PreToolUse:", lines)
                 self.assertIn('- matcher: "Write|Edit"', lines)
                 cmd = next(l for l in lines if l.startswith("command:") and "guard.py" in l).removeprefix("command:").strip()
-                m = re.fullmatch(r'python3 "\$CLAUDE_PROJECT_DIR/scripts/guard\.py" --allow "([^"]+)"', cmd)
+                m = re.fullmatch(r'python3 "\$CLAUDE_PROJECT_DIR/scripts/guard\.py" --allow((?: "[^"]+")+)', cmd)
                 self.assertIsNotNone(m, cmd)
-                declared = [x.strip("`") for x in table_row("## ۱. خلاصه‌ی ایجنت‌ها", f.stem)[6].split("،")]
-                self.assertEqual([m.group(1).replace("{n}", "<n>")], declared)
+                declared = backticked(table_row("## ۱. خلاصه‌ی ایجنت‌ها", f.stem)[6])
+                self.assertEqual([p.replace("{n}", "<n>") for p in re.findall(r'"([^"]+)"', m.group(1))], declared)
 
     def test_environment_assumptions_are_stated_in_readme(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
