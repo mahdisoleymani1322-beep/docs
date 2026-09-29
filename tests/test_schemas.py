@@ -96,7 +96,7 @@ class SchemaTest(unittest.TestCase):
 
     def test_every_schema_has_cases(self):
         names = {p.name[: -len(".schema.json")] for p in (ROOT / "schemas").glob("*.schema.json")}
-        covered = set(VALID) | {"document", "gate", "rubric", "banned"}
+        covered = set(VALID) | {"document", "gate", "rubric", "banned", "brand"}
         self.assertEqual(names - covered, set(), "schema بدون آزمون")
 
     def test_valid_and_invalid_samples(self):

@@ -24,6 +24,8 @@ FEEDBACK = pathlib.Path(os.environ.get("STUDIO_FEEDBACK_DIR", ROOT / "feedback")
 GOLDEN = ROOT / "evals" / "golden"
 CALIBRATION = ROOT / "evals" / "calibration.json"
 DOC_TYPES = ("proposal", "pitch", "catalog")
+BRANDS = ROOT / "brand"
+DEFAULT_BRAND = "mahdiyar"  # تصمیم کاربر: کارت برند قابل‌تعویض، مهدیار پیش‌فرض
 
 
 # ---------------------------------------------------------------- JSON
@@ -156,6 +158,14 @@ def load_card(doc_type: str) -> dict:
     if doc_type not in DOC_TYPES:
         raise SystemExit(f"نوع سند ناشناخته: {doc_type} (مجاز: {', '.join(DOC_TYPES)})")
     return load_json(RUBRICS / f"{doc_type}.json")
+
+
+def load_brand(brand_id: str | None = None) -> dict:
+    brand_id = brand_id or DEFAULT_BRAND
+    path = BRANDS / f"{brand_id}.json"
+    if not path.exists():
+        raise SystemExit(f"کارت برند پیدا نشد: {path}")
+    return load_json(path)
 
 
 def load_banned() -> dict:

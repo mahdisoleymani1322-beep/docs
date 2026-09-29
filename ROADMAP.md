@@ -37,7 +37,7 @@
 | کار | خروجی | تمام یعنی | وضعیت |
 |---|---|---|---|
 | BR1 | `brand/sources/*`، `scripts/docx_to_md.py`، `.claude/skills/truth/` | md استخراج‌شده دقیقاً خروجی docx است (تست) | ✅ |
-| BR2 | `schemas/brand.schema.json`، `brand/mahdiyar.json` | هر واژه، رنگ و ادعای کارت عیناً در منبع پیدا شود (تست) | ⏳ |
+| BR2 | `schemas/brand.schema.json`، `brand/mahdiyar.json` | هر واژه، رنگ و ادعای کارت عیناً در منبع پیدا شود (تست) | ✅ |
 | BR3 | فیلد `brand` در ورودی، `context/brand.md`، اثر واژه‌ی ممنوع برند در کارت‌ها، فیلدهای truth در گزارش داور | اجرای تازه brand.md دارد؛ داور بدون bottom_line رد می‌شود (تست) | ⏳ |
 | BR4 | به‌روزرسانی داک‌ها و README | هیچ داکی با لایه‌ی برند تناقض ندارد | ⏳ |
 

@@ -1,0 +1,453 @@
+{
+  "id": "mahdiyar",
+  "name_fa": "مهدیار هوش‌افزا",
+  "name_en": "Mahdiyar Hoosh Afza",
+  "sources": [
+    {
+      "key": "brand_guide",
+      "path": "brand/sources/brand-guide-v2.md",
+      "title": "برند گاید جامع مهدیار هوش‌افزا، نسخه ۲.۰",
+      "date": "تیر ۱۴۰۴"
+    },
+    {
+      "key": "design_system",
+      "path": "brand/sources/design-system-v2.md",
+      "title": "Mahdiyar Refined Minimal AI Design System، نسخه ۲.۰",
+      "date": null
+    }
+  ],
+  "precedence": "قواعد بصری: Design System V2 مقدم است (تصمیم کاربر، ۲۹ سپتامبر ۲۰۲۶). واژه‌های مجاز و ممنوع، فراخوان عمل و قواعد نگارش از Design System V2 (فهرست ممنوع آن شامل کل فهرست برند گاید است). صدا، پیام و شواهد از برند گاید.",
+  "positioning": "مهدیار هوش‌افزا، بازوی هوشمند رشد و تحول دیجیتال کسب‌وکارهاست؛ شرکتی که با ترکیب هوش مصنوعی، تجربه نرم‌افزاری، دیجیتال مارکتینگ، تولید محتوا، طراحی سایت، سئو و تحلیل داده، به کسب‌وکارها کمک می‌کند سریع‌تر، هوشمندتر و قابل اندازه‌گیری‌تر رشد کنند.",
+  "usp": "نه فقط مشاوره، نه فقط ابزار — از تحلیل تا اجرا کنار کسب‌وکارت می‌مانیم تا نتیجه واقعی بگیری.",
+  "one_liner_fa": "ما به مدیران و صاحبان کسب‌وکار کمک می‌کنیم که نمی‌دانند AI را از کجا شروع کنند، تا با یک مسیر مشخص و اجرایی، هوش مصنوعی را وارد فروش، بازاریابی و فرآیندهایشان کنند و رشد واقعی ببینند.",
+  "commitments": [
+    "بدون اصطلاح پیچیده",
+    "بدون وعده غیرواقعی",
+    "نتیجه قابل اندازه‌گیری",
+    "همراهی تا نتیجه"
+  ],
+  "voice": [
+    {
+      "principle": "متخصص اما قابل فهم",
+      "meaning": "مثل همکار باتجربه — نه استاد بالای تریبون",
+      "do": "هوش مصنوعی نیازی به برنامه‌نویسی نداره — فقط باید بدونی کجا ازش بخوای.",
+      "dont": "با استفاده از الگوریتم‌های یادگیری ماشین، اتوماسیون هوشمند پیاده‌سازی می‌شود.",
+      "caution": null
+    },
+    {
+      "principle": "اجرایی و نتیجه‌محور",
+      "meaning": "هر حرف به یه اقدام مشخص ختم می‌شه",
+      "do": "این هفته یه ایمیل بازاریابی با ChatGPT بنویس — وقتت رو با نتیجه مقایسه کن.",
+      "dont": "هوش مصنوعی فرصت‌های بی‌نهایتی پیش روی کسب‌وکارها قرار داده.",
+      "caution": null
+    },
+    {
+      "principle": "صادق و واقع‌بینانه",
+      "meaning": "هیچ‌وقت اغراق نمی‌کنه",
+      "do": "AI معجزه نمی‌کنه — ولی اگه درست ازش استفاده کنی، ۳۰٪ وقت تیمت رو پس می‌گیری.",
+      "dont": "با هوش مصنوعی فروشتون رو ۱۰ برابر کنید!",
+      "caution": "مثال «✓» خودش عدد بی‌منبع دارد (۳۰٪)؛ در سند مشتری عدد فقط با منبع دفتر ادعا می‌آید (Design System، قاعده‌ی «Do not invent numbers»)."
+    }
+  ],
+  "approved_words": [
+    "رشد واقعی",
+    "قابل اندازه‌گیری",
+    "از تحلیل تا اجرا",
+    "کنارت می‌مانیم",
+    "هوشمند",
+    "قابل اجرا",
+    "سریع‌تر",
+    "هدفمند",
+    "داده‌محور",
+    "ساده‌تر",
+    "شریک اجرایی",
+    "کاربردی",
+    "تحول دیجیتال",
+    "اتوماسیون",
+    "تصمیم‌گیری با داده",
+    "نقشه راه",
+    "اجرای واقعی",
+    "مسئله واقعی",
+    "نتیجه",
+    "بهینه‌سازی"
+  ],
+  "forbidden_words": [
+    {
+      "text": "تضمینی",
+      "pattern": "تضمینی",
+      "negation_cancels": true
+    },
+    {
+      "text": "یه‌شبه",
+      "pattern": "یه شبه",
+      "negation_cancels": true
+    },
+    {
+      "text": "۱۰ برابر!",
+      "pattern": "۱۰ برابر",
+      "negation_cancels": true
+    },
+    {
+      "text": "انقلابی",
+      "pattern": "انقلابی",
+      "negation_cancels": true
+    },
+    {
+      "text": "پیشرفته‌ترین",
+      "pattern": "پیشرفته ترین",
+      "negation_cancels": true
+    },
+    {
+      "text": "بدون زحمت",
+      "pattern": "بدون زحمت",
+      "negation_cancels": true
+    },
+    {
+      "text": "جادویی",
+      "pattern": "جادویی",
+      "negation_cancels": true
+    },
+    {
+      "text": "فوری",
+      "pattern": "فوری",
+      "negation_cancels": true
+    },
+    {
+      "text": "بی‌نظیر",
+      "pattern": "بی نظیر",
+      "negation_cancels": true
+    },
+    {
+      "text": "پارادایم",
+      "pattern": "پارادایم",
+      "negation_cancels": true
+    },
+    {
+      "text": "اکوسیستم",
+      "pattern": "اکوسیستم",
+      "negation_cancels": true
+    },
+    {
+      "text": "سینرژی",
+      "pattern": "سینرژی",
+      "negation_cancels": true
+    },
+    {
+      "text": "موفقیت قطعی",
+      "pattern": "موفقیت قطعی",
+      "negation_cancels": true
+    },
+    {
+      "text": "بهترین ایران",
+      "pattern": "بهترین ایران",
+      "negation_cancels": true
+    },
+    {
+      "text": "شماره یک",
+      "pattern": "شماره یک",
+      "negation_cancels": true
+    }
+  ],
+  "cta": {
+    "preferred": [
+      "بررسی فرصت‌های AI",
+      "دریافت نقشه راه",
+      "شروع تحلیل",
+      "مشاهده خدمات",
+      "بررسی فرآیند",
+      "گفت‌وگو درباره پروژه",
+      "مشاهده نمونه اجرا"
+    ],
+    "avoid": [
+      "همین الان منفجرش کن",
+      "فرصت را از دست نده",
+      "تضمینی رشد کن",
+      "سریع پولدار شو"
+    ]
+  },
+  "copy_rules": [
+    "Start from the business problem.",
+    "Explain the role of AI in plain language.",
+    "Connect strategy to execution.",
+    "Prefer measurable outcomes when evidence exists.",
+    "Do not invent numbers.",
+    "Avoid vague transformation claims.",
+    "Keep headings compact.",
+    "Use practical B2B language.",
+    "Avoid motivational filler.",
+    "Avoid excessive English buzzwords in Persian copy."
+  ],
+  "proof": [
+    {
+      "id": "BP-01",
+      "claim": "۲۵+ سال تجربه نرم‌افزاری",
+      "kind": "credential",
+      "status": "self_reported",
+      "publish_permission": "not_needed",
+      "source_quote": "۲۵+ سال تجربه نرم‌افزاری",
+      "limits": "ادعای خود برند؛ در سند مشتری به‌عنوان ادعای تهیه‌کننده با منبع برند گاید، نه واقعیت تأییدشده."
+    },
+    {
+      "id": "BP-02",
+      "claim": "۲۰+ پروژه اجراشده",
+      "kind": "credential",
+      "status": "self_reported",
+      "publish_permission": "not_needed",
+      "source_quote": "۲۰+ پروژه اجراشده",
+      "limits": "تعداد بدون فهرست پروژه؛ فقط به‌عنوان ادعای تهیه‌کننده."
+    },
+    {
+      "id": "BP-03",
+      "claim": "۸+ صنعت پوشش‌داده",
+      "kind": "credential",
+      "status": "self_reported",
+      "publish_permission": "not_needed",
+      "source_quote": "۸+ · صنعت پوشش‌داده",
+      "limits": "فهرست صنعت‌ها در منبع نیامده."
+    },
+    {
+      "id": "BP-04",
+      "claim": "نماینده میز AI مدارس سما",
+      "kind": "credential",
+      "status": "self_reported",
+      "publish_permission": "unknown",
+      "source_quote": "نماینده میز AI مدارس سما",
+      "limits": "نقش و دوره‌ی نمایندگی مشخص نیست."
+    },
+    {
+      "id": "BP-05",
+      "claim": "مشتری: تشک مانی (manymattress.com)",
+      "kind": "client",
+      "status": "self_reported",
+      "publish_permission": "unknown",
+      "source_quote": "### نمونه ۱ — تشک مانی",
+      "limits": "مجوز انتشار نام در منبع نیامده؛ پیش از نام‌بردن در سند مشتری تأیید لازم است (راهنمای پرپوزال: «نمونه‌کار مرتبط و مجوز انتشار»)."
+    },
+    {
+      "id": "BP-06",
+      "claim": "نتیجه برای تشک مانی: افزایش قابل توجه بازدید سایت، بهبود رتبه گوگل",
+      "kind": "result",
+      "status": "self_reported",
+      "publish_permission": "unknown",
+      "source_quote": "افزایش قابل توجه بازدید سایت، بهبود رتبه گوگل",
+      "limits": "کیفی و بدون عدد یا خط مبنا؛ در کاتالوگ بدون منبع مصداق رد فوری «نتیجه بی‌منبع» است. فقط به‌صورت کیفی و با برچسب ادعای تهیه‌کننده."
+    },
+    {
+      "id": "BP-07",
+      "claim": "مشتری: طلای ماهان (mahangold.org)",
+      "kind": "client",
+      "status": "self_reported",
+      "publish_permission": "unknown",
+      "source_quote": "### نمونه ۲ — طلای ماهان",
+      "limits": "مجوز انتشار نام در منبع نیامده؛ پیش از نام‌بردن در سند مشتری تأیید لازم است (راهنمای پرپوزال: «نمونه‌کار مرتبط و مجوز انتشار»)."
+    },
+    {
+      "id": "BP-08",
+      "claim": "نتیجه برای طلای ماهان: ورود مشتریان جدید از گوگل، افزایش اعتبار برند",
+      "kind": "result",
+      "status": "self_reported",
+      "publish_permission": "unknown",
+      "source_quote": "ورود مشتریان جدید از گوگل، افزایش اعتبار برند",
+      "limits": "کیفی و بدون عدد یا خط مبنا؛ در کاتالوگ بدون منبع مصداق رد فوری «نتیجه بی‌منبع» است. فقط به‌صورت کیفی و با برچسب ادعای تهیه‌کننده."
+    },
+    {
+      "id": "BP-09",
+      "claim": "مشتری: راجین کابل (rajincable.ir)",
+      "kind": "client",
+      "status": "self_reported",
+      "publish_permission": "unknown",
+      "source_quote": "### نمونه ۳ — راجین کابل",
+      "limits": "مجوز انتشار نام در منبع نیامده؛ پیش از نام‌بردن در سند مشتری تأیید لازم است (راهنمای پرپوزال: «نمونه‌کار مرتبط و مجوز انتشار»)."
+    },
+    {
+      "id": "BP-10",
+      "claim": "نتیجه برای راجین کابل: حضور آنلاین حرفه‌ای، سهولت دسترسی مشتریان صنعتی",
+      "kind": "result",
+      "status": "self_reported",
+      "publish_permission": "unknown",
+      "source_quote": "حضور آنلاین حرفه‌ای، سهولت دسترسی مشتریان صنعتی",
+      "limits": "کیفی و بدون عدد یا خط مبنا؛ در کاتالوگ بدون منبع مصداق رد فوری «نتیجه بی‌منبع» است. فقط به‌صورت کیفی و با برچسب ادعای تهیه‌کننده."
+    }
+  ],
+  "packages": [
+    {
+      "id": "PK-01",
+      "name": "پکیج رشد دیجیتال",
+      "from_amount": 15000000,
+      "currency": "تومان",
+      "includes": "سایت + سئو + استراتژی شبکه اجتماعی + گزارش ماهانه",
+      "as_of": "تیر ۱۴۰۴",
+      "needs_confirmation": true,
+      "source_quote": "🚀 پکیج رشد دیجیتال — از ۱۵M تومان"
+    },
+    {
+      "id": "PK-02",
+      "name": "پکیج محتوای هوشمند",
+      "from_amount": 8000000,
+      "currency": "تومان",
+      "includes": "استراتژی محتوا + ۳۰ محتوا/ماه + طراحی تصاویر + زمان‌بندی",
+      "as_of": "تیر ۱۴۰۴",
+      "needs_confirmation": true,
+      "source_quote": "✍️ پکیج محتوای هوشمند — از ۸M تومان"
+    },
+    {
+      "id": "PK-03",
+      "name": "پکیج اتوماسیون",
+      "from_amount": 20000000,
+      "currency": "تومان",
+      "includes": "نقشه فرآیند + سیستم خودکار + داشبورد + گزارش ROI",
+      "as_of": "تیر ۱۴۰۴",
+      "needs_confirmation": true,
+      "source_quote": "⚙️ پکیج اتوماسیون — از ۲۰M تومان"
+    },
+    {
+      "id": "PK-04",
+      "name": "پکیج مشاوره AI",
+      "from_amount": 5000000,
+      "currency": "تومان",
+      "includes": "جلسه تشخیص + نقشه راه + اولویت‌بندی + گزارش فرصت‌ها",
+      "as_of": "تیر ۱۴۰۴",
+      "needs_confirmation": true,
+      "source_quote": "🧭 پکیج مشاوره AI — از ۵M تومان"
+    },
+    {
+      "id": "PK-05",
+      "name": "پکیج آموزش",
+      "from_amount": 10000000,
+      "currency": "تومان",
+      "includes": "دوره اختصاصی + پرامپت‌نویسی + ابزارهای AI + گواهینامه",
+      "as_of": "تیر ۱۴۰۴",
+      "needs_confirmation": true,
+      "source_quote": "🎓 پکیج آموزش — از ۱۰M تومان"
+    }
+  ],
+  "design": {
+    "mode": "light-first (Design System V2)",
+    "colors": [
+      {
+        "token": "--mh-white",
+        "name": "Soft White",
+        "hex": "#FDFDFD",
+        "role": "Main background / clean surface"
+      },
+      {
+        "token": "--mh-cream",
+        "name": "Warm Cream",
+        "hex": "#F0EBE5",
+        "role": "Secondary background / warm neutral surface"
+      },
+      {
+        "token": "--mh-sand",
+        "name": "Soft Sand",
+        "hex": "#D9D1C9",
+        "role": "Card border / divider / neutral surface"
+      },
+      {
+        "token": "--mh-teal-light",
+        "name": "Light Teal",
+        "hex": "#9AD9D5",
+        "role": "Soft highlight / light card / subtle visual emphasis"
+      },
+      {
+        "token": "--mh-text-primary",
+        "name": "Deep Navy",
+        "hex": "#051939",
+        "role": "Primary typography / strong contrast"
+      },
+      {
+        "token": "--mh-text-body",
+        "name": "Charcoal Gray",
+        "hex": "#585A5D",
+        "role": "Main body copy"
+      },
+      {
+        "token": "--mh-text-muted",
+        "name": "Soft Gray",
+        "hex": "#8A8988",
+        "role": "Secondary text / metadata"
+      },
+      {
+        "token": "--mh-navy",
+        "name": "Deep Navy",
+        "hex": "#051939",
+        "role": "Authority / headings / limited dark sections"
+      },
+      {
+        "token": "--mh-teal",
+        "name": "Mahdiyar Teal",
+        "hex": "#059B9A",
+        "role": "Primary brand accent / technology / active data"
+      },
+      {
+        "token": "--mh-teal-dark",
+        "name": "Deep Teal",
+        "hex": "#147B72",
+        "role": "Positive result / confirmation / controlled emphasis"
+      },
+      {
+        "token": "--mh-teal-mid",
+        "name": "Medium Teal",
+        "hex": "#37A09A",
+        "role": "Secondary accent / charts / key insight"
+      }
+    ],
+    "fonts": {
+      "fa": [
+        "Vazirmatn",
+        "YekanBakh",
+        "IRANYekan"
+      ],
+      "en_heading": [
+        "Space Grotesk",
+        "Helvetica Now",
+        "Inter",
+        "Neue Haas Grotesk",
+        "Helvetica",
+        "Arial"
+      ],
+      "en_body": [
+        "Inter",
+        "Helvetica",
+        "Arial"
+      ]
+    },
+    "contrast_pairs": [
+      "Deep Navy text on Soft White",
+      "Deep Navy text on Warm Cream",
+      "Soft White text on Deep Navy",
+      "Deep Navy text on Light Teal"
+    ],
+    "rules": [
+      "Orange, Gold and warm Yellow accents are not part of the Mahdiyar palette and should not be introduced as brand colors.",
+      "Do not use low-opacity text for information that must be readable.",
+      "Do not mix more than two font families in one output."
+    ]
+  },
+  "known_issues": [
+    {
+      "issue": "نتیجه‌ی نمونه‌کارها بدون عدد و منبع است",
+      "evidence": "برند گاید، بخش ۱۰: «افزایش قابل توجه بازدید سایت، بهبود رتبه گوگل»",
+      "handling": "BP-06، BP-08، BP-10 فقط کیفی و با برچسب ادعای تهیه‌کننده؛ هرگز به‌عنوان نتیجه‌ی سنجیده."
+    },
+    {
+      "issue": "مثال صدای برند عدد بی‌منبع دارد",
+      "evidence": "برند گاید، هویت کلامی: «۳۰٪ وقت تیمت رو پس می‌گیری»؛ Design System بخش ۱۰۴: «Do not invent numbers»",
+      "handling": "صدا از برند، قاعده‌ی عدد از Design System و راهنماها؛ عدد فقط با منبع دفتر ادعا."
+    },
+    {
+      "issue": "قیمت پکیج‌ها قدیمی است",
+      "evidence": "پکیج‌ها «از …M تومان»، برند گاید تیر ۱۴۰۴",
+      "handling": "needs_confirmation=true؛ نویسنده قیمت پکیج را فقط به‌عنوان «از» و با تأیید تازه می‌آورد؛ راهنمای پرپوزال: «قیمت نمونه آموزشی، قیمت بازار یا قیمت پروژه جدید نیست»."
+    },
+    {
+      "issue": "مجوز انتشار نام مشتریان ثبت نشده",
+      "evidence": "برند گاید، بخش ۱۰: نام و سایت سه مشتری بدون اشاره به مجوز",
+      "handling": "publish_permission=unknown؛ پیش از نام‌بردن باید تأیید شود."
+    },
+    {
+      "issue": "تعارض عکاسی بین دو منبع",
+      "evidence": "برند گاید: «نور تیره» و «اجتناب از فضاهای بسیار روشن و سفید»؛ Design System V2: Light-first",
+      "handling": "Design System V2 مقدم است (تصمیم کاربر)."
+    }
+  ]
+}
