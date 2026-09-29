@@ -17,6 +17,7 @@ import sys
 from fractions import Fraction
 
 import common
+import gate_report
 import run as runmod
 
 # وضعیت run بعد از هر تصمیم (docs/۰۴ نمودار حالت)
@@ -26,8 +27,7 @@ DECISION_FA = {"continue": "ادامه", "stop_target_met": "توقف: هدف ب
                "stop_max_rounds": "توقف: سقف دور", "stop_plateau": "توقف: درجا زدن"}
 
 
-SEVERITY_FA = {"veto": "رد فوری", "critical": "بحرانی", "below_min": "زیر حداقل", "below_target": "زیر هدف", "warn": "هشدار",
-               "human": "درخواست انسان"}
+SEVERITY_FA = gate_report.SEVERITY_FA
 
 
 def fr(x) -> Fraction:
@@ -225,24 +225,13 @@ def finalize(run_dir: pathlib.Path) -> pathlib.Path:
 def report(run_dir, loop: dict, gate: dict, files: list[str]) -> str:
     b = loop["best_version"]
     run = runmod.load_run(run_dir)
-    status_fa = {"ready_for_review": "آماده‌ی بررسی انسان", "needs_human": "نیازمند تصمیم انسان"}.get(run["status"], run["status"])
+    status_fa = gate_report.STATUS_FA.get(run["status"], run["status"])
     L = ['<div dir="rtl">', "", "# گزارش نهایی", "",
          f"- **وضعیت:** {status_fa} (بالاترین وضعیتی که سیستم می‌دهد؛ ارسال و تأیید نهایی فقط با انسان است)",
-         f"- **بهترین نسخه:** {fa(b)} با total {fa(gate['total'])} (نمره‌ی Loop {fa(gate['target']['score10'])})",
-         f"- **قبولی راهنما:** {'بله' if gate['guide']['pass'] else 'خیر'} · باند: {gate['guide']['band']}",
-         f"- **هدف Loop (> {fa(gate['target']['threshold'])}):** {'برآورده شد' if gate['target']['met'] else 'برآورده نشد'}",
-         f"- **دلیل توقف:** {loop['stop_reason']}"]
-    if not gate["judges_valid"]:
-        L.append("- **هشدار:** داورها کالیبره نشده‌اند (یا κ < ۰٫۶)؛ نمره‌ها **فرضیه**‌اند، نه اندازه‌گیری تأییدشده.")
-    if gate["guide"]["fail_reasons"]:
-        L += ["", "## چرا قبول نشد", ""] + [f"- {x}" for x in gate["guide"]["fail_reasons"]]
-    if gate.get("bottom_line"):
-        L += ["", "## خط پایانی داور", "", gate["bottom_line"]]
-    w = gate.get("biggest_weakness")
-    if w:
-        L += ["", f"**بزرگ‌ترین ضعف ({w['criterion']}):** {w['what']} — {w['why']}. راه‌حل: {w['fix']}"]
-    if gate["issues"]:
-        L += ["", "## ایرادهای باقی‌مانده (به ترتیب اثر)", ""] + [f"- ({SEVERITY_FA[i['severity']]}) {i['text']}" for i in gate["issues"]]
+         f"- **بهترین نسخه:** {fa(b)} با total {fa(gate['total'])} (نمره‌ی Loop {fa(gate['target']['score10'])})"]
+    L += gate_report.sections(gate)
+    L.append(f"- **دلیل توقف:** {loop['stop_reason']}")
+    L += gate_report.tail(gate)
     L += ["", "## تاریخچه‌ی Loop", ""] + (run_dir / "loop-log.md").read_text(encoding="utf-8").splitlines()[2:]
     L += ["", "## فایل‌های شاهد", ""] + [f"- `{f}`" for f in files] + ["", "</div>", ""]
     return "\n".join(L)
