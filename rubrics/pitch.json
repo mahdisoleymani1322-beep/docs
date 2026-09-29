@@ -1,0 +1,428 @@
+{
+  "doc_type": "pitch",
+  "title": "پیچ‌دک",
+  "guide": "guides/پیچ.md",
+  "scale": {
+    "0": "غایب/متناقض",
+    "1": "کلی و بی‌شاهد",
+    "2": "بخشی روشن با شکاف مهم",
+    "3": "کافی و مستند با ایراد جزئی",
+    "4": "کامل، قابل پیگیری و آزموده"
+  },
+  "scale_source": "۰ غایب/متناقض؛ ۱ کلی و بی‌شاهد؛ ۲ بخشی روشن با شکاف مهم؛ ۳ کافی و مستند با ایراد جزئی؛ ۴ کامل، قابل پیگیری و آزموده",
+  "formula": "weight * score / 4",
+  "criteria": [
+    {
+      "id": "R01",
+      "title": "تناسب مخاطب، مسیر و درخواست",
+      "weight": 10,
+      "sections": [
+        "S01",
+        "S14"
+      ]
+    },
+    {
+      "id": "R02",
+      "title": "مسئله، بینش و why now",
+      "weight": 15,
+      "sections": [
+        "S02",
+        "S03"
+      ]
+    },
+    {
+      "id": "R03",
+      "title": "محصول و دمو",
+      "weight": 10,
+      "sections": [
+        "S04",
+        "S05"
+      ]
+    },
+    {
+      "id": "R04",
+      "title": "بازار و رقابت و دفاع‌پذیری",
+      "weight": 15,
+      "sections": [
+        "S06",
+        "S07",
+        "S08"
+      ]
+    },
+    {
+      "id": "R05",
+      "title": "traction و صداقت شواهد",
+      "weight": 15,
+      "sections": [
+        "S10"
+      ]
+    },
+    {
+      "id": "R06",
+      "title": "مدل درآمد و GTM",
+      "weight": 10,
+      "sections": [
+        "S09",
+        "S11"
+      ]
+    },
+    {
+      "id": "R07",
+      "title": "منطق مالی و مصرف سرمایه",
+      "weight": 10,
+      "sections": [
+        "S13",
+        "S14"
+      ]
+    },
+    {
+      "id": "R08",
+      "title": "تیم و امکان اجرا",
+      "weight": 5,
+      "sections": [
+        "S12"
+      ]
+    },
+    {
+      "id": "R09",
+      "title": "نگارش، طراحی و دسترس‌پذیری",
+      "weight": 10,
+      "sections": []
+    }
+  ],
+  "gate": {
+    "min_total": 85.0,
+    "min_row": 2,
+    "critical": null
+  },
+  "gate_source": "آستانه ارسال: حداقل ۸۵ و هیچ ردیف کمتر از ۲.",
+  "bands": [
+    {
+      "min": 85,
+      "label": "آماده ارسال"
+    },
+    {
+      "min": 70,
+      "label": "نیازمند اصلاح"
+    },
+    {
+      "min": 0,
+      "label": "نیازمند بازطراحی روایت"
+    }
+  ],
+  "loop_target": {
+    "total_gt": 90.0,
+    "max_rounds": 4,
+    "plateau_rounds": 2,
+    "plateau_min_gain": 1.0
+  },
+  "claims_criterion": "R05",
+  "veto": [
+    {
+      "id": "V01",
+      "text": "عدد یا مشتری جعلی",
+      "detector": "judge"
+    },
+    {
+      "id": "V02",
+      "text": "درآمد آینده به‌عنوان واقعی",
+      "detector": "judge"
+    },
+    {
+      "id": "V03",
+      "text": "منبع نامرتبط",
+      "detector": "judge"
+    },
+    {
+      "id": "V04",
+      "text": "وعده محصول ناموجود",
+      "detector": "judge"
+    },
+    {
+      "id": "V05",
+      "text": "افشای داده بدون مجوز",
+      "detector": "judge"
+    },
+    {
+      "id": "V06",
+      "text": "تناقض حل‌نشده در ask و بودجه",
+      "detector": "judge"
+    }
+  ],
+  "veto_source": "رد فوری مستقل از نمره: عدد یا مشتری جعلی، درآمد آینده به‌عنوان واقعی، منبع نامرتبط، وعده محصول ناموجود، افشای داده بدون مجوز، تناقض حل‌نشده در ask و بودجه.",
+  "banned_effects": {
+    "guarantee": {
+      "caps": [
+        {
+          "criterion": "R05",
+          "max": 1
+        }
+      ]
+    },
+    "flawless": {
+      "caps": [
+        {
+          "criterion": "R05",
+          "max": 1
+        }
+      ]
+    },
+    "absolute_security": {
+      "caps": [
+        {
+          "criterion": "R05",
+          "max": 1
+        }
+      ]
+    },
+    "hype": {
+      "warn": true
+    }
+  },
+  "sections": [
+    {
+      "id": "S01",
+      "title": "معرفی و مقصود",
+      "required": true
+    },
+    {
+      "id": "S02",
+      "title": "مسئله و وضع موجود",
+      "required": true
+    },
+    {
+      "id": "S03",
+      "title": "بینش و چرا اکنون",
+      "required": true
+    },
+    {
+      "id": "S04",
+      "title": "راه‌حل",
+      "required": true
+    },
+    {
+      "id": "S05",
+      "title": "محصول و دمو",
+      "required": true
+    },
+    {
+      "id": "S06",
+      "title": "بازار",
+      "required": true
+    },
+    {
+      "id": "S07",
+      "title": "رقابت و جایگزین",
+      "required": true
+    },
+    {
+      "id": "S08",
+      "title": "دفاع‌پذیری یا moat",
+      "required": true
+    },
+    {
+      "id": "S09",
+      "title": "مدل کسب‌وکار",
+      "required": true
+    },
+    {
+      "id": "S10",
+      "title": "کشش و یادگیری",
+      "required": true
+    },
+    {
+      "id": "S11",
+      "title": "ورود به بازار یا GTM",
+      "required": true
+    },
+    {
+      "id": "S12",
+      "title": "تیم",
+      "required": true
+    },
+    {
+      "id": "S13",
+      "title": "منطق مالی و نقاط عطف",
+      "required": true
+    },
+    {
+      "id": "S14",
+      "title": "درخواست و مصرف سرمایه",
+      "required": true
+    }
+  ],
+  "intake_fields": [
+    {
+      "key": "company_product",
+      "label": "نام شرکت / محصول / نسخه / تاریخ قطع داده",
+      "required": true,
+      "blocking": true
+    },
+    {
+      "key": "deck_type",
+      "label": "نوع دک: سرمایه / فروش / همکاری",
+      "required": true,
+      "blocking": true
+    },
+    {
+      "key": "audience",
+      "label": "مخاطب مشخص، کشور، زبان و سابقه تصمیم‌های مشابه",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "company_stage",
+      "label": "مرحله شرکت: ایده / نمونه / پایلوت / درآمد / رشد",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "round_stage",
+      "label": "مرحله دور سرمایه: pre-seed / seed / سایر",
+      "required": false,
+      "blocking": false,
+      "required_if": {
+        "field": "deck_type",
+        "contains": "سرمایه"
+      }
+    },
+    {
+      "key": "decision",
+      "label": "تصمیم و اقدام مورد انتظار پس از مطالعه",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "delivery",
+      "label": "نسخه: ارسال ایمیلی / ارائه زنده، مدت ارائه",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "customer",
+      "label": "مشتری اولیه و خریدار اقتصادی، شغل و محرک خرید",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "problem",
+      "label": "مسئله فعلی، روش جایگزین و هزینه آن با شواهد",
+      "required": true,
+      "blocking": true
+    },
+    {
+      "key": "insight",
+      "label": "بینش متمایز و شواهد رد یا تأیید آن",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "capability_demo",
+      "label": "قابلیت موجود با دموی قابل مشاهده",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "capability_future",
+      "label": "قابلیت آزمایشی / در حال ساخت / صرفاً برنامه آینده",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "market",
+      "label": "بازار: واحد شمارش، جغرافیا، تعداد خریداران، منبع و سال",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "revenue_model",
+      "label": "مدل درآمد، قیمت آزمایش‌شده یا فرضی، هزینه خدمت‌رسانی",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "metrics",
+      "label": "شاخص‌های واقعی با تعریف، دوره، مخرج و گزارش خام",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "competitors",
+      "label": "رقبا و جایگزین‌ها، نسخه محصول و تاریخ مقایسه",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "channels",
+      "label": "کانال‌های جذب، ظرفیت فروش، نتایج آزمایش",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "team",
+      "label": "سوابق مرتبط اعضا، میزان تعهد و نقش‌های خالی",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "funding",
+      "label": "سرمایه درخواستی، پول موجود، مصرف ماهانه، نقاط عطف",
+      "required": false,
+      "blocking": false,
+      "required_if": {
+        "field": "deck_type",
+        "contains": "سرمایه"
+      }
+    },
+    {
+      "key": "constraints",
+      "label": "محدودیت امنیت، داده، مجوز انتشار لوگو و نام مشتری",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "visual_identity",
+      "label": "هویت بصری، فرمت تحویل، مالک تأیید نهایی",
+      "required": false,
+      "blocking": false
+    }
+  ],
+  "blocking_rationale": "بدون نام شرکت/محصول، نوع دک و مسئله، نوع روایت و اسلایدها معلوم نیست. بقیه با «نامعلوم» ادامه می‌یابند (راهنما: «پاسخ «نامعلوم» معتبر است، اما باید مالکِ تأمین داده و موعد داشته باشد»).",
+  "slices": {
+    "doc_types": "## ۱. نوع تصمیم را پیش از ساخت دک مشخص کنید",
+    "intake_form": "## ۲. فرم ورودی اجباری",
+    "evidence_rules": "## ۳. پژوهش و راستی‌آزمایی",
+    "architecture": "## ۴. معماری پیشنهادی ۱۴ اسلایدی جذب سرمایه",
+    "operations": "## ۷. قواعد عدد، اقتصاد و ادعا",
+    "writing_rules": "## ۸. نگارش فارسی و طراحی",
+    "checklist": "## ۹. بازبینی و چک‌لیست تحویل",
+    "rubric_text": "## ۱۰. روبریک ۱۰۰ امتیازی"
+  },
+  "length_words": null,
+  "interpretations": [
+    {
+      "topic": "مرز قبولی",
+      "decision": "قبولی یعنی total ≥ min_total بدون گرد کردن؛ باند «۷۰ تا ۸۴» یعنی 70 ≤ total < 85."
+    },
+    {
+      "topic": "هدف Loop",
+      "decision": "total > 90.0 به درخواست کاربر؛ سخت‌تر از آستانه‌ی راهنما. سقف ۴ دور و توقف با درجا زدن (بهبود کمتر از ۱٫۰ در ۲ دور) سیاست توکن این پروژه است، نه متن راهنما."
+    },
+    {
+      "topic": "نگاشت ردیف به بخش",
+      "decision": "فیلد sections هر ردیف تفسیر این پروژه است؛ فقط برای سقف ۰ وقتی بخش مرتبط غایب است استفاده می‌شود."
+    },
+    {
+      "topic": "ادعای بی‌پشتوانه",
+      "decision": "هر ادعای unsupported ← ردیف claims_criterion حداکثر ۱ (سطح ۱: بی‌شاهد)؛ هر contradicts_ledger ← حداکثر ۰ (سطح ۰)."
+    },
+    {
+      "topic": "فیلدهای مسدودکننده",
+      "decision": "فقط فیلدهایی که بدون آن‌ها نوع و موضوع سند معلوم نیست؛ بقیه با [نامعلوم] ادامه می‌یابند، چون راهنما پیش‌نویس با مجهول را مجاز می‌داند."
+    },
+    {
+      "topic": "رد فوری با کد",
+      "decision": "تا فاز G همه‌ی رد فوری‌ها detector=judge هستند؛ چک ask و مصرف سرمایه در فاز G به V06 کد اضافه می‌کند."
+    }
+  ]
+}

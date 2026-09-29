@@ -1,0 +1,469 @@
+{
+  "doc_type": "proposal",
+  "title": "پروپوزال فروش و اجرای پروژه",
+  "guide": "guides/پرپوزال.md",
+  "scale": {
+    "0": "غایب/متناقض",
+    "1": "عمومی و بی‌شاهد",
+    "2": "ناقص",
+    "3": "کافی با نقص جزئی",
+    "4": "مستند، مشخص و تأییدشده توسط مالک مربوط"
+  },
+  "scale_source": "۰ غایب/متناقض؛ ۱ عمومی و بی‌شاهد؛ ۲ ناقص؛ ۳ کافی با نقص جزئی؛ ۴ مستند، مشخص و تأییدشده توسط مالک مربوط",
+  "formula": "weight * score / 4",
+  "criteria": [
+    {
+      "id": "R01",
+      "title": "شناخت و شخصی‌سازی مشتری",
+      "weight": 15,
+      "sections": [
+        "S02",
+        "S03"
+      ]
+    },
+    {
+      "id": "R02",
+      "title": "نتیجه و معیار سنجش",
+      "weight": 10,
+      "sections": [
+        "S04"
+      ]
+    },
+    {
+      "id": "R03",
+      "title": "دامنه و تحویل‌دادنی",
+      "weight": 15,
+      "sections": [
+        "S05",
+        "S06"
+      ]
+    },
+    {
+      "id": "R04",
+      "title": "پذیرش و مدیریت تغییر",
+      "weight": 10,
+      "sections": [
+        "S10",
+        "S13"
+      ]
+    },
+    {
+      "id": "R05",
+      "title": "فرایند، زمان و نقش‌ها",
+      "weight": 10,
+      "sections": [
+        "S07",
+        "S08"
+      ]
+    },
+    {
+      "id": "R06",
+      "title": "قیمت و شرایط تجاری",
+      "weight": 15,
+      "sections": [
+        "S09"
+      ]
+    },
+    {
+      "id": "R07",
+      "title": "امنیت، فرض‌ها و ریسک",
+      "weight": 10,
+      "sections": [
+        "S10",
+        "S11",
+        "S12"
+      ]
+    },
+    {
+      "id": "R08",
+      "title": "proof و صداقت ادعا",
+      "weight": 5,
+      "sections": [
+        "S14"
+      ]
+    },
+    {
+      "id": "R09",
+      "title": "نگارش و طراحی و دسترس‌پذیری",
+      "weight": 5,
+      "sections": []
+    },
+    {
+      "id": "R10",
+      "title": "گام بعد و انطباق با دستور مشتری",
+      "weight": 5,
+      "sections": [
+        "S01",
+        "S15"
+      ]
+    }
+  ],
+  "gate": {
+    "min_total": 85.0,
+    "min_row": 2,
+    "critical": {
+      "criteria": [
+        "R03",
+        "R04",
+        "R06"
+      ],
+      "min": 3
+    }
+  },
+  "gate_source": "آستانه ارسال: ۸۵، هیچ معیار زیر ۲ و امتیاز حداقل ۳ در دامنه، پذیرش و قیمت.",
+  "bands": [
+    {
+      "min": 85,
+      "label": "آماده ارسال"
+    },
+    {
+      "min": 70,
+      "label": "نیازمند اصلاح"
+    },
+    {
+      "min": 0,
+      "label": "نیازمند بازتعریف پیشنهاد"
+    }
+  ],
+  "loop_target": {
+    "total_gt": 90.0,
+    "max_rounds": 4,
+    "plateau_rounds": 2,
+    "plateau_min_gain": 1.0
+  },
+  "claims_criterion": "R08",
+  "veto": [
+    {
+      "id": "V01",
+      "text": "مشتری/نتیجه/جلسه جعلی",
+      "detector": "judge"
+    },
+    {
+      "id": "V02",
+      "text": "تضمین درآمد یا بی‌خطایی",
+      "detector": "both"
+    },
+    {
+      "id": "V03",
+      "text": "جمع قیمت غلط",
+      "detector": "code"
+    },
+    {
+      "id": "V04",
+      "text": "دامنه ناسازگار با قیمت",
+      "detector": "judge"
+    },
+    {
+      "id": "V05",
+      "text": "فقدان معیار پذیرش حیاتی",
+      "detector": "both"
+    },
+    {
+      "id": "V06",
+      "text": "ادعای امنیت اجرا‌نشده",
+      "detector": "judge"
+    },
+    {
+      "id": "V07",
+      "text": "افشای بدون مجوز",
+      "detector": "judge"
+    },
+    {
+      "id": "V08",
+      "text": "عدم پاسخ به الزام اجباری RFP",
+      "detector": "judge",
+      "applies_if": "proposal_kind شامل RFP"
+    }
+  ],
+  "veto_source": "رد فوری: مشتری/نتیجه/جلسه جعلی، تضمین درآمد یا بی‌خطایی، جمع قیمت غلط، دامنه ناسازگار با قیمت، فقدان معیار پذیرش حیاتی، ادعای امنیت اجرا‌نشده، افشای بدون مجوز یا عدم پاسخ به الزام اجباری RFP.",
+  "banned_effects": {
+    "guarantee": {
+      "veto": [
+        "V02"
+      ]
+    },
+    "flawless": {
+      "veto": [
+        "V02"
+      ]
+    },
+    "absolute_security": {
+      "caps": [
+        {
+          "criterion": "R07",
+          "max": 1
+        }
+      ]
+    },
+    "hype": {
+      "warn": true
+    }
+  },
+  "sections": [
+    {
+      "id": "S01",
+      "title": "مشخصات و کنترل نسخه",
+      "required": true
+    },
+    {
+      "id": "S02",
+      "title": "خلاصه اجرایی",
+      "required": true
+    },
+    {
+      "id": "S03",
+      "title": "تشخیص و وضع موجود",
+      "required": true
+    },
+    {
+      "id": "S04",
+      "title": "نتایج و معیار سنجش",
+      "required": true
+    },
+    {
+      "id": "S05",
+      "title": "راه‌حل و منطق انتخاب",
+      "required": true
+    },
+    {
+      "id": "S06",
+      "title": "دامنه و تحویل‌دادنی‌ها",
+      "required": true
+    },
+    {
+      "id": "S07",
+      "title": "فرایند و زمان‌بندی",
+      "required": true
+    },
+    {
+      "id": "S08",
+      "title": "نقش‌ها و شیوه همکاری",
+      "required": true
+    },
+    {
+      "id": "S09",
+      "title": "قیمت و شرایط تجاری",
+      "required": true
+    },
+    {
+      "id": "S10",
+      "title": "فرض‌ها، استثناها و تغییر دامنه",
+      "required": true
+    },
+    {
+      "id": "S11",
+      "title": "امنیت و حریم خصوصی",
+      "required": true
+    },
+    {
+      "id": "S12",
+      "title": "ریسک و کنترل",
+      "required": true
+    },
+    {
+      "id": "S13",
+      "title": "پذیرش و تحویل نهایی",
+      "required": true
+    },
+    {
+      "id": "S14",
+      "title": "توان اجرا و نمونه مرتبط",
+      "required": true
+    },
+    {
+      "id": "S15",
+      "title": "گام بعد و وضعیت توافق",
+      "required": true
+    }
+  ],
+  "intake_fields": [
+    {
+      "key": "client_identity",
+      "label": "هویت دقیق مشتری، نام تجاری و طرف تصمیم",
+      "required": true,
+      "blocking": true
+    },
+    {
+      "key": "stakeholders",
+      "label": "حامی پروژه / امضاکننده / کاربر / IT / مسئول داده",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "proposal_kind",
+      "label": "نوع پیشنهاد: فروش / مشاوره / RFP",
+      "required": true,
+      "blocking": true
+    },
+    {
+      "key": "decision",
+      "label": "تصمیم مطلوب، موعد و فرایند تصویب بودجه",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "discovery_notes",
+      "label": "صورت‌جلسه کشف نیاز، تاریخ و موارد تأییدشده",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "current_state",
+      "label": "وضع موجود، مسئله، هزینه و خط مبنا با روش اندازه‌گیری",
+      "required": true,
+      "blocking": true
+    },
+    {
+      "key": "desired_outcome",
+      "label": "نتیجه مطلوب، شاخص، هدف، دوره و مالک سنجش",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "scope",
+      "label": "دامنه: کاربران، فرایندها، کانال‌ها، محیط‌ها، داده و حجم",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "deliverables",
+      "label": "تحویل‌دادنی‌های مورد انتظار و معیار پذیرش هرکدام",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "capability_status",
+      "label": "قابلیت موجود / نیازمند ساخت / خارج از دامنه",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "dependencies",
+      "label": "وابستگی‌های فنی، دسترسی و اجازه استفاده داده",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "roles_capacity",
+      "label": "نقش‌ها، ظرفیت تیم و زمان پاسخ مشتری",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "schedule",
+      "label": "زمان‌بندی، تاریخ محدودکننده، تعطیلات و روز کاری",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "budget",
+      "label": "بودجه، ارز، واحد قیمت، هزینه جاری و مالیات مورد توافق",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "payment_terms",
+      "label": "شرایط پرداخت پیشنهادی و اعتبار قیمت",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "assumptions",
+      "label": "فرض‌ها، استثناها، ریسک‌ها و روش درخواست تغییر",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "security",
+      "label": "امنیت: نوع داده، محل نگهداری، پردازشگران، دسترسی، حذف و رخداد",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "ownership",
+      "label": "مالکیت خروجی سفارشی، دارایی قبلی و مجوز طرف ثالث",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "support_exit",
+      "label": "پشتیبانی، آموزش، خروج و تحویل دسترسی‌ها",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "proof",
+      "label": "نمونه‌کار مرتبط و مجوز انتشار",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "rfp",
+      "label": "الزامات RFP و اصلاحیه‌ها، مهلت، منطقه زمانی و مسیر ارسال",
+      "required": false,
+      "blocking": false,
+      "required_if": {
+        "field": "proposal_kind",
+        "contains": "RFP"
+      }
+    },
+    {
+      "key": "visual_identity",
+      "label": "هویت بصری، فرمت تحویل، تأییدکنندگان",
+      "required": false,
+      "blocking": false
+    },
+    {
+      "key": "open_questions",
+      "label": "موارد نامعلوم + سؤال + مالک + موعد",
+      "required": false,
+      "blocking": false
+    }
+  ],
+  "blocking_rationale": "بدون هویت مشتری، نوع پیشنهاد و وضع موجود/مسئله، استراتژیست نمی‌تواند نوع و بخش‌های سند را تعیین کند. بقیه‌ی فیلدها با [نامعلوم] و gap ادامه می‌یابند (پرامپت مادر: «حداکثر پنج سؤال مسدودکننده بپرس و کار مستقل را ادامه بده»).",
+  "slices": {
+    "doc_types": "## ۱. نوع پیشنهاد و مرحله تصمیم",
+    "intake_form": "## ۲. فرم ورودی اجباری سفارش‌دهنده",
+    "evidence_rules": "## ۳. فرایند پژوهش و مدیریت شواهد",
+    "architecture": "## ۴. معماری بخش‌به‌بخش",
+    "operations": "## ۵. جدول‌های عملیاتی ضروری",
+    "writing_rules": "## ۷. نگارش فارسی، ادعا و لحن",
+    "checklist": "## ۹. بازبینی چندمرحله‌ای",
+    "rubric_text": "## ۱۰. روبریک ۱۰۰ امتیازی"
+  },
+  "length_words": {
+    "min": 1000,
+    "max": 3200,
+    "derivation": "فصل ۴: «متن اصلی را حدود ۴ تا ۸ صفحه» × فصل ۸: «حدود ۲۵۰ تا ۴۰۰ کلمه برای صفحه متنی»؛ هر دو پیشنهاد راهنماست، پس فقط هشدار."
+  },
+  "interpretations": [
+    {
+      "topic": "مرز قبولی",
+      "decision": "قبولی یعنی total ≥ min_total بدون گرد کردن؛ باند «۷۰ تا ۸۴» یعنی 70 ≤ total < 85."
+    },
+    {
+      "topic": "هدف Loop",
+      "decision": "total > 90.0 به درخواست کاربر؛ سخت‌تر از آستانه‌ی راهنما. سقف ۴ دور و توقف با درجا زدن (بهبود کمتر از ۱٫۰ در ۲ دور) سیاست توکن این پروژه است، نه متن راهنما."
+    },
+    {
+      "topic": "نگاشت ردیف به بخش",
+      "decision": "فیلد sections هر ردیف تفسیر این پروژه است؛ فقط برای سقف ۰ وقتی بخش مرتبط غایب است استفاده می‌شود."
+    },
+    {
+      "topic": "ادعای بی‌پشتوانه",
+      "decision": "هر ادعای unsupported ← ردیف claims_criterion حداکثر ۱ (سطح ۱: بی‌شاهد)؛ هر contradicts_ledger ← حداکثر ۰ (سطح ۰)."
+    },
+    {
+      "topic": "فیلدهای مسدودکننده",
+      "decision": "فقط فیلدهایی که بدون آن‌ها نوع و موضوع سند معلوم نیست؛ بقیه با [نامعلوم] ادامه می‌یابند، چون راهنما پیش‌نویس با مجهول را مجاز می‌داند."
+    },
+    {
+      "topic": "معیار پذیرش حیاتی",
+      "decision": "پذیرش هر تحویل حیاتی است (چک‌لیست نهایی: «هر تحویل شناسه و معیار پذیرش دارد»)؛ تحویل بدون پذیرش ← V05 با کد."
+    },
+    {
+      "topic": "درصد پرداخت",
+      "decision": "جمع درصد ≠ ۱۰۰ ← سقف R06 برابر ۱، بدون رد فوری (جزو قبولی بخش ۹ است، نه فهرست رد فوری)."
+    }
+  ]
+}

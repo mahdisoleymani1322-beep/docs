@@ -1,0 +1,384 @@
+{
+  "doc_type": "catalog",
+  "title": "کاتالوگ محصول و خدمات",
+  "guide": "guides/کاتالوگ.md",
+  "scale": {
+    "0": "غایب/نادرست",
+    "1": "کلی و بی‌شاهد",
+    "2": "ناقص",
+    "3": "روشن با نقص جزئی",
+    "4": "روشن، مستند و با خواننده/مالک مربوط آزموده"
+  },
+  "scale_source": "۰ غایب/نادرست؛ ۱ کلی و بی‌شاهد؛ ۲ ناقص؛ ۳ روشن با نقص جزئی؛ ۴ روشن، مستند و با خواننده/مالک مربوط آزموده",
+  "formula": "weight * score / 4",
+  "criteria": [
+    {
+      "id": "R01",
+      "title": "تناسب مخاطب و کار مشتری",
+      "weight": 20,
+      "sections": [
+        "S01",
+        "S03"
+      ]
+    },
+    {
+      "id": "R02",
+      "title": "معماری انتخاب و مسیر سریع",
+      "weight": 15,
+      "sections": [
+        "S02"
+      ]
+    },
+    {
+      "id": "R03",
+      "title": "سناریو، خروجی و حدود تناسب",
+      "weight": 15,
+      "sections": [
+        "S04",
+        "S05"
+      ]
+    },
+    {
+      "id": "R04",
+      "title": "کیفیت و صداقت proof",
+      "weight": 15,
+      "sections": [
+        "S06",
+        "S09"
+      ]
+    },
+    {
+      "id": "R05",
+      "title": "بسته، پیش‌نیاز و شیوه شروع",
+      "weight": 10,
+      "sections": [
+        "S07",
+        "S08"
+      ]
+    },
+    {
+      "id": "R06",
+      "title": "CTA و مسیر تماس",
+      "weight": 10,
+      "sections": [
+        "S10"
+      ]
+    },
+    {
+      "id": "R07",
+      "title": "نگارش فارسی و دقت ادعا",
+      "weight": 5,
+      "sections": []
+    },
+    {
+      "id": "R08",
+      "title": "طراحی و دسترس‌پذیری",
+      "weight": 10,
+      "sections": []
+    }
+  ],
+  "gate": {
+    "min_total": 85.0,
+    "min_row": 2,
+    "critical": null
+  },
+  "gate_source": "آستانه انتشار: ۸۵، بدون معیار زیر ۲.",
+  "bands": [
+    {
+      "min": 85,
+      "label": "آماده انتشار"
+    },
+    {
+      "min": 70,
+      "label": "اصلاح و آزمون مجدد"
+    },
+    {
+      "min": 0,
+      "label": "بازطراحی"
+    }
+  ],
+  "loop_target": {
+    "total_gt": 90.0,
+    "max_rounds": 4,
+    "plateau_rounds": 2,
+    "plateau_min_gain": 1.0
+  },
+  "claims_criterion": "R04",
+  "veto": [
+    {
+      "id": "V01",
+      "text": "کیس/لوگوی جعلی",
+      "detector": "judge"
+    },
+    {
+      "id": "V02",
+      "text": "نتیجه بی‌منبع",
+      "detector": "judge"
+    },
+    {
+      "id": "V03",
+      "text": "قابلیت ناموجود به‌عنوان موجود",
+      "detector": "judge"
+    },
+    {
+      "id": "V04",
+      "text": "قیمت متناقض",
+      "detector": "judge"
+    },
+    {
+      "id": "V05",
+      "text": "افشای داده",
+      "detector": "judge"
+    },
+    {
+      "id": "V06",
+      "text": "CTA خراب",
+      "detector": "judge"
+    },
+    {
+      "id": "V07",
+      "text": "حذف محدودیتی که انتخاب خرید را عوض می‌کند",
+      "detector": "judge"
+    }
+  ],
+  "veto_source": "رد فوری: کیس/لوگوی جعلی، نتیجه بی‌منبع، قابلیت ناموجود به‌عنوان موجود، قیمت متناقض، افشای داده، CTA خراب یا حذف محدودیتی که انتخاب خرید را عوض می‌کند.",
+  "banned_effects": {
+    "guarantee": {
+      "caps": [
+        {
+          "criterion": "R04",
+          "max": 1
+        }
+      ]
+    },
+    "flawless": {
+      "caps": [
+        {
+          "criterion": "R04",
+          "max": 1
+        }
+      ]
+    },
+    "absolute_security": {
+      "caps": [
+        {
+          "criterion": "R07",
+          "max": 1
+        }
+      ]
+    },
+    "hype": {
+      "warn": true
+    }
+  },
+  "sections": [
+    {
+      "id": "S01",
+      "title": "جلد و تناسب اولیه",
+      "required": true
+    },
+    {
+      "id": "S02",
+      "title": "راهنمای انتخاب و مسیر سریع",
+      "required": true
+    },
+    {
+      "id": "S03",
+      "title": "کار مشتری و وضع موجود",
+      "required": true
+    },
+    {
+      "id": "S04",
+      "title": "سناریوی اصلی",
+      "required": true
+    },
+    {
+      "id": "S05",
+      "title": "سناریوی دوم و حدود تناسب",
+      "required": true
+    },
+    {
+      "id": "S06",
+      "title": "شواهد و نمونه خروجی",
+      "required": true
+    },
+    {
+      "id": "S07",
+      "title": "بسته‌بندی پیشنهاد",
+      "required": true
+    },
+    {
+      "id": "S08",
+      "title": "شروع همکاری و تحویل",
+      "required": true
+    },
+    {
+      "id": "S09",
+      "title": "اعتماد، محدودیت و پرسش‌های خرید",
+      "required": true
+    },
+    {
+      "id": "S10",
+      "title": "اقدام بعدی",
+      "required": true
+    }
+  ],
+  "intake_fields": [
+    {
+      "key": "product",
+      "label": "نام محصول/خدمت، مالک محتوا، نسخه، تاریخ اعتبار",
+      "required": true,
+      "blocking": true
+    },
+    {
+      "key": "doc_kind",
+      "label": "نوع سند: محصول / خدمات / SaaS / corporate",
+      "required": true,
+      "blocking": true
+    },
+    {
+      "key": "primary_audience",
+      "label": "مخاطب اصلی: نقش، صنعت، اندازه تیم، منطقه و زبان",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "secondary_readers",
+      "label": "خواننده ثانویه: مدیر، کاربر، IT، تدارکات",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "usage_context",
+      "label": "موقعیت استفاده: ایمیل، واتساپ، وب، نمایشگاه، جلسه",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "decision_cta",
+      "label": "تصمیم مطلوب و CTA اصلی",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "customer_jobs",
+      "label": "سه کار مهم مشتری با زبان خودش و منبع مصاحبه",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "need_trigger",
+      "label": "محرک نیاز، روش فعلی، مانع و پیامد مستند",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "scenarios",
+      "label": "سناریوهای اولویت‌دار و سناریوهای خارج از تناسب",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "capability_status",
+      "label": "وضعیت هر قابلیت: موجود / آزمایشی / برنامه آینده",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "scenario_io",
+      "label": "ورودی مشتری، خروجی و پیش‌نیاز هر سناریو",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "packages",
+      "label": "بسته‌ها، حدود مصرف، واحد قیمت، هزینه‌های جدا و اعتبار قیمت",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "onboarding",
+      "label": "نحوه شروع، آموزش، پشتیبانی و نقش مشتری",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "proof",
+      "label": "شواهد: نمونه خروجی، دمو، ارزیابی، کیس مجاز، نقل‌قول مجاز",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "constraints",
+      "label": "محدودیت‌های داده، امنیت، کانال و یکپارچگی",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "brand_assets",
+      "label": "فونت، رنگ، لوگو و مجوز تصاویر",
+      "required": false,
+      "blocking": false
+    },
+    {
+      "key": "contact_path",
+      "label": "مسیر واقعی تماس/دمو، مسئول پاسخ و زمان پاسخ تأییدشده",
+      "required": true,
+      "blocking": false
+    },
+    {
+      "key": "output_format",
+      "label": "فرمت خروجی و شرایط چاپ یا نمایش",
+      "required": false,
+      "blocking": false
+    },
+    {
+      "key": "open_gaps",
+      "label": "کمبود داده + مالک + موعد",
+      "required": false,
+      "blocking": false
+    }
+  ],
+  "blocking_rationale": "بدون نام محصول/خدمت و نوع سند، معماری کاتالوگ معلوم نیست. کار مشتریِ پژوهش‌نشده «فرضیه» نامیده می‌شود و کار ادامه می‌یابد (راهنما: «اگر مشتری پژوهش نشده است، «customer-job» را فرضیه بنامید»).",
+  "slices": {
+    "doc_types": "## ۱. خروجی، هدف و جایگاه در تصمیم خرید",
+    "intake_form": "## ۲. فرم جمع‌آوری ورودی اجباری",
+    "evidence_rules": "## ۳. پژوهش و راستی‌آزمایی",
+    "architecture": "## ۴. معماری پیشنهادی کاتالوگ SaaS/خدمات در ۱۰ صفحه",
+    "operations": "## ۵. تبدیل قابلیت به کار مشتری",
+    "writing_rules": "## ۸. قواعد فارسی و معماری اطلاعات",
+    "checklist": "## ۱۱. بازبینی چندمرحله‌ای و چک‌لیست",
+    "rubric_text": "## ۱۲. روبریک ۱۰۰ امتیازی"
+  },
+  "length_words": null,
+  "interpretations": [
+    {
+      "topic": "مرز قبولی",
+      "decision": "قبولی یعنی total ≥ min_total بدون گرد کردن؛ باند «۷۰ تا ۸۴» یعنی 70 ≤ total < 85."
+    },
+    {
+      "topic": "هدف Loop",
+      "decision": "total > 90.0 به درخواست کاربر؛ سخت‌تر از آستانه‌ی راهنما. سقف ۴ دور و توقف با درجا زدن (بهبود کمتر از ۱٫۰ در ۲ دور) سیاست توکن این پروژه است، نه متن راهنما."
+    },
+    {
+      "topic": "نگاشت ردیف به بخش",
+      "decision": "فیلد sections هر ردیف تفسیر این پروژه است؛ فقط برای سقف ۰ وقتی بخش مرتبط غایب است استفاده می‌شود."
+    },
+    {
+      "topic": "ادعای بی‌پشتوانه",
+      "decision": "هر ادعای unsupported ← ردیف claims_criterion حداکثر ۱ (سطح ۱: بی‌شاهد)؛ هر contradicts_ledger ← حداکثر ۰ (سطح ۰)."
+    },
+    {
+      "topic": "فیلدهای مسدودکننده",
+      "decision": "فقط فیلدهایی که بدون آن‌ها نوع و موضوع سند معلوم نیست؛ بقیه با [نامعلوم] ادامه می‌یابند، چون راهنما پیش‌نویس با مجهول را مجاز می‌داند."
+    },
+    {
+      "topic": "دو رد فوری در یک عبارت",
+      "decision": "«CTA خراب یا حذف محدودیتی که انتخاب خرید را عوض می‌کند» دو مورد جدا شمرده شد (V06، V07)، چون دو خطای مستقل‌اند."
+    },
+    {
+      "topic": "رد فوری با کد",
+      "decision": "تا فاز G همه detector=judge هستند؛ چک یکسانی قیمت در همه‌ی صفحه‌ها در فاز G به V04 کد اضافه می‌کند."
+    }
+  ]
+}
