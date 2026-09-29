@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
+import os
 import pathlib
 import re
 import sys
@@ -16,9 +17,10 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCHEMAS = ROOT / "schemas"
 RUBRICS = ROOT / "rubrics"
 GUIDES = ROOT / "guides"
-RUNS = ROOT / "runs"
-LESSONS = ROOT / "lessons"
-FEEDBACK = ROOT / "feedback"
+# مسیرهای خروجی با متغیر محیطی قابل‌جابه‌جایی‌اند تا آزمون‌ها در پوشه‌ی موقت اجرا شوند، نه در ریپو
+RUNS = pathlib.Path(os.environ.get("STUDIO_RUNS_DIR", ROOT / "runs"))
+LESSONS = pathlib.Path(os.environ.get("STUDIO_LESSONS_DIR", ROOT / "lessons"))
+FEEDBACK = pathlib.Path(os.environ.get("STUDIO_FEEDBACK_DIR", ROOT / "feedback"))
 GOLDEN = ROOT / "evals" / "golden"
 CALIBRATION = ROOT / "evals" / "calibration.json"
 DOC_TYPES = ("proposal", "pitch", "catalog")
@@ -83,8 +85,8 @@ def schema_for_path(path: pathlib.Path) -> str | None:
         return "banned" if name == "banned.json" else "rubric"
     table = [
         (r"^input\.json$", "input"), (r"^gaps\.json$", "gaps"), (r"^questions\.json$", "questions"),
-        (r"^brief\.json$", "brief"), (r"^claims\.json$", "claims"),
-        (r"^document(\.v[0-9]+)?\.json$", "document"), (r"^revision\.v[0-9]+\.json$", "revision"),
+        (r"^brief\.json$", "brief"), (r"^(.+\.)?claims\.json$", "claims"),
+        (r"^(.+\.)?document(\..+)?\.json$", "document"), (r"^revision\.v[0-9]+\.json$", "revision"),
         (r"^checks\.v[0-9]+\.json$", "checks"), (r"^gate\.v[0-9]+\.json$", "gate"),
         (r"^issues\.v[0-9]+\.json$", "issues"), (r"^loop\.json$", "loop"), (r"^run\.json$", "run"),
         (r"^lessons\.proposed\.json$", "lessons-proposed"), (r"^lessons\.json$", "lessons"),

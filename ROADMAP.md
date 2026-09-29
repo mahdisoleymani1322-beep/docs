@@ -27,7 +27,7 @@
 | B1 | `schemas/document.schema.json`، `scripts/common.py` | نمونه‌ی معتبر پاس و نمونه‌ی نامعتبر رد (تست) | ✅ |
 | B2 | بقیه‌ی schemaها (۲۰ فایل) + `tests/test_schemas.py` | همان آزمون برای هر schema | ✅ |
 | B3 | `rubrics/{proposal,pitch,catalog}.json`، `rubrics/banned.json` | جمع وزن‌ها ۱۰۰؛ ردیف‌ها، آستانه‌ها و رد فوری‌ها عیناً مطابق راهنما (تست) | ✅ |
-| B4 | `validate.py`، `slice_guide.py`، `run.py` | برش «روبریک» پرپوزال دقیقاً جدول راهنما را برمی‌گرداند (تست) | ⏳ |
+| B4 | `validate.py`، `slice_guide.py`، `run.py` | برش «روبریک» پرپوزال دقیقاً جدول راهنما را برمی‌گرداند (تست) | ✅ |
 
 ## فاز C: ارزیاب و Loop (قبل از نویسنده)
 
