@@ -101,27 +101,78 @@ def image_info(path: pathlib.Path) -> dict:
 class LogoTest(unittest.TestCase):
     def setUp(self):
         self.logo = common.load_json(ROOT / "brand" / "mahdiyar.json")["assets"]["logo"]
+        self.files = self.logo["files"]
 
     def test_files_exist_and_match_card(self):
-        for f in self.logo["files"]:
+        for f in self.files:
             info = image_info(ROOT / f["path"])
-            self.assertEqual((info["w"], info["h"]), (self.logo["canvas_px"],) * 2, f["path"])
-            self.assertTrue(info["alpha"], f"{f['path']}: کارت می‌گوید پس‌زمینه شفاف است")
+            self.assertEqual((info["w"], info["h"]), (f["width_px"], f["height_px"]), f["path"])
+            self.assertTrue(info["alpha"], f"{f['path']}: پس‌زمینه‌ی لوگو شفاف است")
         self.assertTrue((ROOT / self.logo["rules_doc"]).exists())
+        on_disk = {p.name for p in (ROOT / "brand" / "assets" / "logo").iterdir()}
+        self.assertEqual(on_disk, {pathlib.Path(f["path"]).name for f in self.files}, "فایل بی‌ثبت یا ثبت بی‌فایل")
 
-    def test_backgrounds_only_light_until_reversed_version(self):
-        """بخش‌های سرمه‌ای لوگو روی Deep Navy ناپدید می‌شوند؛ تا نسخه‌ی معکوس نیامده، فقط پس‌زمینه‌ی روشن."""
-        navy = "#051939"
-        for bg in self.logo["allowed_backgrounds"]:
-            self.assertGreaterEqual(contrast(navy, bg), 4.5, bg)
-        self.assertNotIn(navy, self.logo["allowed_backgrounds"])
-        self.assertTrue(any("معکوس" in v for v in self.logo["missing_versions"]))
+    def test_every_variant_exists_in_both_polarities(self):
+        for variant in ("square", "horizontal", "icon"):
+            self.assertEqual({f["on"] for f in self.files if f["variant"] == variant}, {"light", "dark"}, variant)
 
-    def test_min_size_keeps_smallest_text_legible(self):
-        """«HOOSH AFZA» ۵۲px از ۱۲۵۴px است؛ در حداقل عرض، ارتفاع حرف ≥ ۱٫۵mm و ≥ ۸px بماند."""
-        ratio = 52 / 1254
-        self.assertGreaterEqual(self.logo["min_width_mm"] * ratio, 1.49)
-        self.assertGreaterEqual(self.logo["min_width_px"] * ratio, 8)
+    def test_backgrounds_match_polarity_and_contrast(self):
+        """نسخه‌ی اصلی فقط روی روشن، معکوس فقط روی Deep Navy؛ و مؤلفه‌ی اصلی هر نسخه روی پس‌زمینه‌اش ≥ ۴٫۵ باشد."""
+        navy, white = "#051939", "#FDFDFD"
+        for f in self.files:
+            with self.subTest(f=f["path"]):
+                if f["on"] == "light":
+                    self.assertNotIn(navy, f["allowed_backgrounds"])
+                    for bg in f["allowed_backgrounds"]:
+                        self.assertGreaterEqual(contrast(navy, bg), 4.5, bg)
+                else:
+                    self.assertEqual(f["allowed_backgrounds"], [navy])
+                    self.assertGreaterEqual(contrast(white, navy), 4.5)
+        self.assertEqual(self.logo["allowed_backgrounds"], [f for f in self.files if f["format"] == "webp"][0]["allowed_backgrounds"])
+
+    def test_reversed_files_are_really_reversed(self):
+        """معکوس یعنی جابه‌جایی سرمه‌ای و سفید: بدنه‌ی اصلی سفید شود و سرمه‌ای فقط جزئیات بماند (اندازه‌گیری: سهم سرمه‌ای
+        نسخه‌ی معکوس ≈ سهم سفید نسخه‌ی اصلی)؛ وگرنه روی Deep Navy ناپدید می‌شود."""
+        from PIL import Image
+        import numpy as np
+        navy, white = np.array([5, 25, 57]), np.array([253, 253, 253])
+
+        def shares(path):
+            a = np.array(Image.open(ROOT / path).convert("RGBA"))
+            solid = a[a[..., 3] > 200][:, :3].astype(int)
+            return (np.abs(solid - navy).sum(axis=1) < 60).mean(), (np.abs(solid - white).sum(axis=1) < 60).mean()
+
+        by_key = {(f["variant"], f["on"]): f["path"] for f in self.files if f["format"] == "png"}
+        for variant in ("square", "horizontal", "icon"):
+            with self.subTest(variant=variant):
+                n_light, w_light = shares(by_key[(variant, "light")])
+                n_dark, w_dark = shares(by_key[(variant, "dark")])
+                self.assertGreater(n_light, 0.5, "نسخه‌ی اصلی بدنه‌ی سرمه‌ای دارد")
+                self.assertLess(n_dark, 0.1, "نسخه‌ی معکوس بدنه‌ی سرمه‌ای ندارد")
+                self.assertGreater(w_dark, 0.3, "نسخه‌ی معکوس بدنه‌ی سفید دارد")
+                self.assertAlmostEqual(n_dark, w_light, delta=0.03, msg="جابه‌جایی متقارن")
+
+    def test_min_size_keeps_smallest_details_legible(self):
+        """حداقل هر نسخه از اندازه‌گیری خود فایل: «HOOSH AFZA» ≥ ۱٫۵mm و ≥ ۸px؛ باریک‌ترین خط نماد ≥ ۰٫۱۵mm."""
+        # ارتفاع «HOOSH AFZA» به‌عنوان سهم از عرض فایل؛ اندازه‌گیری‌شده (scripts/make_logo_variants.py): مربع ۵۲/۱۲۵۴،
+        # افقی ۱۳۰/۳۳۹۹ (شامل خط‌های دو طرفش، پس محافظه‌کارانه)
+        text_ratio = {"square": 52 / 1254, "horizontal": 130 / 3399}
+        icon_stroke_ratio = 12 / 755  # باریک‌ترین خط نماد (باز کردن ریخت‌شناختی با هسته‌ی ۱۳px هنوز ۹۸٪ را نگه می‌دارد)
+        for f in self.files:
+            with self.subTest(f=f["path"]):
+                if f["variant"] in text_ratio:
+                    r = text_ratio[f["variant"]]
+                    self.assertGreaterEqual(f["min_width_mm"] * r, 1.49)
+                    self.assertGreaterEqual(f["min_width_px"] * r, 8)
+                else:
+                    self.assertGreaterEqual(f["min_width_mm"] * icon_stroke_ratio, 0.15)
+                    self.assertGreaterEqual(f["min_width_px"] * icon_stroke_ratio, 1)
+        self.assertEqual((self.logo["min_width_mm"], self.logo["min_width_px"]), (36, 200))
+
+    def test_no_unverified_svg(self):
+        """ردیابی خودکار SVG حروف را خراب کرد؛ SVG بی‌تأیید نباید وارد ریپو شود."""
+        self.assertEqual(list((ROOT / "brand" / "assets" / "logo").glob("*.svg")), [])
+        self.assertTrue(any("SVG" in v for v in self.logo["missing_versions"]))
 
 
 if __name__ == "__main__":

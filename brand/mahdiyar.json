@@ -457,12 +457,104 @@
         {
           "path": "brand/assets/logo/mahdiyar-logo-square.webp",
           "format": "webp",
-          "use": "اصلی (ارسال کاربر، بدون تغییر)"
+          "use": "اصلی (ارسال کاربر، بدون تغییر)",
+          "variant": "square",
+          "on": "light",
+          "width_px": 1254,
+          "height_px": 1254,
+          "min_width_mm": 36,
+          "min_width_px": 200,
+          "allowed_backgrounds": [
+            "#FDFDFD",
+            "#F0EBE5"
+          ]
         },
         {
           "path": "brand/assets/logo/mahdiyar-logo-square.png",
           "format": "png",
-          "use": "Word، PowerPoint و ابزارهای بدون WebP"
+          "use": "Word، PowerPoint و ابزارهای بدون WebP",
+          "variant": "square",
+          "on": "light",
+          "width_px": 1254,
+          "height_px": 1254,
+          "min_width_mm": 36,
+          "min_width_px": 200,
+          "allowed_backgrounds": [
+            "#FDFDFD",
+            "#F0EBE5"
+          ]
+        },
+        {
+          "path": "brand/assets/logo/mahdiyar-logo-square-reversed.png",
+          "format": "png",
+          "use": "معکوس (مشتق): روی Deep Navy؛ سرمه‌ای و سفید جابه‌جا، teal ثابت",
+          "variant": "square",
+          "on": "dark",
+          "width_px": 1254,
+          "height_px": 1254,
+          "min_width_mm": 36,
+          "min_width_px": 200,
+          "allowed_backgrounds": [
+            "#051939"
+          ]
+        },
+        {
+          "path": "brand/assets/logo/mahdiyar-logo-horizontal.png",
+          "format": "png",
+          "use": "افقی (مشتق): نماد + نام کنار هم؛ برای سربرگ و جاهای کم‌ارتفاع",
+          "variant": "horizontal",
+          "on": "light",
+          "width_px": 3399,
+          "height_px": 860,
+          "min_width_mm": 40,
+          "min_width_px": 220,
+          "allowed_backgrounds": [
+            "#FDFDFD",
+            "#F0EBE5"
+          ]
+        },
+        {
+          "path": "brand/assets/logo/mahdiyar-logo-horizontal-reversed.png",
+          "format": "png",
+          "use": "افقی معکوس (مشتق): روی Deep Navy",
+          "variant": "horizontal",
+          "on": "dark",
+          "width_px": 3399,
+          "height_px": 860,
+          "min_width_mm": 40,
+          "min_width_px": 220,
+          "allowed_backgrounds": [
+            "#051939"
+          ]
+        },
+        {
+          "path": "brand/assets/logo/mahdiyar-logo-icon.png",
+          "format": "png",
+          "use": "فقط‌نماد (مشتق): آیکون و جاهای خیلی کوچک؛ بدون نام",
+          "variant": "icon",
+          "on": "light",
+          "width_px": 755,
+          "height_px": 860,
+          "min_width_mm": 12,
+          "min_width_px": 64,
+          "allowed_backgrounds": [
+            "#FDFDFD",
+            "#F0EBE5"
+          ]
+        },
+        {
+          "path": "brand/assets/logo/mahdiyar-logo-icon-reversed.png",
+          "format": "png",
+          "use": "فقط‌نماد معکوس (مشتق): روی Deep Navy",
+          "variant": "icon",
+          "on": "dark",
+          "width_px": 755,
+          "height_px": 860,
+          "min_width_mm": 12,
+          "min_width_px": 64,
+          "allowed_backgrounds": [
+            "#051939"
+          ]
         }
       ],
       "canvas_px": 1254,
@@ -478,12 +570,12 @@
         "proposal": "جلد بالا-راست ۴۵ تا ۵۵mm؛ انتهای بدنه (پیش از پیوست‌ها) پایین-راست؛ صفحه‌های داخلی بدون لوگو (نشانگر متنی «مهدیار / رشد هوشمند»)",
         "pitch": "اسلاید ۱ بالا-راست؛ اسلاید ۱۴ پایین-راست؛ ۸ تا ۱۰٪ عرض",
         "catalog": "جلد بالا-راست؛ پشت جلد پایین-راست",
-        "html": "سربرگ صفحه‌ی اول، راست، ≥ ۲۰۰px"
+        "html": "سربرگ صفحه‌ی اول، راست، ≥ ۲۰۰px",
+        "dark_sections": "روی Deep Navy فقط نسخه‌ی معکوس (variant با on=dark)؛ همان قواعد اندازه و فضای خالی",
+        "header": "سربرگ صفحه‌های داخلی و وب می‌تواند نسخه‌ی افقی داشته باشد (≥ ۴۰mm)؛ هنوز هیچ خروجی‌ساز از آن استفاده نمی‌کند و سربرگ فعلی نشانگر متنی است"
       },
       "missing_versions": [
-        "SVG برداری",
-        "نسخه‌ی روشن یا معکوس برای پس‌زمینه‌ی Deep Navy",
-        "نسخه‌ی افقی یا فقط‌نماد برای سربرگ"
+        "SVG برداری (ردیابی خودکار حروف را خراب کرد؛ فقط از طراح)"
       ]
     }
   }

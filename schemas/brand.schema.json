@@ -396,7 +396,14 @@
                 "required": [
                   "path",
                   "format",
-                  "use"
+                  "use",
+                  "variant",
+                  "on",
+                  "width_px",
+                  "height_px",
+                  "min_width_mm",
+                  "min_width_px",
+                  "allowed_backgrounds"
                 ],
                 "properties": {
                   "path": {
@@ -411,6 +418,42 @@
                   },
                   "use": {
                     "type": "string"
+                  },
+                  "variant": {
+                    "enum": [
+                      "square",
+                      "horizontal",
+                      "icon"
+                    ]
+                  },
+                  "on": {
+                    "enum": [
+                      "light",
+                      "dark"
+                    ],
+                    "description": "light: نسخه‌ی اصلی (سرمه‌ای و teal)؛ dark: نسخه‌ی معکوس برای Deep Navy"
+                  },
+                  "width_px": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "height_px": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "min_width_mm": {
+                    "type": "number"
+                  },
+                  "min_width_px": {
+                    "type": "integer"
+                  },
+                  "allowed_backgrounds": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^#[0-9A-F]{6}$"
+                    }
                   }
                 }
               }
