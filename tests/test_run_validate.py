@@ -80,7 +80,7 @@ class RunCliTest(unittest.TestCase):
         run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
         self.assertEqual(common.schema_errors(run, "run"), [])
         self.assertEqual((run["status"], run["lifecycle"], run["revision"]), ("running", "draft", 1))
-        for f in ("intake_form.md", "architecture.md", "rubric.md", "veto.md", "lessons.writer.md"):
+        for f in ("intake_form.md", "architecture.md", "rubric.md", "veto.md", "brand.md", "lessons.writer.md"):
             self.assertTrue((run_dir / "context" / f).exists(), f)
         runs = self.tmp / "runs"
         self.assertEqual((runs / ".current").read_text(), run_dir.name)
@@ -111,6 +111,14 @@ class RunCliTest(unittest.TestCase):
     def test_unknown_field_rejected(self):
         form = json.loads(self.form.read_text(encoding="utf-8"))
         form["fields"]["guess"] = "x"
+        self.form.write_text(json.dumps(form, ensure_ascii=False), encoding="utf-8")
+        r = sh(["run.py", "new", "proposal", str(self.form)], self.env, check=False)
+        self.assertNotEqual(r.returncode, 0)
+
+
+    def test_unknown_brand_rejected(self):
+        form = json.loads(self.form.read_text(encoding="utf-8"))
+        form["brand"] = "nobrand"
         self.form.write_text(json.dumps(form, ensure_ascii=False), encoding="utf-8")
         r = sh(["run.py", "new", "proposal", str(self.form)], self.env, check=False)
         self.assertNotEqual(r.returncode, 0)
@@ -178,7 +186,9 @@ class ValidateStageTest(unittest.TestCase):
         for c in common.load_card("proposal")["criteria"]:
             crit.append({"id": c["id"], "score": 2, "evidence": [{"section": "S03", "quote": quote}],
                          "reason": "نمونه", "fix": "", "limited_by_input": False, "gap_refs": []})
-        return {"judge": "rubric", "version": 1, "criteria": crit}
+        return {"judge": "rubric", "version": 1, "criteria": crit, "bottom_line": "همه‌ی ردیف‌ها ناقص‌اند.",
+                "biggest_weakness": {"criterion": "R06", "what": "قیمت ناقص", "why": "تصمیم خرید ممکن نیست", "fix": "اقلام قیمت را کامل کن"},
+                "would_change": "جدول قیمت کامل"}
 
     def test_fabricated_quote_is_rejected(self):
         self._doc_md()
@@ -202,14 +212,42 @@ class ValidateStageTest(unittest.TestCase):
         self._doc_md()
         card = common.load_card("proposal")
         responsible = [v["id"] for v in card["veto"] if v["detector"] != "code"]
-        self.write("judges/v1/veto.json", {"judge": "veto", "version": 1, "checked": responsible[:-1], "hits": []})
+        self.write("judges/v1/veto.json", {"judge": "veto", "version": 1, "checked": responsible[:-1], "hits": [], "bottom_line": "آزمون پوشش رد فوری."})
         self.assertTrue(any("بررسی نشده" in e for e in validate.validate_stage(self.run_dir, "judge-veto")))
-        self.write("judges/v1/veto.json", {"judge": "veto", "version": 1, "checked": responsible, "hits": [],
+        self.write("judges/v1/veto.json", {"judge": "veto", "version": 1, "checked": responsible, "hits": [], "bottom_line": "آزمون پوشش رد فوری.",
                                            "not_applicable": [{"veto_id": "V01", "reason": "بی‌ربط"}]})
         self.assertTrue(any("شرط ندارد" in e for e in validate.validate_stage(self.run_dir, "judge-veto")))
-        self.write("judges/v1/veto.json", {"judge": "veto", "version": 1, "checked": responsible[:-1], "hits": [],
+        self.write("judges/v1/veto.json", {"judge": "veto", "version": 1, "checked": responsible[:-1], "hits": [], "bottom_line": "آزمون پوشش رد فوری.",
                                            "not_applicable": [{"veto_id": "V08", "reason": "پیشنهاد RFP نیست"}]})
         self.assertEqual(validate.validate_stage(self.run_dir, "judge-veto"), [])
+
+    def test_truth_fields_are_enforced(self):
+        """حالت truth: «بدون ضعف» فقط وقتی همه ۴ است؛ مهم‌ترین ضعف باید ردیفی باشد که امتیاز از دست داده."""
+        self._doc_md()
+        self.write("gaps.json", {"gaps": []})
+        rep = self._rubric("طبق صورت‌جلسه‌ی کشف نیاز")
+        rep["biggest_weakness"] = None
+        self.write("judges/v1/rubric.json", rep)
+        self.assertTrue(any("biggest_weakness خالی" in e for e in validate.validate_stage(self.run_dir, "judge-rubric")))
+        rep = self._rubric("طبق صورت‌جلسه‌ی کشف نیاز")
+        rep["criteria"][5]["score"] = 4
+        self.write("judges/v1/rubric.json", rep)
+        self.assertTrue(any("نمره‌ی کامل" in e for e in validate.validate_stage(self.run_dir, "judge-rubric")))
+
+    def test_brand_proof_source(self):
+        base = {"id": "C-01", "text": "۲۵+ سال تجربه‌ی نرم‌افزاری", "type": "fact", "used_in": ["S14"], "limits": "ادعای تهیه‌کننده", "impact": "none"}
+        self.write("claims.json", {"claims": [dict(base, source={"kind": "brand", "ref": "BP-99", "date": None, "quote": None})], "searches": []})
+        self.assertTrue(any("شاهد برند ناموجود" in e for e in validate.validate_stage(self.run_dir, "claims")))
+        self.write("claims.json", {"claims": [dict(base, source={"kind": "brand", "ref": "BP-01", "date": None, "quote": None})], "searches": []})
+        self.assertEqual(validate.validate_stage(self.run_dir, "claims"), [])
+
+    def test_brand_context_marks_unverified_proof(self):
+        md = (self.run_dir / "context" / "brand.md").read_text(encoding="utf-8")
+        self.assertIn("مهدیار هوش‌افزا", md)
+        self.assertIn("نامعلوم — پیش از نام‌بردن تأیید لازم است", md)
+        self.assertIn("| PK-01 | پکیج رشد دیجیتال | ۱۵٬۰۰۰٬۰۰۰ |", md)
+        run = json.loads((self.run_dir / "run.json").read_text(encoding="utf-8"))
+        self.assertEqual(run["brand"], "mahdiyar")
 
     def test_hook_blocks_once_then_releases(self):
         self.write("questions.json", {"questions": []})

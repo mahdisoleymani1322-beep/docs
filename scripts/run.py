@@ -82,7 +82,7 @@ def set_run(run_dir, status=None, stage=None, round_=None, error=None, note=None
 
 def template(doc_type: str) -> dict:
     card = common.load_card(doc_type)
-    return {"doc_type": doc_type, "fields": {f["key"]: None for f in card["intake_fields"]},
+    return {"doc_type": doc_type, "brand": common.DEFAULT_BRAND, "fields": {f["key"]: None for f in card["intake_fields"]},
             "attachments": [], "answers": [], "sample": False}
 
 
@@ -93,6 +93,7 @@ def load_input(path, doc_type: str) -> tuple[dict, list[str]]:
         common.fail(f"فرم ورودی {path} نامعتبر است:\n" + "\n".join(errors))
     if data["doc_type"] != doc_type:
         common.fail(f"نوع سند فرم ({data['doc_type']}) با {doc_type} نمی‌خواند")
+    common.load_brand(data.get("brand"))  # کارت برند باید وجود داشته باشد
     keys = [f["key"] for f in common.load_card(doc_type)["intake_fields"]]
     unknown = sorted(set(data["fields"]) - set(keys))
     if unknown:
@@ -165,17 +166,46 @@ def veto_md(card: dict, banned: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def build_context(run_dir, doc_type: str) -> list[str]:
+def brand_md(brand: dict) -> str:
+    """خلاصه‌ی کارت برند برای ایجنت‌ها؛ توکن‌های طراحی عمداً نیامده (فقط برای خروجی بصری، فاز H)."""
+    L = [f"# برند: {brand['name_fa']} (از brand/{brand['id']}.json)", "",
+         "سند از طرف این برند نوشته می‌شود. این قواعد صدا و شواهد برند است؛ قواعد راهنمای نوع سند مقدم‌اند.", "",
+         f"- **جایگاه‌یابی:** {brand['positioning']}", f"- **ارزش پیشنهادی:** {brand['usp']}",
+         f"- **تعهدها:** {'، '.join(brand['commitments'])}", "", "## صدا", ""]
+    for v in brand["voice"]:
+        L.append(f"- **{v['principle']}** ({v['meaning']}): ✓ «{v['do']}» ✗ «{v['dont']}»"
+                 + (f" — ⚠️ {v['caution']}" if v.get("caution") else ""))
+    L += ["", "## واژه‌ها", "", "- **مجاز:** " + "، ".join(brand["approved_words"]),
+          "- **ممنوع (checks.py با کد می‌سنجد؛ سقف ردیف نگارش ۳):** " + "، ".join(w["text"] for w in brand["forbidden_words"]),
+          "- **CTA ترجیحی:** " + "، ".join(brand["cta"]["preferred"]),
+          "- **CTA ممنوع:** " + "، ".join(brand["cta"]["avoid"]), "",
+          "## قواعد نگارش (Design System)", ""] + [f"- {r}" for r in brand["copy_rules"]]
+    L += ["", "## شواهد برند (فقط با ارجاع به همین شناسه‌ها در دفتر ادعا، منبع kind=brand)", "",
+          "| شناسه | ادعا | وضعیت | مجوز انتشار | محدودیت |", "|---|---|---|---|---|"]
+    status = {"self_reported": "ادعای خود برند", "verified": "تأییدشده"}
+    perm = {"unknown": "نامعلوم — پیش از نام‌بردن تأیید لازم است", "granted": "دارد", "not_needed": "لازم نیست"}
+    for p in brand["proof"]:
+        L.append(f"| {p['id']} | {p['claim']} | {status[p['status']]} | {perm[p['publish_permission']]} | {p['limits']} |")
+    L += ["", "## پکیج‌ها (قیمت «از»؛ تاریخ منبع قدیمی است و بدون تأیید تازه قیمت قطعی نیست)", "",
+          "| شناسه | پکیج | از (تومان) | شامل | تاریخ | نیاز به تأیید |", "|---|---|---|---|---|---|"]
+    for k in brand["packages"]:
+        L.append(f"| {k['id']} | {k['name']} | {common.fa_number(k['from_amount'])} | {k['includes']} | {k['as_of']} | {'بله' if k['needs_confirmation'] else 'خیر'} |")
+    L += ["", "## مشکلات شناخته‌شده‌ی منابع برند", ""] + [f"- **{i['issue']}** — {i['handling']}" for i in brand["known_issues"]]
+    return "\n".join(L) + "\n"
+
+
+def build_context(run_dir, doc_type: str, brand_id: str | None = None) -> list[str]:
     ctx = run_dir / "context"
     ctx.mkdir(parents=True, exist_ok=True)
     card = common.load_card(doc_type)
+    (ctx / "brand.md").write_text(brand_md(common.load_brand(brand_id)), encoding="utf-8")
     written = []
     for name in CONTEXT_SLICES:
         (ctx / f"{name}.md").write_text(slice_guide.slice_chapter(doc_type, name), encoding="utf-8")
         written.append(f"{name}.md")
     (ctx / "rubric.md").write_text(rubric_md(card), encoding="utf-8")
     (ctx / "veto.md").write_text(veto_md(card, common.load_banned()), encoding="utf-8")
-    written += ["rubric.md", "veto.md"]
+    written += ["rubric.md", "veto.md", "brand.md"]
     written += write_lessons_context(ctx)
     return written
 
@@ -210,8 +240,8 @@ def _new_run_dir(doc_type: str):
     return run_id, run_dir
 
 
-def _init_run(run_id: str, mode: str, doc_type: str, stage: str, round_: int) -> dict:
-    run = {"run_id": run_id, "mode": mode, "doc_type": doc_type, "created": common.now_iso(), "status": "running",
+def _init_run(run_id: str, mode: str, doc_type: str, stage: str, round_: int, brand: str) -> dict:
+    run = {"run_id": run_id, "mode": mode, "doc_type": doc_type, "brand": brand, "created": common.now_iso(), "status": "running",
            "stage": stage, "round": round_, "intake_rounds": 0, "lifecycle": "draft", "revision": 1,
            "parent_run": None, "errors": [], "history": []}
     event(run, "created", mode)
@@ -227,7 +257,8 @@ def cmd_new(args) -> int:
     inp, warnings = load_input(args.input, args.doc_type)
     run_id, run_dir = _new_run_dir(args.doc_type)
     common.dump_json(inp, run_dir / "input.json")
-    run = _init_run(run_id, "studio", args.doc_type, "init", 0)
+    brand = inp.get("brand") or common.DEFAULT_BRAND
+    run = _init_run(run_id, "studio", args.doc_type, "init", 0, brand)
     for w in warnings:
         event(run, "warning", w)
     if args.parent:
@@ -235,7 +266,7 @@ def cmd_new(args) -> int:
         run["parent_run"] = parent["run_id"]
         run["revision"] = parent["revision"] + 1
     save_run(run_dir, run)
-    build_context(run_dir, args.doc_type)
+    build_context(run_dir, args.doc_type, brand)
     _activate(run_dir, run_id)
     print(run_dir)
     return 0
@@ -257,10 +288,11 @@ def cmd_new_eval(args) -> int:
         inp = template(args.doc_type)
     common.dump_json(inp, run_dir / "input.json")
     common.dump_json({"gaps": []}, run_dir / "gaps.json")
-    run = _init_run(run_id, "evaluate", args.doc_type, "checks", 1)
+    brand = inp.get("brand") or common.DEFAULT_BRAND
+    run = _init_run(run_id, "evaluate", args.doc_type, "checks", 1, brand)
     event(run, "source", f"{src.name}؛ دفتر ادعا: {'دارد' if args.claims else 'ندارد'}؛ فرم ورودی: {'دارد' if args.input else 'ندارد'}")
     save_run(run_dir, run)
-    build_context(run_dir, args.doc_type)
+    build_context(run_dir, args.doc_type, brand)
     _activate(run_dir, run_id)
     print(run_dir)
     return 0
@@ -322,7 +354,7 @@ def cmd_finish(args) -> int:
 def cmd_status(args) -> int:
     run_dir = common.resolve_run(args.run)
     run = load_run(run_dir)
-    out = {k: run[k] for k in ("run_id", "mode", "doc_type", "status", "stage", "round", "lifecycle", "revision", "errors")}
+    out = {k: run[k] for k in ("run_id", "mode", "doc_type", "brand", "status", "stage", "round", "lifecycle", "revision", "errors")}
     out["locked"] = (common.RUNS / ".lock").exists()
     print(json.dumps(out, ensure_ascii=False, indent=2))
     return 0

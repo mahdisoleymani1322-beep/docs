@@ -38,11 +38,16 @@ VALID = {
                "results": [{"id": "CHK-PRICE-SUM", "status": "pass", "detail": "", "locations": [], "veto": [], "caps": []}]},
     "judge-rubric": {"judge": "rubric", "version": 1, "criteria": [
         {"id": "R01", "score": 3, "evidence": [{"section": "S03", "quote": "طبق صورت‌جلسه‌ی کشف نیاز"}],
-         "reason": "مسئله با شاهد", "fix": "", "limited_by_input": False, "gap_refs": []}]},
+         "reason": "مسئله با شاهد", "fix": "", "limited_by_input": False, "gap_refs": []}],
+        "bottom_line": "تشخیص مستند است اما خط مبنا ندارد.",
+        "biggest_weakness": {"criterion": "R01", "what": "خط مبنا نیست", "why": "هدف قابل سنجش نیست", "fix": "خط مبنا را در فاز کشف بسازید"},
+        "would_change": "خط مبنای اندازه‌گیری‌شده"},
     "judge-claims": {"judge": "claims", "version": 1, "claims": [
         {"quote": "بازبینی دستی گلوگاه است", "section": "S02", "ledger_ref": "C-01", "status": "supported", "note": ""}],
-        "summary": {"supported": 1, "labeled_assumption": 0, "unsupported": 0, "contradicts_ledger": 0}},
-    "judge-veto": {"judge": "veto", "version": 1, "checked": ["V01"], "not_applicable": [], "hits": []},
+        "summary": {"supported": 1, "labeled_assumption": 0, "unsupported": 0, "contradicts_ledger": 0},
+        "bottom_line": "همه‌ی ادعاهای بررسی‌شده منبع دارند."},
+    "judge-veto": {"judge": "veto", "version": 1, "checked": ["V01"], "not_applicable": [], "hits": [],
+                   "bottom_line": "هیچ مورد رد فوری پیدا نشد."},
     "issues": {"for_round": 2, "base_version": 1, "issues": [
         {"id": "I-01", "source": "V03", "severity": "veto", "section": "S09", "text": "جمع قیمت را اصلاح کن"}],
         "regressions": []},
@@ -51,7 +56,7 @@ VALID = {
                           "authority_system": [], "authority_human": []},
              "config": {"max_rounds": 4, "total_gt": 90.0, "plateau_rounds": 2, "plateau_min_gain": 1.0},
              "rounds": [], "best_version": None, "state": "running", "stop_reason": None},
-    "run": {"run_id": "20260929-120000-proposal", "mode": "studio", "doc_type": "proposal", "created": "t",
+    "run": {"run_id": "20260929-120000-proposal", "mode": "studio", "doc_type": "proposal", "brand": "mahdiyar", "created": "t",
             "status": "running", "stage": "init", "round": 0, "intake_rounds": 0, "lifecycle": "draft",
             "revision": 1, "parent_run": None, "errors": [], "history": []},
     "feedback": {"ts": "t", "run_id": "r", "version": 1, "section": "S06", "vote": "down",

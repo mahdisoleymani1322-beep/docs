@@ -34,7 +34,11 @@ def _load(run_dir: pathlib.Path, name: str, schema: str, errors: list[str]):
     except json.JSONDecodeError as exc:
         errors.append(f"{name}: JSON خراب است ({exc})")
         return None
-    errors.extend(f"{name}: {e}" for e in common.schema_errors(data, schema))
+    schema_errs = common.schema_errors(data, schema)
+    if schema_errs:
+        # چک متقاطع روی داده‌ی بدشکل معنا ندارد و ممکن است خودش خطا بدهد؛ اول شکل درست شود
+        errors.extend(f"{name}: {e}" for e in schema_errs)
+        return None
     return data
 
 
@@ -129,6 +133,7 @@ def check_claims(run_dir, run, card, errors):
     urls = {u for s in claims["searches"] for u in s["urls"]}
     answers = {a["question"] for a in inp["answers"]}
     attachments = {a["name"] for a in inp["attachments"]}
+    brand_proof = {p["id"] for p in common.load_brand(run.get("brand"))["proof"]}
     sec_ids = {s["id"] for s in card["sections"]}
     import run as runmod
     for c in claims["claims"]:
@@ -145,6 +150,8 @@ def check_claims(run_dir, run, card, errors):
                 errors.append(f"claims.json: {c['id']} به URL استناد می‌کند که در searches نیست: {src['ref']}")
             elif src["kind"] == "attachment" and src["ref"] not in attachments:
                 errors.append(f"claims.json: {c['id']} به پیوست ناموجود «{src['ref']}» استناد می‌کند")
+            elif src["kind"] == "brand" and src["ref"] not in brand_proof:
+                errors.append(f"claims.json: {c['id']} به شاهد برند ناموجود «{src['ref']}» استناد می‌کند")
         for s in c["used_in"]:
             if s not in sec_ids:
                 errors.append(f"claims.json: {c['id']} در بخش ناموجود {s} استفاده شده")
@@ -200,6 +207,16 @@ def check_judge_rubric(run_dir, run, card, errors):
     if text is not None:
         for c in rep["criteria"]:
             _check_quotes(c["evidence"], text, f"rubric {c['id']} evidence", errors)
+    # حالت truth: مهم‌ترین ضعف باید یک ردیف واقعاً ناقص باشد؛ «بدون ضعف» فقط وقتی همه ۴ گرفته‌اند
+    scores = {c["id"]: c["score"] for c in rep["criteria"]}
+    bw = rep["biggest_weakness"]
+    if bw is None and any(v < 4 for v in scores.values()):
+        errors.append("rubric: biggest_weakness خالی است اما ردیفی زیر ۴ وجود دارد")
+    if bw is not None:
+        if bw["criterion"] not in scores:
+            errors.append(f"rubric: biggest_weakness به ردیف ناموجود {bw['criterion']} اشاره می‌کند")
+        elif scores[bw["criterion"]] == 4:
+            errors.append(f"rubric: biggest_weakness ردیف {bw['criterion']} است که نمره‌ی کامل ۴ گرفته")
     gaps_path = run_dir / "gaps.json"
     gap_ids = {g["id"] for g in common.load_json(gaps_path)["gaps"]} if gaps_path.exists() else set()
     for c in rep["criteria"]:

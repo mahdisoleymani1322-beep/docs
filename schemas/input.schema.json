@@ -5,32 +5,94 @@
   "description": "کلیدهای fields باید با intake_fields کارت نوع سند بخوانند؛ این تطبیق را run.py چک می‌کند، نه schema.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["doc_type", "fields", "attachments", "answers", "sample"],
+  "required": [
+    "doc_type",
+    "fields",
+    "attachments",
+    "answers",
+    "sample"
+  ],
   "properties": {
-    "doc_type": {"enum": ["proposal", "pitch", "catalog"]},
+    "doc_type": {
+      "enum": [
+        "proposal",
+        "pitch",
+        "catalog"
+      ]
+    },
     "fields": {
       "type": "object",
-      "additionalProperties": {"type": ["string", "null"]}
+      "additionalProperties": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
     },
     "attachments": {
       "type": "array",
       "items": {
-        "type": "object", "additionalProperties": false, "required": ["name", "description"],
-        "properties": {"name": {"type": "string", "minLength": 1}, "path": {"type": ["string", "null"]}, "description": {"type": "string"}}
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        }
       }
     },
     "answers": {
       "type": "array",
       "items": {
-        "type": "object", "additionalProperties": false, "required": ["question", "text", "ts"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question",
+          "text",
+          "ts"
+        ],
         "properties": {
-          "question": {"type": "string", "pattern": "^Q-[0-9]{2}$"},
-          "field": {"type": ["string", "null"]},
-          "text": {"type": "string", "minLength": 1},
-          "ts": {"type": "string"}
+          "question": {
+            "type": "string",
+            "pattern": "^Q-[0-9]{2}$"
+          },
+          "field": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ts": {
+            "type": "string"
+          }
         }
       }
     },
-    "sample": {"type": "boolean"}
+    "sample": {
+      "type": "boolean"
+    },
+    "brand": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "شناسه‌ی کارت برند در brand/؛ اگر نیاید، پیش‌فرض (mahdiyar)"
+    }
   }
 }

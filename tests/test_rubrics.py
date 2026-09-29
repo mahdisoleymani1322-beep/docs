@@ -138,7 +138,8 @@ class RubricCardTest(unittest.TestCase):
                     self.assertTrue(set(card["gate"]["critical"]["criteria"]) <= crit_ids)
                 for c in card["criteria"]:
                     self.assertTrue(set(c["sections"]) <= sec_ids, c["id"])
-                self.assertEqual(set(card["banned_effects"]), banned_cats)
+                # دسته‌های banned.json (از راهنما) + brand_voice (واژه‌های ممنوع کارت برند)
+                self.assertEqual(set(card["banned_effects"]), banned_cats | {"brand_voice"})
                 for eff in card["banned_effects"].values():
                     self.assertTrue(set(eff.get("veto", [])) <= veto_ids)
                     self.assertTrue({c["criterion"] for c in eff.get("caps", [])} <= crit_ids)

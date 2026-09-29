@@ -5,35 +5,149 @@
   "description": "نمره‌ی ≥ ۱ بدون شاهد نامعتبر است. هر quote باید عیناً در document.v<n>.md پیدا شود (چک متقاطع در validate.py).",
   "type": "object",
   "additionalProperties": false,
-  "required": ["judge", "version", "criteria"],
+  "required": [
+    "judge",
+    "version",
+    "criteria",
+    "bottom_line",
+    "biggest_weakness",
+    "would_change"
+  ],
   "properties": {
-    "judge": {"const": "rubric"},
-    "version": {"type": "integer", "minimum": 1},
+    "judge": {
+      "const": "rubric"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
     "criteria": {
-      "type": "array", "minItems": 1,
+      "type": "array",
+      "minItems": 1,
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["id", "score", "evidence", "reason", "fix", "limited_by_input", "gap_refs"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "score",
+          "evidence",
+          "reason",
+          "fix",
+          "limited_by_input",
+          "gap_refs"
+        ],
         "properties": {
-          "id": {"type": "string", "pattern": "^R[0-9]{2}$"},
-          "score": {"type": "integer", "minimum": 0, "maximum": 4},
-          "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
-          "reason": {"type": "string", "minLength": 3},
-          "fix": {"type": "string"},
-          "limited_by_input": {"type": "boolean"},
-          "gap_refs": {"type": "array", "items": {"type": "string", "pattern": "^G-[0-9]{2}$"}}
+          "id": {
+            "type": "string",
+            "pattern": "^R[0-9]{2}$"
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 3
+          },
+          "fix": {
+            "type": "string"
+          },
+          "limited_by_input": {
+            "type": "boolean"
+          },
+          "gap_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^G-[0-9]{2}$"
+            }
+          }
         },
-        "if": {"properties": {"score": {"minimum": 1}}},
-        "then": {"properties": {"evidence": {"minItems": 1}}}
+        "if": {
+          "properties": {
+            "score": {
+              "minimum": 1
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "evidence": {
+              "minItems": 1
+            }
+          }
+        }
       }
+    },
+    "bottom_line": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 300,
+      "description": "حالت truth (.claude/skills/truth): جمع‌بندی یک‌جمله‌ای، اول مهم‌ترین ضعف، بدون تعارف"
+    },
+    "biggest_weakness": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "criterion",
+        "what",
+        "why",
+        "fix"
+      ],
+      "description": "null فقط وقتی همه‌ی ردیف‌ها ۴ گرفته‌اند (چک در validate.py)",
+      "properties": {
+        "criterion": {
+          "type": "string",
+          "pattern": "^R[0-9]{2}$"
+        },
+        "what": {
+          "type": "string",
+          "minLength": 5
+        },
+        "why": {
+          "type": "string",
+          "minLength": 5
+        },
+        "fix": {
+          "type": "string",
+          "minLength": 5
+        }
+      }
+    },
+    "would_change": {
+      "type": "string",
+      "minLength": 5,
+      "description": "چه شاهد یا تغییری نمره را بالا می‌برد"
     }
   },
   "$defs": {
     "evidence": {
-      "type": "object", "additionalProperties": false, "required": ["section", "quote"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "section",
+        "quote"
+      ],
       "properties": {
-        "section": {"type": "string", "pattern": "^S[0-9]{2}$"},
-        "quote": {"type": "string", "minLength": 8, "maxLength": 400}
+        "section": {
+          "type": "string",
+          "pattern": "^S[0-9]{2}$"
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 400
+        }
       }
     }
   }

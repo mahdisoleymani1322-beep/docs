@@ -4,44 +4,188 @@
   "title": "دروازه (gate.v<n>.json) — gate.py",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "doc_type", "criteria", "total", "veto", "guide", "target", "issues", "judges_valid"],
+  "required": [
+    "version",
+    "doc_type",
+    "criteria",
+    "total",
+    "veto",
+    "guide",
+    "target",
+    "issues",
+    "judges_valid"
+  ],
   "properties": {
-    "version": {"type": "integer", "minimum": 1},
-    "doc_type": {"enum": ["proposal", "pitch", "catalog"]},
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "doc_type": {
+      "enum": [
+        "proposal",
+        "pitch",
+        "catalog"
+      ]
+    },
     "criteria": {
       "type": "array",
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["id", "title", "weight", "judge_score", "caps", "final_score", "points", "limited_by_input", "fix"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "weight",
+          "judge_score",
+          "caps",
+          "final_score",
+          "points",
+          "limited_by_input",
+          "fix"
+        ],
         "properties": {
-          "id": {"type": "string", "pattern": "^R[0-9]{2}$"},
-          "title": {"type": "string"},
-          "weight": {"type": "number"},
-          "judge_score": {"type": "integer", "minimum": 0, "maximum": 4},
-          "caps": {"type": "array", "items": {"type": "object", "required": ["max", "source"],
-            "properties": {"max": {"type": "integer"}, "source": {"type": "string"}, "detail": {"type": "string"}}}},
-          "final_score": {"type": "integer", "minimum": 0, "maximum": 4},
-          "points": {"type": "number"},
-          "limited_by_input": {"type": "boolean"},
-          "fix": {"type": "string"}
+          "id": {
+            "type": "string",
+            "pattern": "^R[0-9]{2}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "judge_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "caps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "max",
+                "source"
+              ],
+              "properties": {
+                "max": {
+                  "type": "integer"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "final_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "points": {
+            "type": "number"
+          },
+          "limited_by_input": {
+            "type": "boolean"
+          },
+          "fix": {
+            "type": "string"
+          }
         }
       }
     },
-    "total": {"type": "number", "minimum": 0, "maximum": 100},
+    "total": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
     "veto": {
       "type": "array",
-      "items": {"type": "object", "additionalProperties": false, "required": ["id", "source", "detail"],
-        "properties": {"id": {"type": "string"}, "source": {"type": "string"}, "detail": {"type": "string"}}}
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "source",
+          "detail"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
     },
     "guide": {
-      "type": "object", "additionalProperties": false, "required": ["pass", "band", "fail_reasons"],
-      "properties": {"pass": {"type": "boolean"}, "band": {"type": "string"}, "fail_reasons": {"type": "array", "items": {"type": "string"}}}
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pass",
+        "band",
+        "fail_reasons"
+      ],
+      "properties": {
+        "pass": {
+          "type": "boolean"
+        },
+        "band": {
+          "type": "string"
+        },
+        "fail_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "target": {
-      "type": "object", "additionalProperties": false, "required": ["met", "threshold", "score10"],
-      "properties": {"met": {"type": "boolean"}, "threshold": {"type": "number"}, "score10": {"type": "number"}}
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "met",
+        "threshold",
+        "score10"
+      ],
+      "properties": {
+        "met": {
+          "type": "boolean"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "score10": {
+          "type": "number"
+        }
+      }
     },
-    "issues": {"$ref": "issues.schema.json#/properties/issues"},
-    "judges_valid": {"type": "boolean", "description": "false اگر کالیبراسیون κ < ۰٫۶ یا انجام‌نشده باشد؛ آنگاه نمره «فرضیه» است"}
+    "issues": {
+      "$ref": "issues.schema.json#/properties/issues"
+    },
+    "judges_valid": {
+      "type": "boolean",
+      "description": "false اگر کالیبراسیون κ < ۰٫۶ یا انجام‌نشده باشد؛ آنگاه نمره «فرضیه» است"
+    },
+    "bottom_line": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "biggest_weakness": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
   }
 }
