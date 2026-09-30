@@ -296,7 +296,12 @@ def check_judge_veto(run_dir, run, card, errors):
 
 
 def check_critic(run_dir, run, card, errors):
-    _load(run_dir, "lessons.proposed.json", "lessons-proposed", errors)
+    data = _load(run_dir, "lessons.proposed.json", "lessons-proposed", errors)
+    if data:
+        import lessons
+        for item in data["lessons"]:   # همان فیلتر تزریق lessons.py؛ خطا به خود critic برمی‌گردد و یک بار اصلاح می‌کند
+            for why in lessons.problems(item["text"]):
+                errors.append(f"lessons.proposed.json: درس «{item['text']}»: {why}")
 
 
 CHECKERS = {"intake": check_intake, "brief": check_brief, "claims": check_claims, "write": check_write,

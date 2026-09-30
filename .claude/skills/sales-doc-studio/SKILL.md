@@ -72,9 +72,18 @@ python3 scripts/loop.py record <اجرا> --version <n>
 ```
 python3 scripts/loop.py finalize
 python3 scripts/export.py <اجرا> --version <بهترین نسخه> --formats <فرمت‌ها> -o <اجرا>/final
-python3 scripts/run.py finish
 ```
 بهترین نسخه در `loop.json` است. فرمت `docx` و `pptx` هنوز ساخته نشده؛ اگر خواستند صریح بگو.
+
+**درس‌ها (اختیاری، شکستش اجرا را خراب نمی‌کند):** `critic` را با پیام «پوشه‌ی اجرا» صدا بزن، بعد:
+```
+python3 scripts/validate.py --run <اجرا> --stage critic
+python3 scripts/lessons.py add <اجرا>
+```
+خراب بود: critic را **یک بار** با فهرست خطا دوباره صدا بزن؛ باز خراب بود درس را رد کن و در گزارش بگو. فایل را با دست ویرایش نکن. سپس:
+```
+python3 scripts/run.py finish
+```
 
 ## ۶. گزارش به کاربر (فارسی، کوتاه)
 فقط از `final/report.md`: total و نمره‌ی Loop، وضعیت (آماده‌ی بررسی انسان یا نیازمند تصمیم انسان) و دلیل توقف، رد فوری‌ها، سه ایراد اول باقی‌مانده، هشدار «نمره فرضیه است» اگر `judges_valid` نادرست است، و مسیر فایل‌های خروجی. اگر نمره بالای ۹ نشد، همین را رک بگو؛ نرم‌ترش نکن.

@@ -37,7 +37,7 @@ EXPECTED = [
     "validate.py --run <اجرا> --stage brief", "validate.py --run <اجرا> --stage claims",
     "run.py set --stage write --round", "validate.py --run <اجرا> --stage write", "render.py", "checks.py",
     "validate.py --run <اجرا> --stage judge-rubric", "validate.py --run <اجرا> --stage judge-claims", "validate.py --run <اجرا> --stage judge-veto",
-    "gate.py", "loop.py record", "loop.py finalize", "export.py", "run.py finish"]
+    "gate.py", "loop.py record", "loop.py finalize", "export.py", "validate.py --run <اجرا> --stage critic", "lessons.py add", "run.py finish"]
 
 
 class SkillTextTest(unittest.TestCase):
@@ -45,7 +45,7 @@ class SkillTextTest(unittest.TestCase):
         head, body, _ = skill_parts()
         self.assertIn("name: sales-doc-studio", head)
         self.assertIn("disable-model-invocation: true", head)  # G7: اجرای پرهزینه فقط با دستور انسان
-        order = ["intake-analyst", "strategist", "researcher", "writer", "judge-rubric", "judge-claims", "judge-veto"]
+        order = ["intake-analyst", "strategist", "researcher", "writer", "judge-rubric", "judge-claims", "judge-veto", "critic"]
         idx = [body.index(f"`{a}`") for a in order]
         self.assertEqual(idx, sorted(idx))
         for a in order:
@@ -70,7 +70,7 @@ class SkillTextTest(unittest.TestCase):
         self.assertIn("gate.py", arch)
 
     def test_lean(self):
-        self.assertLess(SKILL.stat().st_size, 7200)  # با اعتبارسنجی صریح بعد از هر ایجنت (hook تا trust خاموش است) از ۶٫۵ کیلوبایت گذشت
+        self.assertLess(SKILL.stat().st_size, 7800)  # با اعتبارسنجی صریح بعد از هر ایجنت (hook تا trust خاموش است) از ۶٫۵ کیلوبایت گذشت
 
 
 class SkillExecutionTest(unittest.TestCase):
@@ -81,7 +81,7 @@ class SkillExecutionTest(unittest.TestCase):
 
     def setUp(self):
         self.tmp = pathlib.Path(tempfile.mkdtemp())
-        self.env = dict(os.environ, STUDIO_RUNS_DIR=str(self.tmp / "runs"))
+        self.env = dict(os.environ, STUDIO_RUNS_DIR=str(self.tmp / "runs"), STUDIO_LESSONS_DIR=str(self.tmp / "lessons"))
         self.run_dir = None
 
     def tearDown(self):
@@ -130,6 +130,10 @@ class SkillExecutionTest(unittest.TestCase):
         shutil.copyfile(FX / "document.good.json", self.run_dir / "document.v1.json")
         common.dump_json({"version": 1, "base_version": None, "addressed": [], "not_addressed": [], "summary": "دور اول"}, self.run_dir / "revision.v1.json")
 
+    def agent_critic(self):
+        common.dump_json({"lessons": [{"agent": "writer", "text": "پیش از نوشتن معیار پذیرش هر تحویل را کنار خودش بیاور", "evidence": "دور ۱",
+                                       "source_kind": "loop"}], "rationale": "آزمون"}, self.run_dir / "lessons.proposed.json")
+
     def agent_judges(self):
         (self.run_dir / "judges" / "v1").mkdir(parents=True, exist_ok=True)
         for s in ("rubric", "claims", "veto"):
@@ -148,6 +152,8 @@ class SkillExecutionTest(unittest.TestCase):
                                       discovery_notes="مدیر فروش در جلسه‌ی کشف گفت بازبینی دستی گلوگاه است")
                 (self.tmp / "input.json").write_text(json.dumps(form, ensure_ascii=False), encoding="utf-8")
                 continue
+            if line.endswith("--stage critic"):
+                self.agent_critic()
             if line.endswith("--stage brief"):
                 self.agent_strategist()
             elif line.endswith("--stage claims"):
@@ -172,6 +178,8 @@ class SkillExecutionTest(unittest.TestCase):
         self.assertFalse((final / "document.v1.pdf").exists(), "pdf نخواسته بودند")
         self.assertFalse((pathlib.Path(self.env["STUDIO_RUNS_DIR"]) / ".lock").exists(), "قفل برداشته شد")
         self.assertIn("آماده‌ی بررسی انسان", (final / "report.md").read_text(encoding="utf-8"))
+        stored = common.load_json(pathlib.Path(self.env["STUDIO_LESSONS_DIR"]) / "lessons.json")["lessons"]
+        self.assertEqual([(x["id"], x["agent"], x["source_run"]) for x in stored], [("L-001", "writer", self.run_dir.name)])
 
 
 if __name__ == "__main__":
