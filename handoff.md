@@ -53,6 +53,8 @@
 
 ## 4) Changes made
 
+- **D3 (کد):** `scripts/kappa.py` (κ ی Cohen وزنی خطی با Fraction؛ `--write` فقط با برچسب انسانی و ≥۲۰ جفت؛ بدون برچسب انسانی خطای صریح و فایل کالیبراسیون ساخته نمی‌شود) + `tests/test_kappa.py` (مقدار دست‌حساب ۵/۷ و ۲/۵؛ جهش‌ها کشته شدند؛ تنها جهش زنده «مقیاس وزن» معادل است چون κ نسبت به مقیاس وزن ناوردا است). ۳۱۱ آزمون پاس. اجرای زنده‌ی داورها روی گلدن‌ست هنوز انجام نشده.
+
 - **D2:** `scripts/make_golden.py` → `evals/golden/` (۶ سند: good-1/2، bad-guarantee/price-sum/unsourced/no-acceptance + `claims.json` + `labels.json` + README)؛ `tests/test_golden.py` (تک‌علتی، بازتولیدپذیر، `human` همه null)؛ ۳۰۰ آزمون پاس. ساخت با `STUDIO_ALLOW_LOCKED=1`.
 
 - **D1:** `examples/inputs/proposal-complete.json` (همه‌ی فیلدها پر، داده‌ی نمایشی برچسب‌دار) و `proposal-conflict.json` (تضاد عمدی: دامنه در برابر تحویل، جمع پرداخت ۱۱۰٪، ۶ در برابر ۴ هفته) + `tests/test_sample_inputs.py`؛ ۲۹۲ آزمون پاس. هنوز با ایجنت اجرا نشده‌اند.
