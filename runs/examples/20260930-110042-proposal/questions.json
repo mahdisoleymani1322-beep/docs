@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "id": "Q-01",
+      "gap": "G-04",
+      "text": "What are the security requirements for this project: data types handled, storage location, encryption standards, access controls, and incident response procedure?",
+      "why": "Security requirements are mandatory to design a compliant solution and protect sensitive customer data.",
+      "blocking": false
+    },
+    {
+      "id": "Q-02",
+      "gap": "G-01",
+      "text": "What is the approved total budget or budget range for this proposal?",
+      "why": "Budget is essential to determine pricing strategy, scope boundaries, team allocation, and feasibility.",
+      "blocking": false
+    },
+    {
+      "id": "Q-03",
+      "gap": "G-02",
+      "text": "What payment terms are expected (e.g., Net 30, Net 60, milestone-based, upfront deposit percentage)?",
+      "why": "Payment terms are required for contractual agreement and financial planning on both sides.",
+      "blocking": false
+    },
+    {
+      "id": "Q-04",
+      "gap": "G-03",
+      "text": "What are the key assumptions for this project: team capacity availability, data quality/readiness, system integration dependencies, and any scope exclusions?",
+      "why": "Documenting assumptions prevents scope creep, manages risk, and ensures both parties have aligned expectations.",
+      "blocking": false
+    },
+    {
+      "id": "Q-05",
+      "gap": "G-07",
+      "text": "Can you share case studies, references, or work samples demonstrating similar automation capability in quote response or document generation?",
+      "why": "Proof of relevant prior work builds confidence in the proposed solution and demonstrates applicable expertise.",
+      "blocking": false
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "run_id": "20260930-110042-proposal",
+  "mode": "studio",
+  "doc_type": "proposal",
+  "brand": "mahdiyar",
+  "created": "2026-09-30T11:00:42+00:00",
+  "status": "needs_human",
+  "stage": "finalize",
+  "round": 4,
+  "intake_rounds": 1,
+  "lifecycle": "draft",
+  "revision": 1,
+  "parent_run": null,
+  "errors": [],
+  "history": [
+    {
+      "ts": "2026-09-30T11:00:42+00:00",
+      "event": "created",
+      "detail": "studio"
+    },
+    {
+      "ts": "2026-09-30T11:00:42+00:00",
+      "event": "intake-check",
+      "detail": "{\"required\": 20, \"filled\": 13, \"score10\": 6.5, \"missing\": [\"budget\", \"payment_terms\", \"assumptions\", \"security\", \"ownership\", \"support_exit\", \"proof\"], \"blocking_missing\": []}"
+    },
+    {
+      "ts": "2026-09-30T11:09:54+00:00",
+      "event": "stage",
+      "detail": "write"
+    },
+    {
+      "ts": "2026-09-30T11:09:54+00:00",
+      "event": "round",
+      "detail": "1"
+    },
+    {
+      "ts": "2026-09-30T11:18:22+00:00",
+      "event": "note",
+      "detail": "دور 1: ادامه"
+    },
+    {
+      "ts": "2026-09-30T11:18:32+00:00",
+      "event": "round",
+      "detail": "2"
+    },
+    {
+      "ts": "2026-09-30T11:28:30+00:00",
+      "event": "note",
+      "detail": "دور 2: ادامه"
+    },
+    {
+      "ts": "2026-09-30T11:30:17+00:00",
+      "event": "round",
+      "detail": "3"
+    },
+    {
+      "ts": "2026-09-30T11:36:45+00:00",
+      "event": "note",
+      "detail": "دور 3: ادامه"
+    },
+    {
+      "ts": "2026-09-30T11:37:48+00:00",
+      "event": "round",
+      "detail": "4"
+    },
+    {
+      "ts": "2026-09-30T11:43:11+00:00",
+      "event": "stage",
+      "detail": "judge"
+    },
+    {
+      "ts": "2026-09-30T11:44:10+00:00",
+      "event": "status",
+      "detail": "running ← needs_human"
+    },
+    {
+      "ts": "2026-09-30T11:44:10+00:00",
+      "event": "note",
+      "detail": "دور 4: توقف: سقف دور"
+    },
+    {
+      "ts": "2026-09-30T11:44:13+00:00",
+      "event": "stage",
+      "detail": "finalize"
+    },
+    {
+      "ts": "2026-09-30T11:44:13+00:00",
+      "event": "note",
+      "detail": "final/ از نسخه‌ی 4"
+    },
+    {
+      "ts": "2026-09-30T11:44:15+00:00",
+      "event": "note",
+      "detail": "قفل برداشته شد"
+    }
+  ]
+}
