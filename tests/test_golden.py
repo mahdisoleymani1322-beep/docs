@@ -68,6 +68,13 @@ class GoldenTest(unittest.TestCase):
                 self.assertTrue(inp["fields"][c["source"]["ref"]], c["id"])
                 self.assertIn(c["source"]["date"], inp["fields"][c["source"]["ref"]], c["id"])
 
+    def test_golden_base_has_no_known_unsupported_sentences(self):
+        """داور ادعا این دو جمله‌ی fixture را unsupported دید؛ گلدنِ خوب نباید آن‌ها را داشته باشد."""
+        for name in LABELS:
+            text = (GOLD / f"{name}.json").read_text(encoding="utf-8")
+            self.assertNotIn("فعلاً فقط در کانال ایمیل گزارش شده", text, name)
+            self.assertNotIn("یک جریان تحلیل و پیش‌نویس با تأیید انسانی", text, name)
+
     def test_files_are_reproducible_from_the_generator(self):
         with tempfile.TemporaryDirectory() as t:
             make_golden.build(pathlib.Path(t))

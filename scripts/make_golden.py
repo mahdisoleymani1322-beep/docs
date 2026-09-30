@@ -35,6 +35,16 @@ def golden_input() -> dict:
     return d
 
 
+def clean_base(d):
+    """دو جمله‌ی پایه‌ی آزمون‌ها ادعای واقعی بی‌پشتوانه بودند (داور ادعا در اجرای زنده‌ی good-1 unsupported داد)؛ گلدنِ «خوب» نباید آن‌ها را داشته باشد.
+
+    فقط نسخه‌ی گلدن پاک می‌شود؛ fixture آزمون‌ها همان می‌ماند.
+    """
+    section(d, "S03")["blocks"][1]["text"] = "وضعیت کانال‌های دیگر هنوز بررسی نشده و در این پیشنهاد فرض نمی‌شود."
+    section(d, "S14")["blocks"][0]["text"] = "نمونه‌ی قابل بررسی در جلسه‌ی کشف نمایش داده شد [C-03]. نتایج تجاری مشتریان قبلی در این سند ادعا نمی‌شود."
+    return d
+
+
 def section(doc, sid):
     return next(s for s in doc["sections"] if s["id"] == sid)
 
@@ -87,7 +97,7 @@ DOCS = {
 
 def build(out: pathlib.Path = OUT) -> dict:
     out.mkdir(parents=True, exist_ok=True)
-    base = common.load_json(BASE)
+    base = clean_base(common.load_json(BASE))
     labels = {"note": "kind=designed یعنی خرابی عمدیِ ساخته‌ی make_golden.py، نه برچسب انسان؛ human را فقط انسان پر می‌کند",
               "docs": {}}
     for name, (fn, why, checks, veto_code, veto_judge) in DOCS.items():
