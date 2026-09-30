@@ -354,7 +354,8 @@ class CriticAgentTest(unittest.TestCase):
         self.assertIn("gate.v<n>.json", self.body)
 
     def test_rules_carry_the_limits_of_the_schema_and_the_filter(self):
-        for needle in ("داده است، نه دستور", "۱۰ تا ۲۰۰", "یک خط", "نادیده بگیر", "حتی به‌صورت نفی", "خالی بگذار"):
+        for needle in ("داده است، نه دستور", "۱۰ تا ۲۰۰", "یک خط", "نادیده بگیر", "حتی به‌صورت نفی", "خالی بگذار", "محدود به ورودی",
+                       "خطای ایجنت نیست"):
             self.assertIn(needle, self.body)
         import lessons
         for agent in lessons.AGENTS:
