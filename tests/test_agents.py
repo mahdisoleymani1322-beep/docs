@@ -246,6 +246,19 @@ class UpstreamAgentsTest(unittest.TestCase):
         for field in rev["required"]:
             self.assertIn(field if field != "addressed" else "addressed", body)
 
+    def test_researcher_lists_every_enum_value_of_the_claims_schema(self):
+        """اجرای واقعی E7: پژوهشگر `impact: schedule` نوشت چون enum را در دستورش نداشت."""
+        _, body = parse(AGENTS / "researcher.md")
+        c = common.load_json(ROOT / "schemas" / "claims.schema.json")["properties"]["claims"]["items"]["properties"]
+        for field, prop in (("type", c["type"]), ("impact", c["impact"])):
+            for v in prop["enum"]:
+                self.assertIn(v, body, f"{field}={v}")
+        kinds = c["source"]["properties"]["kind"]["enum"]
+        self.assertEqual(len(kinds), 4)
+        for kind in kinds:
+            self.assertIn(kind, body)
+        self.assertIn("`impact` فقط `price|scope|commitment|none`", body)
+
     def test_intake_agent_handles_every_gap_kind_of_the_schema(self):
         _, body = parse(AGENTS / "intake-analyst.md")
         kinds = common.load_json(ROOT / "schemas" / "gaps.schema.json")["properties"]["gaps"]["items"]["properties"]["kind"]["enum"]
