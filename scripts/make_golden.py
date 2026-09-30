@@ -19,6 +19,19 @@ CLAIMS = common.ROOT / "tests" / "fixtures" / "claims.good.json"
 OUT = common.ROOT / "evals" / "golden"
 
 
+def golden_input() -> dict:
+    """ورودی مشترک گلدن‌ست: منبعِ ادعاهای C-01 تا C-03 (`input: discovery_notes`) باید واقعاً در ورودی باشد.
+
+    چرا: اولین اجرای زنده‌ی داورها روی good-1 بدون ورودی، همه‌ی ادعاها را «بی‌منبع» و V01 گرفت؛ داورها درست می‌دیدند و ایراد از خودِ
+    گلدن‌ست بود (ورودی خالی)، پس ورودی جزو مجموعه شد.
+    """
+    d = common.load_json(common.ROOT / "examples" / "inputs" / "proposal-complete.json")
+    d["fields"]["client_identity"] = "شرکت نمونه‌ی آلفا (مشتری نمونه)"
+    d["fields"]["discovery_notes"] = ("در جلسه‌ی کشف مورخ ۱۴۰۵/۰۶/۳۰ (داده‌ی نمایشی) مدیر فروش گفت بازبینی دستی پیش‌نویس‌ها گلوگاه پاسخ‌گویی است؛ "
+                                     "هر پیش‌نویس پاسخ پیش از ارسال توسط یک کارشناس فروش بازبینی می‌شود؛ نمونه‌ی قابل بررسی در همان جلسه نمایش داده شد.")
+    return d
+
+
 def section(doc, sid):
     return next(s for s in doc["sections"] if s["id"] == sid)
 
@@ -79,6 +92,7 @@ def build(out: pathlib.Path = OUT) -> dict:
         labels["docs"][name] = {"kind": "designed", "mutation": why, "expect_failed_checks": checks,
                                 "expect_veto_code": veto_code, "expect_veto_judge": veto_judge, "human": None}
     common.dump_json(common.load_json(CLAIMS), out / "claims.json")
+    common.dump_json(golden_input(), out / "input.json")
     common.dump_json(labels, out / "labels.json")
     return labels
 

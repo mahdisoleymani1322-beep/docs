@@ -58,6 +58,16 @@ class GoldenTest(unittest.TestCase):
             self.assertIsNone(lab["human"], f"{name}: برچسب انسان را فقط انسان می‌دهد")
             self.assertTrue(lab["mutation"], name)
 
+    def test_shared_input_backs_every_input_sourced_claim(self):
+        """اجرای زنده‌ی اول: بدون ورودی، داورها ادعاهای «input» را درست بی‌منبع دیدند؛ ورودی باید جزو مجموعه باشد."""
+        inp = common.load_json(GOLD / "input.json")
+        self.assertEqual(common.schema_errors(inp, "input"), [])
+        self.assertIs(inp["sample"], True)
+        for c in common.load_json(GOLD / "claims.json")["claims"]:
+            if c["source"]["kind"] == "input":
+                self.assertTrue(inp["fields"][c["source"]["ref"]], c["id"])
+                self.assertIn(c["source"]["date"], inp["fields"][c["source"]["ref"]], c["id"])
+
     def test_files_are_reproducible_from_the_generator(self):
         with tempfile.TemporaryDirectory() as t:
             make_golden.build(pathlib.Path(t))

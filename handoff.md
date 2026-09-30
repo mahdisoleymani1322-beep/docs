@@ -53,6 +53,8 @@
 
 ## 4) Changes made
 
+- **D3 (یافته‌ی زنده‌ی ۱):** اولین اجرای داورها روی good-1 بدون ورودی، همه‌ی ادعاهای `input` را بی‌منبع و V01 گرفت؛ داورها درست می‌دیدند و ایراد از گلدن‌ست بود. `evals/golden/input.json` (ساخته‌ی `make_golden.py`) اضافه شد و اجرا با `--input` تکرار می‌شود؛ تلاش اول در scratchpad بایگانی شد. اجرای زنده‌ی ۶ سند در جریان است.
+
 - **D3 (کد):** `scripts/kappa.py` (κ ی Cohen وزنی خطی با Fraction؛ `--write` فقط با برچسب انسانی و ≥۲۰ جفت؛ بدون برچسب انسانی خطای صریح و فایل کالیبراسیون ساخته نمی‌شود) + `tests/test_kappa.py` (مقدار دست‌حساب ۵/۷ و ۲/۵؛ جهش‌ها کشته شدند؛ تنها جهش زنده «مقیاس وزن» معادل است چون κ نسبت به مقیاس وزن ناوردا است). ۳۱۱ آزمون پاس. اجرای زنده‌ی داورها روی گلدن‌ست هنوز انجام نشده.
 
 - **D2:** `scripts/make_golden.py` → `evals/golden/` (۶ سند: good-1/2، bad-guarantee/price-sum/unsourced/no-acceptance + `claims.json` + `labels.json` + README)؛ `tests/test_golden.py` (تک‌علتی، بازتولیدپذیر، `human` همه null)؛ ۳۰۰ آزمون پاس. ساخت با `STUDIO_ALLOW_LOCKED=1`.
