@@ -259,6 +259,15 @@ class UpstreamAgentsTest(unittest.TestCase):
             self.assertIn(kind, body)
         self.assertIn("`impact` فقط `price|scope|commitment|none`", body)
 
+    def test_judges_are_told_the_file_round_is_not_the_document_revision(self):
+        """اجرای واقعی E7 دور ۲: دو داور «نسخه‌ی ۱» داخل سند را ناهماهنگی یا ادعای بی‌پشتوانه شمردند چون پیام ارکستریتور «نسخه‌ی n = 2» می‌گفت."""
+        for name in ("judge-rubric", "judge-claims"):
+            _, body = parse(AGENTS / f"{name}.md")
+            self.assertIn("`v<n>` شماره‌ی دور داخلیِ فایل است، نه ویرایش سند", body, name)
+        skill = (ROOT / ".claude" / "skills" / "sales-doc-studio" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("n شماره‌ی فایل `document.v<n>.md` است و با `meta.revision` سند یکی نیست", skill)
+        self.assertNotIn("«نسخه‌ی n»", skill)
+
     def test_writer_knows_revision_is_not_the_round_number(self):
         """اجرای واقعی E7: نویسنده meta.revision را برابر شماره‌ی دور (۲) گذاشت و validate رد کرد."""
         _, body = parse(AGENTS / "writer.md")

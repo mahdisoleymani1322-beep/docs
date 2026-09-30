@@ -49,13 +49,13 @@ python3 scripts/validate.py --run <اجرا> --stage claims
 ```
 python3 scripts/run.py set --stage write --round <n>
 ```
-۱. ایجنت `writer` را صدا بزن؛ در پیام: پوشه‌ی اجرا و «دور n». (از دور ۲، خودش `issues.v<n-1>.json` را می‌خواند.)
+۱. ایجنت `writer` را صدا بزن؛ در پیام: پوشه‌ی اجرا و «دور n» (n شماره‌ی فایل است، نه ویرایش سند). (از دور ۲، خودش `issues.v<n-1>.json` را می‌خواند.)
 ```
 python3 scripts/validate.py --run <اجرا> --stage write
 python3 scripts/render.py <اجرا> --version <n>
 python3 scripts/checks.py <اجرا> --version <n>
 ```
-۲. سه داور `judge-rubric`، `judge-claims`، `judge-veto` را **در یک پیام و موازی** صدا بزن؛ پیامشان فقط پوشه‌ی اجرا و «نسخه‌ی n» است.
+۲. سه داور `judge-rubric`، `judge-claims`، `judge-veto` را **در یک پیام و موازی** صدا بزن؛ پیامشان فقط پوشه‌ی اجرا و «دور n» است (با یادآوری کوتاه: n شماره‌ی فایل `document.v<n>.md` است و با `meta.revision` سند یکی نیست).
 ```
 python3 scripts/validate.py --run <اجرا> --stage judge-rubric
 python3 scripts/validate.py --run <اجرا> --stage judge-claims

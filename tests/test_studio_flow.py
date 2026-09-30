@@ -70,7 +70,7 @@ class SkillTextTest(unittest.TestCase):
         self.assertIn("gate.py", arch)
 
     def test_lean(self):
-        self.assertLess(SKILL.stat().st_size, 6500)
+        self.assertLess(SKILL.stat().st_size, 7200)  # با اعتبارسنجی صریح بعد از هر ایجنت (hook تا trust خاموش است) از ۶٫۵ کیلوبایت گذشت
 
 
 class SkillExecutionTest(unittest.TestCase):
