@@ -7,6 +7,7 @@
   guard.py --locked                  G3: نوشتن در guides/ rubrics/ schemas/ evals/golden/ رد می‌شود اگر runs/.lock هست یا
                                      فراخوانی از داخل یک ایجنت است؛ عبور فقط با STUDIO_ALLOW_LOCKED=1 (تصمیم انسان)
   guard.py --allow <الگو> [...]      G2: فقط فایل‌هایی که با الگو نسبت به پوشه‌ی اجرای جاری می‌خوانند؛ {n} = دور فعلی
+  guard.py --by-agent                G2 از settings.json: الگوهای مجاز را از --allow دستور همان ایجنت (`agent_type`) می‌خواند؛ بدون agent_type عبور
   guard.py --budget نام=N            G5: فراخوانی N+۱ام رد می‌شود؛ شمارنده‌ی هر اجرا در runs/<id>/.budget/<نام>
 
 مسیر هدف با realpath یکسان می‌شود تا «..» و symlink دورش نزنند. فقط ابزارهای نوشتن بررسی می‌شوند (به‌جز --budget که ابزار را matcher
@@ -20,6 +21,7 @@ import json
 import os
 import pathlib
 import re
+import shlex
 import sys
 
 import common
@@ -81,6 +83,24 @@ def check_allow(target: pathlib.Path, patterns: list[str]) -> str | None:
             "فایل دیگری را ننویس؛ نتیجه‌ی کارت فقط همان فایل خروجی است.")
 
 
+AGENTS_DIR = common.ROOT / ".claude" / "agents"
+
+
+def agent_patterns(agent_type: str) -> list[str] | None:
+    """الگوهای `--allow` تعریف‌شده در frontmatter ایجنت؛ None اگر ایجنت سفارشیِ این ریپو نیست یا گارد نوشتن ندارد.
+
+    چرا از همان فایل: hook frontmatter تا workspace trust اجرا نمی‌شود (E7: `evil.txt` نوشته شد)، ولی hook `settings.json` همیشه
+    اجرا می‌شود. منبع واحد می‌ماند تا دو فهرست از هم جدا نشوند.
+    """
+    if not re.fullmatch(r"[\w-]+", agent_type or ""):
+        return None
+    f = AGENTS_DIR / f"{agent_type}.md"
+    if not f.is_file():
+        return None
+    m = re.search(r"guard\.py\"?\s+--allow\s+(.+)", f.read_text(encoding="utf-8"))
+    return shlex.split(m.group(1)) if m else None
+
+
 def parse_budget(spec: str) -> tuple[str, int]:
     m = re.fullmatch(r"([A-Za-z][\w-]*)=([0-9]+)", spec)
     if not m:
@@ -111,23 +131,27 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--locked", action="store_true")
     ap.add_argument("--allow", nargs="+", metavar="الگو")
+    ap.add_argument("--by-agent", action="store_true")
     ap.add_argument("--budget", metavar="نام=N")
     args = ap.parse_args(argv)
-    if not (args.locked or args.allow or args.budget):
-        ap.error("دست‌کم یکی از --locked، --allow، --budget لازم است")
+    if not (args.locked or args.allow or args.budget or args.by_agent):
+        ap.error("دست‌کم یکی از --locked، --allow، --by-agent، --budget لازم است")
     budget = parse_budget(args.budget) if args.budget else None  # آرگومان خراب پیش از هر ورودی و صریح رد می‌شود
     try:
         data = json.load(sys.stdin)
     except (json.JSONDecodeError, ValueError):
         return 0
     reasons = []
-    if data.get("tool_name") in WRITE_TOOLS and (args.locked or args.allow):
+    allow = args.allow
+    if args.by_agent and not allow:
+        allow = agent_patterns(data.get("agent_type", ""))
+    if data.get("tool_name") in WRITE_TOOLS and (args.locked or allow):
         target = target_path(data)
         if target is not None:
             if args.locked:
                 reasons.append(check_locked(data, target))
-            if args.allow:
-                reasons.append(check_allow(target, args.allow))
+            if allow:
+                reasons.append(check_allow(target, allow))
     reason = next((r for r in reasons if r), None)
     if reason is None and budget:
         reason = check_budget(*budget)

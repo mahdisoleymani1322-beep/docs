@@ -169,6 +169,51 @@ class AllowTest(GuardBase):
         self.allowed(self.args, tool="Read", path=self.run_dir / "document.v1.md", agent=True)
 
 
+class ByAgentTest(GuardBase):
+    """G2 از settings.json: الگو از frontmatter همان ایجنت (agent_type) می‌آید، نه از آرگومان."""
+
+    def setUp(self):
+        super().setUp()
+        self.run_dir = self.make_run(round_=1)
+
+    def call_as(self, agent_type, path, tool="Write"):
+        payload = json.dumps({"tool_name": tool, "tool_input": {"file_path": str(path)}, "cwd": str(ROOT),
+                              **({"agent_id": "a1", "agent_type": agent_type} if agent_type else {})})
+        return self.call(["--by-agent"], raw=payload)
+
+    def test_agent_may_write_only_its_declared_file(self):
+        self.assertIsNone(self.call_as("intake-analyst", self.run_dir / "gaps.json"))
+        self.assertIsNone(self.call_as("intake-analyst", self.run_dir / "questions.json"))
+        for bad in ("evil.txt", "brief.json", "sub/gaps.json"):
+            out = self.call_as("intake-analyst", self.run_dir / bad)
+            self.assertEqual(out["permissionDecision"], "deny", bad)
+
+    def test_round_placeholder_and_each_agent_has_own_scope(self):
+        (self.run_dir / "judges" / "v1").mkdir(parents=True)
+        self.assertIsNone(self.call_as("judge-veto", self.run_dir / "judges/v1/veto.json"))
+        self.assertEqual(self.call_as("judge-veto", self.run_dir / "judges/v1/rubric.json")["permissionDecision"], "deny")
+        self.assertEqual(self.call_as("writer", self.run_dir / "judges/v1/veto.json")["permissionDecision"], "deny")
+
+    def test_no_agent_type_or_unknown_agent_passes(self):
+        self.assertIsNone(self.call_as(None, self.run_dir / "evil.txt"))            # نشست اصلی
+        self.assertIsNone(self.call_as("general-purpose", self.run_dir / "evil.txt"))  # ایجنت این ریپو نیست
+        self.assertIsNone(self.call_as("../../etc/passwd", self.run_dir / "evil.txt"))  # نام نامعتبر: مسیر ساخته نمی‌شود
+
+    def test_read_tools_and_no_run(self):
+        self.assertIsNone(self.call_as("intake-analyst", self.run_dir / "evil.txt", tool="Read"))
+        (self.runs / ".current").unlink()
+        self.assertEqual(self.call_as("intake-analyst", self.run_dir / "gaps.json")["permissionDecision"], "deny")
+
+    def test_every_guarded_agent_is_resolved_to_its_frontmatter_patterns(self):
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import guard
+        for f in sorted((ROOT / ".claude" / "agents").glob("*.md")):
+            fm = f.read_text(encoding="utf-8")
+            m = re.search(r"guard\.py\"\s+--allow\s+(.+)", fm)
+            self.assertIsNotNone(m, f.name)
+            self.assertEqual(guard.agent_patterns(f.stem), __import__("shlex").split(m.group(1)), f.name)
+
+
 class BudgetTest(GuardBase):
     def test_sixth_passes_seventh_denied_and_denied_calls_do_not_count(self):
         d = self.make_run()
@@ -249,6 +294,9 @@ class WiringTest(unittest.TestCase):
         self.assertEqual(len(write), 1)
         cmd = write[0]["hooks"][0]
         self.assertEqual(cmd["command"], 'python3 "$CLAUDE_PROJECT_DIR/scripts/guard.py" --locked')
+        self.assertEqual(write[0]["hooks"][1]["command"], 'python3 "$CLAUDE_PROJECT_DIR/scripts/guard.py" --by-agent',
+                         "G2 باید از settings.json هم اجرا شود: hook frontmatter تا trust خاموش است (E7)")
+        self.assertEqual(len(write[0]["hooks"]), 2)
         self.assertIn("Bash", [g["matcher"] for g in pre], "hook handoff سر جایش می‌ماند")
         self.assertEqual(cfg["env"]["CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH"], "1")  # G6
 
