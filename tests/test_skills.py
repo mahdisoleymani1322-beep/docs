@@ -75,3 +75,32 @@ class EvaluateDocSkillTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GiveFeedbackSkillTest(unittest.TestCase):
+    """F1: اسکیل give-feedback فقط با دستور صریح اجرا می‌شود و دستورهایش با feedback.py واقعی می‌خوانند."""
+
+    def setUp(self):
+        self.meta, self.body = parse(SKILLS / "give-feedback" / "SKILL.md")
+
+    def test_frontmatter_is_explicit_only(self):
+        self.assertEqual(self.meta["name"], "give-feedback")
+        self.assertEqual(self.meta["disable-model-invocation"], "true")
+
+    def test_commands_and_flags_exist_in_the_real_cli(self):
+        cmds = commands(self.body)
+        self.assertEqual(len(cmds), 2)
+        help_add = subprocess.run([sys.executable, str(ROOT / "scripts" / "feedback.py"), "add", "-h"], capture_output=True, text=True).stdout
+        for flag in ("--author", "--version", "--section", "--vote", "--note", "--action", "--override"):
+            self.assertIn(flag, cmds[0])
+            self.assertIn(flag, help_add)
+        self.assertTrue(cmds[1].startswith("python3 scripts/feedback.py status"))
+        for action in ("review", "request_changes", "approve", "decline"):
+            self.assertIn(action, self.body)
+
+    def test_the_model_never_decides_for_the_human(self):
+        for phrase in ("خودت هیچ‌وقت نه تأیید می‌کنی و نه رد", "نام نساز", "عیناً", "نه «ارسال شد»"):
+            self.assertIn(phrase, self.body)
+
+    def test_lean(self):
+        self.assertLess(len((SKILLS / "give-feedback" / "SKILL.md").read_bytes()), 4000)
