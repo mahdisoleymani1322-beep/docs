@@ -53,6 +53,8 @@
 
 ## 4) Changes made
 
+- **D1:** `examples/inputs/proposal-complete.json` (همه‌ی فیلدها پر، داده‌ی نمایشی برچسب‌دار) و `proposal-conflict.json` (تضاد عمدی: دامنه در برابر تحویل، جمع پرداخت ۱۱۰٪، ۶ در برابر ۴ هفته) + `tests/test_sample_inputs.py`؛ ۲۹۲ آزمون پاس. هنوز با ایجنت اجرا نشده‌اند.
+
 - **D0:** `guard.py --by-agent` + hook دوم در `.claude/settings.json` (الگوی مجاز از frontmatter همان `agent_type`)، ۵ آزمون تازه + جهش؛ آزمون زنده: `intake-analyst` نتوانست `evil.txt` بنویسد (پیام G2). داک ۰۵ و ROADMAP به‌روز.
 
 - **E7:** `examples/inputs/proposal-sample.json`، `runs/examples/*` (اجرای کامل + `final/` md/html/pdf ۱۹ صفحه)، ROADMAP E7 ✅، درس ۱۹.
@@ -233,7 +235,7 @@
 
 ## 6) Next steps
 
-- ادامه‌ی فاز D طبق پلن: D1 (سه ورودی نمونه) ← D2 (گلدن‌ست، برچسب انسان از کاربر) ← D3 (`kappa.py`) ← بازبینی CHK-PAY-PERCENT.
+- ادامه‌ی فاز D طبق پلن: D2 (گلدن‌ست، برچسب انسان از کاربر) ← D3 (`kappa.py`) ← بازبینی CHK-PAY-PERCENT.
 
 - بعد از E7: فاز D (گلدن‌ست؛ برچسب‌های انسانی از کاربر لازم است)، بازبینی CHK-PAY-PERCENT، انتقال گارد `--allow` به settings.json یا راهنمای trust، سپس F و G.
 
