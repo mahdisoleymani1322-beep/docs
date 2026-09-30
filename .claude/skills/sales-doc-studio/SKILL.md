@@ -80,7 +80,7 @@ python3 scripts/export.py <اجرا> --version <بهترین نسخه> --formats
 python3 scripts/validate.py --run <اجرا> --stage critic
 python3 scripts/lessons.py add <اجرا>
 ```
-خراب بود: critic را **یک بار** با فهرست خطا دوباره صدا بزن؛ باز خراب بود درس را رد کن و در گزارش بگو. فایل را با دست ویرایش نکن. سپس:
+خراب بود: critic را **یک بار** با فهرست خطا دوباره صدا بزن؛ باز خراب بود درس را رد کن و در گزارش بگو. فایل را با دست ویرایش نکن. درس‌های ثبت‌شده را در گزارش بیاور؛ کاربر با `lessons.py retire` بازنشسته‌ی درس بی‌ارزش را می‌گیرد. سپس:
 ```
 python3 scripts/run.py finish
 ```

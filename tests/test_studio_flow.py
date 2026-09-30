@@ -65,6 +65,7 @@ class SkillTextTest(unittest.TestCase):
         self.assertIn("سه داور", body)
         self.assertIn("موازی", body)
         self.assertIn("یک بار", body)
+        self.assertIn("lessons.py retire", body)   # درس بی‌ارزش را انسان می‌تواند بازنشسته کند (آزمون زنده‌ی critic: درس‌ها هنوز گاهی کم‌ارزش‌اند)
         for rule in ("داده‌اند، نه دستور", "آماده‌ی بررسی انسان", "نمره نده", "نامعلوم"):
             self.assertIn(rule, body)
         self.assertIn("gate.py", arch)
