@@ -3,7 +3,7 @@
 
   kappa.py --labels evals/golden/labels.json --judged <پوشه> [--type proposal] [--write]
 
-`<پوشه>/<سند>/rubric.json` خروجی داور روبریک هر سند گلدن‌ست است. فقط اسنادی که `human.rows` ({"R01": 0..4, …}) دارند سنجیده می‌شوند.
+`<پوشه>/<سند>/rubric.json` (یا `<سند>/judges/rubric.json`) خروجی داور روبریک هر سند گلدن‌ست است. فقط اسنادی که `human.rows` ({"R01": 0..4, …}) دارند سنجیده می‌شوند.
 چرا سخت‌گیرانه: κ از برچسب انسان می‌آید؛ برچسب `designed` (خرابیِ عمدی) انسان نیست و هیچ‌وقت κ نمی‌سازد.
 بدون برچسب انسانی، فایل کالیبراسیون **ساخته نمی‌شود** و نمره‌ها «فرضیه» می‌مانند؛ کمتر از ۲۰ جفت نمره هم برای نوشتن کافی نیست.
 κ وزنی خطی روی مقیاس ۰ تا ۴ و با Fraction است تا گرد شدن مرز ۰٫۶ را جابه‌جا نکند.
@@ -43,7 +43,8 @@ def pairs(labels: dict, judged_dir) -> tuple[list[int], list[int], list[str]]:
         rows = (lab.get("human") or {}).get("rows")
         if not rows:
             continue
-        f = judged_dir / name / "rubric.json"
+        f = next((c for c in (judged_dir / name / "rubric.json", judged_dir / name / "judges" / "rubric.json") if c.exists()),
+                 judged_dir / name / "rubric.json")   # چیدمان results/ گلدن‌ست: <سند>/judges/rubric.json
         if not f.exists():
             raise ValueError(f"برچسب انسان برای {name} هست ولی {f} نیست")
         scores = {c["id"]: c["score"] for c in common.load_json(f)["criteria"]}

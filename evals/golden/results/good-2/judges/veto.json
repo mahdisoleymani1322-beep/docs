@@ -1,0 +1,4 @@
+{"judge": "veto", "version": 1, "checked": ["V01", "V02", "V04", "V05", "V06", "V07"],
+ "not_applicable": [{"veto_id": "V08", "reason": "proposal_kind در input.json خالی است و rfp هم null است؛ نوع پیشنهاد RFP نیست"}],
+ "hits": [],
+ "bottom_line": "هیچ مورد رد فوری پیدا نشد؛ سه ادعای C-01 تا C-03 با discovery_notes در input.json می‌خوانند، هیچ تضمینی مثبتاً نیامده و کنترل‌های امنیتی صریحاً اجرا‌نشده گفته شده‌اند."}

@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "doc_type": "proposal",
+  "mode": "structured",
+  "results": [
+    {
+      "id": "CHK-SCHEMA",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-SECTIONS",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-IDS",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-D-A",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-PRICE-SUM",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-PAY-PERCENT",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-PAY-EVENT",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-BANNED",
+      "status": "fail",
+      "severity": "critical",
+      "detail": "«تضمین می کنیم» (guarantee) در sections[1].blocks[1].text؛ «بی خطا» (flawless) در sections[1].blocks[1].text",
+      "locations": [
+        "sections[1].blocks[1].text"
+      ],
+      "veto": [
+        "V02"
+      ],
+      "caps": []
+    },
+    {
+      "id": "CHK-BRAND-WORDS",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-CLAIM-REFS",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-UNKNOWN-FINAL",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-COST-BENEFIT",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-CB-SUPPORT",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-CB-TYPE",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-CB-CAVEAT",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-DIGITS",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-LENGTH",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "۱۴۶۹ کلمه",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    }
+  ]
+}

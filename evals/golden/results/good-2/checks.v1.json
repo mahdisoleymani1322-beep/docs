@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "doc_type": "proposal",
+  "mode": "structured",
+  "results": [
+    {
+      "id": "CHK-SCHEMA",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-SECTIONS",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-IDS",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-D-A",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-PRICE-SUM",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-PAY-PERCENT",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-PAY-EVENT",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-BANNED",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-BRAND-WORDS",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-CLAIM-REFS",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-UNKNOWN-FINAL",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-COST-BENEFIT",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-CB-SUPPORT",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-CB-TYPE",
+      "status": "pass",
+      "severity": "critical",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-CB-CAVEAT",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-DIGITS",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    },
+    {
+      "id": "CHK-LENGTH",
+      "status": "pass",
+      "severity": "warn",
+      "detail": "۱۴۶۷ کلمه",
+      "locations": [],
+      "veto": [],
+      "caps": []
+    }
+  ]
+}

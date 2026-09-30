@@ -50,7 +50,9 @@
         "CHK-CLAIM-REFS"
       ],
       "expect_veto_code": [],
-      "expect_veto_judge": [],
+      "expect_veto_judge": [
+        "V01"
+      ],
       "human": null
     },
     "bad-no-acceptance": {

@@ -120,6 +120,14 @@ class KappaCliTest(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertFalse(gate.judges_valid("proposal"))
 
+    def test_results_layout_with_judges_subdir_is_accepted(self):
+        self.setup_docs([[0, 1, 2, 3, 4] * 2], [[0, 1, 2, 3, 3] * 2])
+        (self.tmp / "d0" / "judges").mkdir()
+        (self.tmp / "d0" / "rubric.json").rename(self.tmp / "d0" / "judges" / "rubric.json")
+        code, out, err = self.run_cli()
+        self.assertEqual(code, 0, err)
+        self.assertIn("κ وزنی", out)
+
     def test_missing_judge_file_or_row_is_a_loud_error(self):
         self.setup_docs([[1, 2, 3]], [[1, 2]])
         code, _, err = self.run_cli()
