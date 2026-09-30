@@ -1,0 +1,71 @@
+{
+  "note": "kind=designed یعنی خرابی عمدیِ ساخته‌ی make_golden.py، نه برچسب انسان؛ human را فقط انسان پر می‌کند",
+  "docs": {
+    "good-1": {
+      "kind": "designed",
+      "mutation": "پایه‌ی خوب بدون جهش",
+      "expect_failed_checks": [],
+      "expect_veto_code": [],
+      "expect_veto_judge": [],
+      "human": null
+    },
+    "good-2": {
+      "kind": "designed",
+      "mutation": "پایه‌ی خوب با پرداخت سه‌مرحله‌ای (۳۰/۳۰/۴۰) و مدت کشف ۱۲ روز",
+      "expect_failed_checks": [],
+      "expect_veto_code": [],
+      "expect_veto_judge": [],
+      "human": null
+    },
+    "bad-guarantee": {
+      "kind": "designed",
+      "mutation": "جمله‌ی «بی‌خطا اجرا می‌شود … تضمین می‌کنیم» در خلاصه‌ی اجرایی",
+      "expect_failed_checks": [
+        "CHK-BANNED"
+      ],
+      "expect_veto_code": [
+        "V02"
+      ],
+      "expect_veto_judge": [
+        "V02"
+      ],
+      "human": null
+    },
+    "bad-price-sum": {
+      "kind": "designed",
+      "mutation": "جمع یک‌باره ۱۰ میلیون بیشتر از مجموع اقلام",
+      "expect_failed_checks": [
+        "CHK-PRICE-SUM"
+      ],
+      "expect_veto_code": [
+        "V03"
+      ],
+      "expect_veto_judge": [],
+      "human": null
+    },
+    "bad-unsourced": {
+      "kind": "designed",
+      "mutation": "ادعای عددی درباره‌ی مشتریان مشابه با ارجاع C-99 که در دفتر ادعا نیست",
+      "expect_failed_checks": [
+        "CHK-CLAIM-REFS"
+      ],
+      "expect_veto_code": [],
+      "expect_veto_judge": [],
+      "human": null
+    },
+    "bad-no-acceptance": {
+      "kind": "designed",
+      "mutation": "حذف معیار پذیرش A-01 از تحویل D-01",
+      "expect_failed_checks": [
+        "CHK-D-A"
+      ],
+      "expect_veto_code": [
+        "V05"
+      ],
+      "expect_veto_judge": [
+        "V05"
+      ],
+      "human": null
+    }
+  }
+}

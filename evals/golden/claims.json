@@ -1,0 +1,54 @@
+{
+  "claims": [
+    {
+      "id": "C-01",
+      "text": "مدیر فروش در جلسه‌ی کشف گفت بازبینی دستی پیش‌نویس گلوگاه پاسخ‌گویی است",
+      "type": "fact",
+      "source": {
+        "kind": "input",
+        "ref": "discovery_notes",
+        "date": "۱۴۰۵/۰۶/۳۰",
+        "quote": null
+      },
+      "used_in": [
+        "S02",
+        "S05"
+      ],
+      "limits": "داده‌ی نمایشی",
+      "impact": "none"
+    },
+    {
+      "id": "C-02",
+      "text": "هر پیش‌نویس پاسخ پیش از ارسال توسط یک کارشناس فروش بازبینی می‌شود",
+      "type": "fact",
+      "source": {
+        "kind": "input",
+        "ref": "discovery_notes",
+        "date": "۱۴۰۵/۰۶/۳۰",
+        "quote": null
+      },
+      "used_in": [
+        "S03"
+      ],
+      "limits": "داده‌ی نمایشی",
+      "impact": "none"
+    },
+    {
+      "id": "C-03",
+      "text": "نمونه‌ی قابل بررسی در جلسه‌ی کشف نمایش داده شد",
+      "type": "fact",
+      "source": {
+        "kind": "input",
+        "ref": "discovery_notes",
+        "date": "۱۴۰۵/۰۶/۳۰",
+        "quote": null
+      },
+      "used_in": [
+        "S14"
+      ],
+      "limits": "داده‌ی نمایشی",
+      "impact": "none"
+    }
+  ],
+  "searches": []
+}
