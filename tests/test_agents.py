@@ -143,9 +143,9 @@ class AgentContractTest(unittest.TestCase):
                 self.assertNotIn("Bash", body)
 
     def test_agents_stay_lean(self):
-        """کانتکست را زیاد پر نکن: هر داور زیر ۳٫۵ کیلوبایت متن."""
+        """کانتکست را زیاد پر نکن: هر داور زیر ۵٫۲ کیلوبایت (شامل اسکلت JSON)."""
         for name in JUDGES:
-            self.assertLess(len((AGENTS / f"{name}.md").read_bytes()), 4500, name)
+            self.assertLess(len((AGENTS / f"{name}.md").read_bytes()), 5200, name)  # ~700 بایت اسکلت JSON
 
 
 UPSTREAM = {"intake-analyst": "intake", "strategist": "brief", "researcher": "claims", "writer": "write"}
@@ -254,6 +254,45 @@ class UpstreamAgentsTest(unittest.TestCase):
         for imp in ("price", "scope", "commitment", "timeline", "security", "none"):
             self.assertIn(imp, body)
         self.assertIn("۵", body)  # سقف سؤال
+
+
+class AgentJsonSkeletonTest(unittest.TestCase):
+    """هر ایجنت فقط چیزی را می‌خواند که در فهرست ورودی‌اش است و schema جزو آن نیست؛ پس شکل خروجی باید در بدنه‌ی خودش باشد.
+    اولین اجرای واقعی (E7) نشان داد بدون اسکلت، ایجنت فهرست خام و بی‌شناسه می‌نویسد. هر اسکلت باید با schema واقعی معتبر باشد."""
+
+    @staticmethod
+    def schema_for(obj):
+        if "judge" in obj:
+            return f"judge-{obj['judge']}"
+        for key, name in (("gaps", "gaps"), ("questions", "questions"), ("sections", "brief"), ("claims", "claims"), ("addressed", "revision")):
+            if key in obj:
+                return name
+        raise AssertionError(f"schema اسکلت معلوم نیست: {list(obj)}")
+
+    def skeletons(self, name):
+        _, body = parse(AGENTS / f"{name}.md")
+        return [json.loads(b) for b in re.findall(r"```json\n(.*?)\n```", body, re.S)]
+
+    def test_every_output_file_has_a_valid_skeleton_in_its_agent(self):
+        expected = {"intake-analyst": {"gaps", "questions"}, "strategist": {"brief"}, "researcher": {"claims"}, "writer": {"revision"},
+                    "judge-rubric": {"judge-rubric"}, "judge-claims": {"judge-claims"}, "judge-veto": {"judge-veto"}}
+        for name, want in expected.items():
+            with self.subTest(agent=name):
+                got = set()
+                for obj in self.skeletons(name):
+                    schema = self.schema_for(obj)
+                    self.assertEqual(common.schema_errors(obj, schema), [], f"{name}: اسکلت با schema {schema} نمی‌خواند")
+                    got.add(schema)
+                self.assertEqual(got, want)
+
+    def test_skeleton_ids_use_the_real_patterns(self):
+        obj = self.skeletons("intake-analyst")[1]
+        self.assertRegex(obj["questions"][0]["gap"], r"^G-[0-9]{2}$")  # اشتباه واقعی E7: gap = نام فیلد
+
+    def test_writer_and_judges_skeletons_are_mutation_sensitive(self):
+        bad = self.skeletons("intake-analyst")[0]
+        bad["gaps"][0].pop("id")
+        self.assertNotEqual(common.schema_errors(bad, "gaps"), [])
 
 
 class ConformanceTest(unittest.TestCase):

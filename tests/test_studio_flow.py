@@ -33,7 +33,8 @@ def skill_parts():
 
 
 EXPECTED = [
-    "run.py template proposal > input.json", "run.py new proposal input.json", "loop.py init", "run.py intake-check", "run.py answer",
+    "run.py template proposal > input.json", "run.py new proposal input.json", "loop.py init", "run.py intake-check", "validate.py --run <اجرا> --stage intake", "run.py answer",
+    "validate.py --run <اجرا> --stage brief", "validate.py --run <اجرا> --stage claims",
     "run.py set --stage write --round", "validate.py --run <اجرا> --stage write", "render.py", "checks.py",
     "validate.py --run <اجرا> --stage judge-rubric", "validate.py --run <اجرا> --stage judge-claims", "validate.py --run <اجرا> --stage judge-veto",
     "gate.py", "loop.py record", "loop.py finalize", "export.py", "run.py finish"]
@@ -112,7 +113,7 @@ class SkillExecutionTest(unittest.TestCase):
         common.dump_json({"gaps": gaps}, self.run_dir / "gaps.json")
         common.dump_json({"questions": qs}, self.run_dir / "questions.json")
 
-    def agent_strategist_and_researcher(self):
+    def agent_strategist(self):
         card = common.load_card("proposal")
         gaps = [g["id"] for g in common.load_json(self.run_dir / "gaps.json")["gaps"]]
         secs = [{"id": s["id"], "title": s["title"], "purpose": "تصمیم را ممکن می‌کند", "must_include": ["جای خالی صریح"], "inputs": ["client_identity"],
@@ -121,6 +122,8 @@ class SkillExecutionTest(unittest.TestCase):
         common.dump_json({"doc_type": "proposal", "variant": "sales", "audience": {"decision_maker": "مدیر فروش", "readers": []},
                           "decision_sought": "تأیید دامنه", "key_message": "پایلوت محدود", "sections": secs,
                           "length_budget": {"min_words": lw["min"], "max_words": lw["max"]}, "out_of_scope": []}, self.run_dir / "brief.json")
+
+    def agent_researcher(self):
         shutil.copyfile(FX / "claims.good.json", self.run_dir / "claims.json")
 
     def agent_writer(self):
@@ -145,8 +148,10 @@ class SkillExecutionTest(unittest.TestCase):
                                       discovery_notes="مدیر فروش در جلسه‌ی کشف گفت بازبینی دستی گلوگاه است")
                 (self.tmp / "input.json").write_text(json.dumps(form, ensure_ascii=False), encoding="utf-8")
                 continue
-            if line.startswith("run.py set --stage write"):
-                self.agent_strategist_and_researcher()  # مراحل ۳ اسکیل، پیش از Loop
+            if line.endswith("--stage brief"):
+                self.agent_strategist()
+            elif line.endswith("--stage claims"):
+                self.agent_researcher()
             out = self.sh(c)
             if line.startswith("run.py new"):
                 self.run_dir = pathlib.Path(out.strip())
