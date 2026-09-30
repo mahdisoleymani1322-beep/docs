@@ -375,7 +375,7 @@
         "id": "T-01",
         "stage": "کشف",
         "prerequisite": "دسترسی به مدیر فروش و نمونه‌ها",
-        "duration_workdays": 12,
+        "duration_workdays": 10,
         "output": "خط مبنا و D-01",
         "approver": "مدیر فروش",
         "delay_effect": "عقب‌افتادن برآورد نهایی"

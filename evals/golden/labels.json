@@ -11,7 +11,7 @@
     },
     "good-2": {
       "kind": "designed",
-      "mutation": "پایه‌ی خوب با پرداخت سه‌مرحله‌ای (۳۰/۳۰/۴۰) و مدت کشف ۱۲ روز",
+      "mutation": "پایه‌ی خوب فقط با پرداخت سه‌مرحله‌ای (۳۰/۳۰/۴۰)",
       "expect_failed_checks": [],
       "expect_veto_code": [],
       "expect_veto_judge": [],
