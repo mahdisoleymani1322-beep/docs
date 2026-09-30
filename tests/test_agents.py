@@ -259,6 +259,12 @@ class UpstreamAgentsTest(unittest.TestCase):
             self.assertIn(kind, body)
         self.assertIn("`impact` فقط `price|scope|commitment|none`", body)
 
+    def test_writer_knows_revision_is_not_the_round_number(self):
+        """اجرای واقعی E7: نویسنده meta.revision را برابر شماره‌ی دور (۲) گذاشت و validate رد کرد."""
+        _, body = parse(AGENTS / "writer.md")
+        self.assertIn("`meta.revision` شماره‌ی نسخه‌ی سند نزد انسان است، **نه شماره‌ی دور بازنویسی**", body)
+        self.assertIn("`meta.date` و `meta.doc_id` را از خودت نساز", body)
+
     def test_intake_agent_handles_every_gap_kind_of_the_schema(self):
         _, body = parse(AGENTS / "intake-analyst.md")
         kinds = common.load_json(ROOT / "schemas" / "gaps.schema.json")["properties"]["gaps"]["items"]["properties"]["kind"]["enum"]
